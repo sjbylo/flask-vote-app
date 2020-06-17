@@ -13,19 +13,19 @@ cache['fail'] = 0
 
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
-#dbhost  = os.environ.get('DB_HOST', '')
-#dbport  = os.environ.get('DB_PORT', '')
-#dbname  = os.environ.get('DB_NAME', '')
-#dbuser  = os.environ.get('DB_USER', '')
-#dbpass  = os.environ.get('DB_PASS', '')
-#dbtype  = os.environ.get('DB_TYPE', '')
-
-dbhost  = os.environ.get('ENDPOINT_ADDRESS', 'db')
-dbport  = os.environ.get('PORT', '3306')
-dbname  = os.environ.get('DB_NAME', 'vote')
-dbuser  = os.environ.get('MASTER_USERNAME', 'user')
-dbpass  = os.environ.get('MASTER_PASSWORD', 'password')
+dbhost  = os.environ.get('DB_HOST', '')
+dbport  = os.environ.get('DB_PORT', '')
+dbname  = os.environ.get('DB_NAME', '')
+dbuser  = os.environ.get('DB_USER', '')
+dbpass  = os.environ.get('DB_PASS', '')
 dbtype  = os.environ.get('DB_TYPE', '')
+
+# dbhost  = os.environ.get('ENDPOINT_ADDRESS', 'db')
+# dbport  = os.environ.get('PORT', '3306')
+# dbname  = os.environ.get('DB_NAME', 'vote')
+# dbuser  = os.environ.get('MASTER_USERNAME', 'user')
+# dbpass  = os.environ.get('MASTER_PASSWORD', 'password')
+# dbtype  = os.environ.get('DB_TYPE', '')
 
 if dbtype == 'mysql':
    dburi  = dbtype + '://' + dbuser + ':' + dbpass + '@' + dbhost + ':' + dbport + '/' + dbname
