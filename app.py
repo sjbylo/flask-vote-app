@@ -9,7 +9,7 @@ from flask import Flask, request, make_response, render_template
 from flask_sqlalchemy import SQLAlchemy
 
 cache = {}
-cache['fail'] = 0;
+cache['fail'] = 0
 
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -84,28 +84,15 @@ def index():
 
 @app.route('/vote.html', methods=['POST','GET'])
 def vote():
-    has_voted = False
-    vote_stamp = request.cookies.get('vote_stamp')
-
     if request.method == 'POST':
-        has_voted = True
         vote = request.form['vote']
-        if vote_stamp:
-           print(("This client has already voted! The vote stamp is : " + vote_stamp))
-        else:
-           print ("This client has not voted yet!")
-           voted_option = Option.query.filter_by(poll_id=poll.id,id=vote).first() 
-           voted_option.votes += 1
-           db.session.commit()
+        voted_option = Option.query.filter_by(poll_id=poll.id,id=vote).first() 
+        voted_option.votes += 1
+        db.session.commit()
     
     # if request.method == 'GET':
     options = Option.query.filter_by(poll_id=poll.id).all()        
     resp = make_response(render_template('vote.html', hostname=hostname, poll=poll, options=options))
-    
-    if has_voted:
-       vote_stamp = hex(random.getrandbits(64))[2:-1]
-       print ("Set coookie for voted")
-       resp.set_cookie('vote_stamp', vote_stamp)
 
     if cache['fail'] == 1:
         cause_some_failure(5)
