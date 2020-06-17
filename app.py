@@ -9,33 +9,23 @@ from flask import Flask, request, make_response, render_template
 from flask_sqlalchemy import SQLAlchemy
 
 cache = {}
-cache['fail'] = 0;
+cache['fail'] = 0
 
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
-#dbhost  = os.environ.get('DB_HOST', '')
-#dbport  = os.environ.get('DB_PORT', '')
-#dbname  = os.environ.get('DB_NAME', '')
-#dbuser  = os.environ.get('DB_USER', '')
-#dbpass  = os.environ.get('DB_PASS', '')
-#dbtype  = os.environ.get('DB_TYPE', '')
-
-# These are the var names created via the RDS binding using the AWS Broker 
-# DB_NAME: 
-# ENDPOINT_ADDRESS: 
-# MASTER_PASSWORD: 
-# MASTER_USERNAME: 
-# PORT:
-
-# The default values ('db', 'vote' etc) are for making it easier to create this app in the OpenShift console after 
-# setting up a DB call 'db'...
-
-dbhost  = os.environ.get('ENDPOINT_ADDRESS', 'db')
-dbport  = os.environ.get('PORT', '3306')
-dbname  = os.environ.get('DB_NAME', 'vote')
-dbuser  = os.environ.get('MASTER_USERNAME', 'user')
-dbpass  = os.environ.get('MASTER_PASSWORD', 'password')
+dbhost  = os.environ.get('DB_HOST', '')
+dbport  = os.environ.get('DB_PORT', '')
+dbname  = os.environ.get('DB_NAME', '')
+dbuser  = os.environ.get('DB_USER', '')
+dbpass  = os.environ.get('DB_PASS', '')
 dbtype  = os.environ.get('DB_TYPE', '')
+
+# dbhost  = os.environ.get('ENDPOINT_ADDRESS', 'db')
+# dbport  = os.environ.get('PORT', '3306')
+# dbname  = os.environ.get('DB_NAME', 'vote')
+# dbuser  = os.environ.get('MASTER_USERNAME', 'user')
+# dbpass  = os.environ.get('MASTER_PASSWORD', 'password')
+# dbtype  = os.environ.get('DB_TYPE', '')
 
 if dbtype == 'mysql':
    dburi  = dbtype + '://' + dbuser + ':' + dbpass + '@' + dbhost + ':' + dbport + '/' + dbname
@@ -84,28 +74,15 @@ def index():
 
 @app.route('/vote.html', methods=['POST','GET'])
 def vote():
-    has_voted = False
-    vote_stamp = request.cookies.get('vote_stamp')
-
     if request.method == 'POST':
-        has_voted = True
         vote = request.form['vote']
-        if vote_stamp:
-           print(("This client has already voted! The vote stamp is : " + vote_stamp))
-        else:
-           print ("This client has not voted yet!")
-           voted_option = Option.query.filter_by(poll_id=poll.id,id=vote).first() 
-           voted_option.votes += 1
-           db.session.commit()
+        voted_option = Option.query.filter_by(poll_id=poll.id,id=vote).first() 
+        voted_option.votes += 1
+        db.session.commit()
     
     # if request.method == 'GET':
     options = Option.query.filter_by(poll_id=poll.id).all()        
     resp = make_response(render_template('vote.html', hostname=hostname, poll=poll, options=options))
-    
-    if has_voted:
-       vote_stamp = hex(random.getrandbits(64))[2:-1]
-       print ("Set coookie for voted")
-       resp.set_cookie('vote_stamp', vote_stamp)
 
     if cache['fail'] == 1:
         cause_some_failure(5)
