@@ -10,4 +10,3 @@ export ENDPOINT_ADDRESS=localhost
 export PORT=3306 
 export MASTER_USERNAME=voteuser
 export MASTER_PASSWORD=password
-

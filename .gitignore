@@ -3,3 +3,5 @@ data/app.db
 .vscode
 
 *.log
+
+flask.rc
