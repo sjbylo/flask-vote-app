@@ -3,6 +3,7 @@ import random
 import json
 import socket
 import flask
+import logging, logging.config
 
 from datetime import datetime
 from flask import Flask, request, make_response, render_template
@@ -11,8 +12,15 @@ from flask_sqlalchemy import SQLAlchemy
 cache = {}
 cache['fail'] = 0
 
-app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
+logpath = ''.join((basedir, os.sep, 'logs', os.sep, 'app.log'))
+
+logging.basicConfig(
+    level=logging.INFO, 
+    filename=logpath,
+    format='%(asctime)s %(levelname)s %(name)s %(threadName)s %(funcName)s : %(message)s')
+
+app = Flask(__name__)
 dbhost  = os.environ.get('DB_HOST', '')
 dbport  = os.environ.get('DB_PORT', '')
 dbname  = os.environ.get('DB_NAME', '')
@@ -103,32 +111,32 @@ def health():
 
 @app.route('/fail')
 def fail():
-    cache['fail'] = 1;
+    cache['fail'] = 1
     return 'Server failing ...'
 
 if __name__ == '__main__':
 
-    print(("Connect to : " + dburi))
+    logging.info(("Connect to : " + dburi))
 
     db.create_all()
     db.session.commit()
     hostname = socket.gethostname()
          
-    print ("Check if a poll already exists in the db")
+    logging.info("Check if a poll already exists in the db")
     # TODO check the latest one filtered by timestamp
     poll = Poll.query.first()
     
     if poll:
-       print ("Restart the poll")
+       logging.info("Restart the poll")
        poll.stamp = datetime.utcnow()
        db.session.commit()
     
     else:
-       print ("Load seed data from file")
+       logging.info("Load seed data  file")
        try: 
            with open(os.path.join(basedir, 'seeds/seed_data.json')) as file:
                seed_data = json.load(file)
-               print ("Start a new poll")
+               logging.info("Start a new poll")
                poll = Poll(seed_data['poll'], seed_data['question'])
                db.session.add(poll)
                for i in seed_data['options']:
@@ -137,7 +145,7 @@ if __name__ == '__main__':
                db.session.commit()
 
        except:
-          print ("Cannot load seed data from file")
+          logging.info("Cannot load seed data from file")
           poll = Poll("", "")
 
     app.run(host='0.0.0.0', port=8080, debug=False)
