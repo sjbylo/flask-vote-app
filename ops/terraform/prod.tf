@@ -1,3 +1,26 @@
+# Vars
+
+variable "mysql_admin_username" {
+  type = string
+}
+
+variable "mysql_admin_password" {
+  type = string
+}
+
+# Outputs
+
+output "vm_instance_ip_addr" {
+  value = azurerm_linux_virtual_machine.polling_app_vm.public_ip_address
+}
+
+
+output "db_instance_fqdn" {
+  value = azurerm_mysql_server.polling_app_db.fqdn
+}
+
+# Definitions
+
 provider "azurerm" {
   version = "=2.15.0"
   features {}
@@ -41,8 +64,6 @@ resource "azurerm_network_interface" "polling_app_network_interface" {
     public_ip_address_id          = azurerm_public_ip.polling_app_public_ip.id
   }
 }
-
-
 
 resource "azurerm_network_security_group" "polling_app_security_group" {
   name                = "prod_polling_app_nsg"
@@ -141,4 +162,35 @@ resource "azurerm_linux_virtual_machine" "polling_app_vm" {
     sku       = "18.04-LTS"
     version   = "latest"
   }
+}
+
+# MySql
+
+resource "azurerm_mysql_server" "polling_app_db" {
+  name                = "prod-polling-app-db-v1"
+  location            = azurerm_resource_group.polling_app.location
+  resource_group_name = azurerm_resource_group.polling_app.name
+
+  administrator_login          = var.mysql_admin_username
+  administrator_login_password = var.mysql_admin_password
+
+  sku_name   = "B_Gen5_1"
+  storage_mb = 5120
+  version    = "5.7"
+
+  auto_grow_enabled                 = false
+  backup_retention_days             = 7
+  geo_redundant_backup_enabled      = false
+  infrastructure_encryption_enabled = true
+  public_network_access_enabled     = true
+  ssl_enforcement_enabled           = true
+  ssl_minimal_tls_version_enforced  = "TLS1_2"
+}
+
+resource "azurerm_mysql_firewall_rule" "polling_app_db_firewall" {
+  name                = "prod_polling_app_firewall"
+  resource_group_name = azurerm_resource_group.polling_app.name
+  server_name         = azurerm_mysql_server.polling_app_db.name
+  start_ip_address    = azurerm_linux_virtual_machine.polling_app_vm.public_ip_address
+  end_ip_address      = azurerm_linux_virtual_machine.polling_app_vm.public_ip_address
 }

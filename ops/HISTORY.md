@@ -242,7 +242,7 @@ Assuming no major issues, these resources can be spun up and torn down using `te
 (once you're ssh'd in)
 ```
 $ sudo apt-get update
-$ sudo apt-get install python3-pip libmysqlclient-dev
+$ sudo apt-get install python3-pip libmysqlclient-dev -y
 $ git clone https://github.com/loganballard/flask-vote-app/
 $ cd flask-vote-app/
 $ sudo python3 -m pip install -r requirements.txt
@@ -252,3 +252,68 @@ $ sudo python3 app.py
 Or something of the like.  However, having to install things manually is still a pain in the ass.  Maybe we can tackle that later.... In the meantime, we've got to spin up a managed MySQL instance to house the database for this service.
 
 ##### 2.3.4 MySQL DB
+
+Creating the SQL DB is a two-part affair.  Once again, we'll have to create an actually managed instance for the DB itself, but we'll also have to configure some networking rules such that our DB can be talked to by our VM instance.  First we need the actual MySQL instance, which is a fairly straightforward definition:
+
+```
+resource "azurerm_mysql_server" "polling_app_db" {
+  name                = "prod-polling-app-db-v1"
+  location            = azurerm_resource_group.polling_app.location
+  resource_group_name = azurerm_resource_group.polling_app.name
+
+  administrator_login          = var.mysql_admin_username
+  administrator_login_password = var.mysql_admin_password
+
+  sku_name   = "B_Gen5_1"
+  storage_mb = 5120
+  version    = "5.7"
+
+  auto_grow_enabled                 = false
+  backup_retention_days             = 7
+  geo_redundant_backup_enabled      = false
+  infrastructure_encryption_enabled = true
+  public_network_access_enabled     = true
+  ssl_enforcement_enabled           = true
+  ssl_minimal_tls_version_enforced  = "TLS1_2"
+}
+```
+
+In real life, we'd probably want to have some sort of replication, but again, MVP!  The sprint is almost over!  Another thing that's interesting about this particular part of the process is that I've used my first [terraform variable](https://www.terraform.io/docs/configuration/variables.html) to shield the mysql username and password from source control.  This means defining them in the `prod.tfvars` file.  But not committing them to the repository!
+
+The other part of the DB is the firewall rules.  This will allow our VM to talk to the MySql DB.
+
+```
+resource "azurerm_mysql_firewall_rule" "polling_app_db_firewall" {
+  name                = "prod_polling_app_firewall"
+  resource_group_name = azurerm_resource_group.polling_app.name
+  server_name         = azurerm_mysql_server.polling_app_db.name
+  start_ip_address    = azurerm_linux_virtual_machine.polling_app_vm.public_ip_address
+  end_ip_address      = azurerm_linux_virtual_machine.polling_app_vm.public_ip_address
+}
+```
+
+That should be all!  Now we can create infrastructure using `terraform apply --var-file=prod.tfvars` and everything should spin up without too much of a struggle.  If it all goes successfully, the IP address of the VM and the [FQDN](https://kb.iu.edu/d/aiuv#:~:text=A%20fully%20qualified%20domain%20name,be%20mymail.somecollege.edu%20.) of the MySQL DB should be spit out to the command line.
+
+##### 2.3.5 Configuration
+
+Now that we have the ability to deploy from the command line, we have to SSH into the instance and set everything up.  We did something similar before but now we'll have to do something a bit more advanced to connect our instance to MySQL.
+
+Once you're ssh'd in to your VM using it's IP and your ssh key...
+```
+$ sudo apt-get update
+$ sudo apt-get install python3-pip libmysqlclient-dev mysql-client-core-5.7 -y
+$ git clone https://github.com/loganballard/flask-vote-app/
+$ cd flask-vote-app/
+$ sudo python3 -m pip install -r requirements.txt
+$ mysql -h <your fqdn> -u <your username> -p'<your password>'
+// create the polling db in mysql
+$ mysql> CREATE DATABASE <db name>;
+# mysql> \q;
+// create the flask.rc file according to your MySQL DB specs ...
+$ source flask.rc
+$ sudo -E python3 app.py
+```
+...or something of the like.
+
+Even though provisioning our infrastructure is easy and repeatable, configuring it is still a pain in the ass. We have to manually install dependencies, clone a repo, and configure a database. Can we do better?
+
