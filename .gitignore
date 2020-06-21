@@ -2,6 +2,8 @@ data/app.db
 
 .vscode
 
-logs
+logs/
 
 flask.rc
+
+*.local
