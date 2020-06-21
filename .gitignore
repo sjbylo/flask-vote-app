@@ -1,9 +1,16 @@
-data/app.db
-
+# IDE
 .vscode
 
-logs/
+# Local DB
+data/app.db
 
+# Logging
+*.log
+
+# Config
 flask.rc
-
 *.local
+
+# Terraform
+*.tfstate*
+.terraform
