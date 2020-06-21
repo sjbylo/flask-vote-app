@@ -305,7 +305,8 @@ $ sudo apt-get install python3-pip libmysqlclient-dev mysql-client-core-5.7 -y
 $ git clone https://github.com/loganballard/flask-vote-app/
 $ cd flask-vote-app/
 $ sudo python3 -m pip install -r requirements.txt
-$ mysql -h <your fqdn> -u <your username> -p'<your password>'
+// NOTE: azure requires that username be in the form username@dbname, which is the first part of the FQDN
+$ mysql -h <your fqdn> -u <your username>@<first part of fqdn> -p'<your password>' 
 // create the polling db in mysql
 $ mysql> CREATE DATABASE <db name>;
 # mysql> \q;
@@ -313,7 +314,9 @@ $ mysql> CREATE DATABASE <db name>;
 $ source flask.rc
 $ sudo -E python3 app.py
 ```
-...or something of the like.
+...or something of the like.  You should be able to use your web browser to navigate to `<your VM's ip>:8080` and see your website running!
+
+![Terraform'd af](./img/05.jpg)
 
 Even though provisioning our infrastructure is easy and repeatable, configuring it is still a pain in the ass. We have to manually install dependencies, clone a repo, and configure a database. Can we do better?
 
