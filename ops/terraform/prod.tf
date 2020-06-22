@@ -8,6 +8,14 @@ variable "mysql_admin_password" {
   type = string
 }
 
+variable "admin_user" {
+  type = string
+}
+
+variable "az_region" {
+  type = string
+}
+
 # Outputs
 
 output "vm_instance_ip_addr" {
@@ -28,7 +36,7 @@ provider "azurerm" {
 
 resource "azurerm_resource_group" "polling_app" {
   name     = "prod_polling_app"
-  location = "westus2"
+  location = var.az_region
 }
 
 resource "azurerm_virtual_network" "polling_app_virt_net" {
@@ -141,13 +149,13 @@ resource "azurerm_linux_virtual_machine" "polling_app_vm" {
   resource_group_name = azurerm_resource_group.polling_app.name
   location            = azurerm_resource_group.polling_app.location
   size                = "Standard_B1ls"
-  admin_username      = "adminuser"
+  admin_username      = var.admin_user
   network_interface_ids = [
     azurerm_network_interface.polling_app_network_interface.id,
   ]
 
   admin_ssh_key {
-    username   = "adminuser"
+    username   = var.admin_user
     public_key = file("~/.ssh/azure/id_rsa.pub")
   }
 

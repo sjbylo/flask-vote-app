@@ -1,0 +1,7 @@
+- name: install config on webserver
+  hosts: webserver
+  remote_user: adminuser
+  roles:
+    - webserver
+  vars_files:
+    - vars/vars.yaml

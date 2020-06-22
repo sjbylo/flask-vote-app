@@ -1,0 +1,4 @@
+---
+repository: https://github.com/loganballard/flask-vote-app.git
+ansible_python_interpreter: /usr/bin/python3.6
+proj_dir: /home/adminuser

@@ -14,3 +14,6 @@ flask.rc
 # Terraform
 *.tfstate*
 .terraform
+
+# Ansible
+env.yaml

@@ -1,0 +1,12 @@
+[Unit]
+Description=Polling App
+
+[Service]
+Restart=on-failure
+RestartSec=5s
+
+ExecStart={{ proj_dir }}/venv/bin/python3.6 {{ proj_dir }}/flask-vote-app/app.py
+EnvironmentFile=/var/local/env_vars
+
+[Install]
+WantedBy=multi-user.target
