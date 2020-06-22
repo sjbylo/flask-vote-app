@@ -1,0 +1,43 @@
+---
+- name: Copy the code from repository
+  git:
+    repo: "{{ repository }}"
+    dest: "{{ proj_dir }}/flask-vote-app"
+    force: yes      
+
+- name: Install pip dependencies
+  pip:
+    requirements: "{{ proj_dir }}/flask-vote-app/requirements.txt"
+    virtualenv: "{{ proj_dir }}/venv"
+
+- name: include the environment vars necessary for running the script
+  include_vars:
+    file: env.yaml
+    name: mysql_vars
+
+- name: configure database
+  command: "/usr/bin/mysql -h {{ mysql_vars.DB_HOST }} -u {{ mysql_vars.DB_USER }} -p'{{ mysql_vars.DB_PASS }}' -e 'CREATE DATABASE IF NOT EXISTS {{ mysql_vars.DB_NAME }};'"
+
+- name: install app service env_vars file
+  template:
+    src: templates/env_vars.j2
+    dest: /var/local/env_vars
+    owner: root
+    mode: '0644'
+  become: yes
+
+- name: install polling app system service
+  template:
+    src: templates/pollingapp.service.j2
+    dest: /etc/systemd/system/pollingapp.service
+    owner: root
+    mode: '0644'
+  become: yes
+
+- name: start polling app service
+  systemd:
+    name: pollingapp
+    state: started
+    enabled: yes
+    daemon_reload: yes
+  become: yes

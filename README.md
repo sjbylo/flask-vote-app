@@ -1,38 +1,37 @@
-# flask-vote-app
+# DevOps Ramp Up
+
+This is mainly an excuse to learn Azure as well as work on DevOps-y best practices.  I originally forked this repo from the `flask-vote-app` in an effort to grab a simple and reliable service that could easily be deployed.  I walked through various ways to deploy locally, in cloud, with automated tooling, and (eventually), automatically.
+
+This README is for how to deploy this app locally.  Once that's mastered, pop over to the `ops` folder to see the real meat of the development.
+
+# Ops
+
+See `ops/README.md` for more...
+
+# Local
+
+### flask-vote-app
 A sample web poll application written in Python (Flask).
 
 Users will be prompted with a poll question and related options. They can vote preferred option(s) and see poll results as a chart. Poll results are then loaded into an internal DB based on sqlite. As alternative, the application can store poll results in an external MySQL database.
 
 This application is intended for demo use only.
 
-## Local deployment
-
-This application can be deployed locally. On linux, install git and clone the repository:
-
-```
-sudo yum install -y git
-git clone https://github.com/sjbylo/flask-vote-app
-cd flask-vote-app
-```
+#### Deployment
 
 Install the dependencies:
 
 ```
-pip install flask
-pip install flask-sqlalchemy
-pip install mysqlclient
+$ pip3 install -r requirements.txt
 ```
 
-and start the application:
+start the application:
 
 ```
-python app.py
-Check if a poll already exists in the db
-...
-* Running on http://0.0.0.0:8080/ (Press CTRL+C to quit)
+$ python3 app.py
 ```
 
-View the app in the browser.  The test script can also be used to test the vote app:
+View the app in the browser. 
 
 Poll question and options are loaded from a JSON file called ``seed_data.json`` under the ``./seeds`` directory. 
 This file is filled with default values, change it before starting the application.
@@ -56,8 +55,8 @@ Make sure an external MySQL database server is running according to the paramete
 Source the file and restart the application:
 
 ```
-source flask.rc
-python app.py
+$ source flask.rc
+(flask) $ python3 app.py
 ```
 
 Cleanup:

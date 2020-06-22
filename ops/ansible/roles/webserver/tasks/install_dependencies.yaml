@@ -1,0 +1,14 @@
+---
+- name: Install python3-pip, mysql
+  apt:
+    name: ["python3-pip", "libmysqlclient-dev", "mysql-client-core-5.7"]
+    state: present
+    update_cache: yes
+  become: yes
+  
+- name: Install pip virtualenv
+  pip:
+    name: virtualenv
+    executable: pip3
+  become: yes
+
