@@ -8,6 +8,10 @@ variable "mysql_admin_password" {
   type = string
 }
 
+variable "mysql_db_name" {
+  type = string
+}
+
 variable "admin_user" {
   type = string
 }
@@ -201,4 +205,36 @@ resource "azurerm_mysql_firewall_rule" "polling_app_db_firewall" {
   server_name         = azurerm_mysql_server.polling_app_db.name
   start_ip_address    = azurerm_linux_virtual_machine.polling_app_vm.public_ip_address
   end_ip_address      = azurerm_linux_virtual_machine.polling_app_vm.public_ip_address
+}
+
+resource "local_file" "ansible_env_vars" {
+  sensitive_content = <<-E0T
+    ---
+    DB_HOST: ${azurerm_mysql_server.polling_app_db.fqdn}
+    DB_PORT: 3306
+    DB_NAME: ${var.mysql_db_name}
+    DB_USER: ${azurerm_mysql_server.polling_app_db.administrator_login}@${azurerm_mysql_server.polling_app_db.name}
+    DB_PASS: ${var.mysql_admin_password}
+    DB_TYPE: mysql
+    ENDPOINT_ADDRESS: ${azurerm_mysql_server.polling_app_db.name}
+    PORT: 3306
+    MASTER_USERNAME: ${azurerm_mysql_server.polling_app_db.administrator_login}@${azurerm_mysql_server.polling_app_db.name}
+    MASTER_PASSWORD: ${var.mysql_admin_password}
+    E0T
+  filename          = "${path.module}/../ansible/roles/webserver/vars/env.yaml"
+  file_permission   = "0444"
+}
+
+resource "local_file" "ansible_dynamic_inventory" {
+  content         = <<-E0T
+    ---
+    plugin: azure_rm
+    include_vm_resource_groups:
+      - ${azurerm_resource_group.polling_app.name}
+    auth_source: cli
+    conditional_groups:
+      webserver: true  # add all to webserver group
+    E0T
+  filename        = "${path.module}/../ansible/inventory.azure_rm.yaml"
+  file_permission = "0444"
 }

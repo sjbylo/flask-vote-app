@@ -408,7 +408,7 @@ Ansible needs to load the environment vars from the `env.yaml` file.  From there
 
 So much easier than doing it manually!
 
-#### 3.5 Creating Service
+#### 3.5: Creating Service
 
 From here, instead of running things as a command-line tool, which opens us up to all sorts of problems, lets instead run things as a [systemd Service](https://www.freedesktop.org/software/systemd/man/systemd.service.html).  This will make everything much more resilient and managed by a reliable process.  We define a basic unit service file:
 
@@ -487,7 +487,7 @@ This command tells ansible to run the playbook `main.yaml` against the hosts in 
 
 ![Ansible'd AF](./img/06.jpg).
 
-### 3.7 Recap
+### 3.7: Recap
 
 This is a lot better!  We started out by provisioning everything manually on the Azure Portal, then doing all configuration management manually through SSH.  Now the process looks more like this:
 
@@ -508,3 +508,91 @@ There are few steps that I'd like to improve on from here.  The list from above 
 - Run `ansible-playbook`
 
 There has to be a way that we can automatically tie these two steps into each other.  Even though we are crushing it, can we do better?
+
+## 4: Unite Terraform and Ansible
+
+One thing still bothering me about this setup is the lack of automatic ansible and terraform integration.  Because you still have to take the output from terraform and feed it manually into ansible, there's still a human intervention step! That's not going to cut it.  How do we fix it?
+
+##### 4.1: Identify Manual Steps
+
+Here, the only step that I'm manually taking is the creation of two files:
+
+- `./ops/ansible/hosts`
+- `./ops/ansible/roles/webserver/vars/env.yaml`
+
+However, `hosts` will take the IP address of the VM instance that is created by terraform, and `env.yaml` is used to set environment variables that _could_ be defined by terraform previously in the pipeline.  We can tackle this problem in two different ways.  Because Ansible handle dynamic inventory gracefully using [dynamic inventory plugins](https://docs.ansible.com/ansible/latest/user_guide/intro_dynamic_inventory.html), we can eliminate the `hosts` file entirely and rely on tagging to allow Ansible to interact with our provisioned VMs.  For `env.yaml`, I can write this file simply by using a `local_file` write.
+
+#### 4.2: Dynamic Inventory
+
+In order to provision the inventory automatically, we first have to find the correct plugin for ansible.  Fortunately Microsoft's [documentation provides a thorough guide](https://docs.microsoft.com/en-us/azure/developer/ansible/dynamic-inventory-configure). After configuring my Ansible cfg file in `/etc/ansible/ansible.cfg` to enable the azure-rm dynamic inventory plugin (line 327), I was well on my way.
+
+I configured a dynamic inventory to be present using the ansible/azure CLI, and set it to the resource group created in terraform:
+
+```
+plugin: azure_rm
+include_vm_resource_groups:
+- prod_polling_app
+auth_source: cli
+
+conditional_groups:
+    webserver: true  # add all to webserver group
+```
+
+Now Terraform can be run, then after `env.yaml` is configured, Ansible can be run:
+
+```
+tf
+** configure env.yaml **
+ansible
+```
+
+#### 4.3: Terraform File Creation
+
+Terraform has the ability to write out a file after completing a `terraform apply` step, which will come in handy here.  In order to do this, I create a `local_file` write to create the `env.yaml` file which I need.  Because we're adding a new resource, you'll have to run `terraform init` to correctly use the "local_file" provisioner.  After running that, I added:
+
+```
+resource "local_file" "ansible_env_vars" {
+  sensitive_content = <<-E0T
+    ---
+    DB_HOST: ${azurerm_mysql_server.polling_app_db.fqdn}
+    DB_PORT: 3306
+    DB_NAME: ${var.mysql_db_name}
+    DB_USER: ${azurerm_mysql_server.polling_app_db.administrator_login}@${azurerm_mysql_server.polling_app_db.name}
+    DB_PASS: ${var.mysql_admin_password}
+    DB_TYPE: mysql
+    ENDPOINT_ADDRESS: ${azurerm_mysql_server.polling_app_db.name}
+    PORT: 3306
+    MASTER_USERNAME: ${azurerm_mysql_server.polling_app_db.administrator_login}@${azurerm_mysql_server.polling_app_db.name}
+    MASTER_PASSWORD: ${var.mysql_admin_password}
+    E0T
+  filename          = "${path.module}/../ansible/roles/webserver/vars/env.yaml"
+}
+```
+
+This will auto-populate the yaml with the required values from the terraform run and will plop the file into the `vars` directory in ansible.  In addition, I do the same thing with the dynamic inventory configuration file:
+
+```
+resource "local_file" "ansible_dynamic_inventory" {
+  sensitive_content = <<-E0T
+    ---
+    plugin: azure_rm
+    include_vm_resource_groups:
+    - ${azurerm_resource_group.polling_app.name}
+    auth_source: cli
+
+    conditional_groups:
+    webserver: true  # add all to webserver group
+    E0T
+  filename          = "${path.module}/../ansible/inventory.azure_rm.yaml"
+  file_permission   = "0444"
+}
+```
+
+From there, now we can eliminate the manual `env.yaml` and `inventory.azure_rm.yaml` file creation such that we can straight from running terraform to running ansible:
+
+```
+$ terraform apply --var-file=prod.tfvars
+$ cd ../ansible/ && ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory.azure_rm.yaml --private-key ~/.ssh/azure/id_rsa main.yaml
+```
+
+And we're pretty much able to run this all automatically!

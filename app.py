@@ -13,10 +13,8 @@ cache = {}
 cache['fail'] = 0
 
 basedir = os.path.abspath(os.path.dirname(__file__))
+
 logpath = ''.join((basedir, os.sep, 'logs', os.sep, 'app.log'))
-open(logpath, 'w+') # create file if it doesn't exist
-
-
 logging.basicConfig(
     level=logging.INFO, 
     filename=logpath,
