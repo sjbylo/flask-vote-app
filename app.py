@@ -28,13 +28,6 @@ dbuser  = os.environ.get('DB_USER', '')
 dbpass  = os.environ.get('DB_PASS', '')
 dbtype  = os.environ.get('DB_TYPE', '')
 
-# dbhost  = os.environ.get('ENDPOINT_ADDRESS', 'db')
-# dbport  = os.environ.get('PORT', '3306')
-# dbname  = os.environ.get('DB_NAME', 'vote')
-# dbuser  = os.environ.get('MASTER_USERNAME', 'user')
-# dbpass  = os.environ.get('MASTER_PASSWORD', 'password')
-# dbtype  = os.environ.get('DB_TYPE', '')
-
 if dbtype == 'mysql':
    dburi  = dbtype + '://' + dbuser + ':' + dbpass + '@' + dbhost + ':' + dbport + '/' + dbname
 elif dbtype == 'postgresql':
@@ -50,8 +43,8 @@ db = SQLAlchemy(app)
 
 class Poll(db.Model):
   id       = db.Column(db.Integer, primary_key=True)
-  name     = db.Column(db.String(30), unique=True)
-  question = db.Column(db.String(90))
+  name     = db.Column(db.String(100), unique=True)
+  question = db.Column(db.String(200))
   stamp    = db.Column(db.DateTime)
   options  = db.relationship('Option', backref='option', lazy='dynamic')
 
@@ -64,7 +57,7 @@ class Poll(db.Model):
 
 class Option(db.Model):
   id      = db.Column(db.Integer, primary_key=True)
-  text    = db.Column(db.String(30))
+  text    = db.Column(db.String(100))
   poll_id = db.Column(db.Integer, db.ForeignKey('poll.id'))
   poll    = db.relationship('Poll', backref=db.backref('poll', lazy='dynamic'))
   votes   = db.Column(db.Integer)
@@ -75,7 +68,6 @@ class Option(db.Model):
       self.votes = votes
 
 @app.route('/')
-
 @app.route('/index.html')
 def index():
     return render_template('index.html', hostname=hostname, poll=poll)
@@ -143,10 +135,12 @@ if __name__ == '__main__':
                    option = Option(i, poll, 0)
                    db.session.add(option)
                db.session.commit()
+               logging.info("New Poll started a new poll")
 
-       except:
-          logging.info("Cannot load seed data from file")
-          poll = Poll("", "")
+       except Exception as e:
+           logging.error(e)
+           logging.info("Cannot load seed data from file")
+           poll = Poll("", "")
 
     app.run(host='0.0.0.0', port=8080, debug=False)
 

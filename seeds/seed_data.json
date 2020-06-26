@@ -1,15 +1,15 @@
 {
-   "poll": "Favorite Fast and Furious Movie",
+   "poll": "FF",
    "question": "What is your favorite Fast and Furious Movie?",
    "options": [
 	"The Fast and the Furious",
 	"2 Fast 2 Furious",
-	"The Fast and the Furious 3: Tokyo Drift",
+	"Tokyo Drift",
 	"Fast and Furious",
 	"Fast Five",
 	"Fast and Furious 6",
 	"Furious 7",
-	"F8: The Fate of the Furious",
+	"The Fate of the Furious",
 	"Hobbes and Shaw"
    ]
 }
