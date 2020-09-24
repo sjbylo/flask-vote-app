@@ -1,0 +1,17 @@
+apiVersion: azure.microsoft.com/v1alpha1
+kind: MySQLFirewallRule
+metadata:
+  name: aro-demo-mysqlfirewallrule
+spec:
+  resourceGroup: aro-demo
+  server: aro-demo-mysqlserver
+  startIpAddress: 219.74.209.13
+  endIpAddress: 219.74.209.13
+#  startIpAddress: 18.136.253.38
+#  endIpAddress: 18.136.253.38
+# Only for Azure services
+#  startIpAddress: 0.0.0.0
+#  endIpAddress: 0.0.0.0
+# Public
+#  startIpAddress: 0.0.0.0
+#  endIpAddress: 255.255.255.255

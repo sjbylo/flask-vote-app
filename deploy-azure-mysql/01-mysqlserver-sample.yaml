@@ -1,0 +1,19 @@
+apiVersion: azure.microsoft.com/v1alpha2
+kind: MySQLServer
+metadata:
+  name: aro-demo-mysqlserver
+  labels:
+    test: aro-demo
+spec:
+  createMode: Default
+  location: australiaeast
+  resourceGroup: aro-demo
+  serverVersion: '8.0'
+  sku:
+    capacity: 4
+    family: Gen5
+    name: GP_Gen5_4
+    size: '51200'
+    tier: GeneralPurpose
+  sslEnforcement: Disabled
+

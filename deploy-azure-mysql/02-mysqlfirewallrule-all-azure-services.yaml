@@ -1,0 +1,10 @@
+apiVersion: azure.microsoft.com/v1alpha1
+kind: MySQLFirewallRule
+metadata:
+  name: mysqlfirewallrule-all-azure-services
+spec:
+  resourceGroup: aro-demo
+  server: aro-demo-mysqlserver
+# Only for Azure services
+  startIpAddress: 0.0.0.0
+  endIpAddress: 0.0.0.0
