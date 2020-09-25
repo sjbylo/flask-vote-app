@@ -278,9 +278,20 @@ As an example, create an account at https://che.openshift.io/ and then open this
 https://che.openshift.io/f?url=https://github.com/sjbylo/flask-vote-app
 
 
+## Tekton CI/CD Pipeline on OpenShift 4.4
 
+This pipeline will provision a MySQL server in Azure, build the vote app, launch the app and connect it to the MySQL database. 
+For this pipeline to work fist set up the [Azure Servie Operator](https://github.com/Azure/azure-service-operator) on OpenShift.
 
+Create the Tekton Pipline in a new project called vote-app:
+```
+oc new-project vote-app
+cd pipeline
+oc create -f .
+```
 
-
-
+To trigger the CI/CD pipeline either go to the OpenShift Console and start the pipeline or run the following command.  tkn cli can be downloaded from the OpenShift Console. 
+```
+tkn pipeline start build-and-deploy -r git-repo=vote-app-source -r image=vote-app-image -p deployment-name=vote-app
+```
 
