@@ -1,0 +1,19 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: vote-app-delete
+  labels:
+    app: vote-app-pipeline
+spec:
+  params:
+  - name: deployment-name
+    type: string
+    description: name of the deployment to be patched
+    default: "vote-app"
+  tasks:
+  - name: app-cleanup
+    params:
+    - name: label
+      value: $(params.deployment-name)
+    taskRef:
+      name: vote-app-cleanup

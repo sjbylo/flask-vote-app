@@ -1,0 +1,99 @@
+apiVersion: tekton.dev/v1beta1
+kind: ClusterTask
+metadata:
+  annotations:
+    manifestival: new
+  creationTimestamp: "2020-09-08T02:51:38Z"
+  generation: 19
+  labels:
+    operator.tekton.dev/provider-type: community
+  name: git-clone
+  ownerReferences:
+  - apiVersion: operator.tekton.dev/v1alpha1
+    blockOwnerDeletion: true
+    controller: true
+    kind: Config
+    name: cluster
+    uid: 616df169-7318-4298-af5a-9b81dbea9ae0
+  resourceVersion: "25190243"
+  selfLink: /apis/tekton.dev/v1beta1/clustertasks/git-clone
+  uid: 4f060a0d-81f8-4545-b39d-f9b76de60ed8
+spec:
+  params:
+  - description: git url to clone
+    name: url
+    type: string
+  - default: master
+    description: git revision to checkout (branch, tag, sha, ref…)
+    name: revision
+    type: string
+  - default: ""
+    description: (optional) git refspec to fetch before checking out revision
+    name: refspec
+    type: string
+  - default: "true"
+    description: defines if the resource should initialize and fetch the submodules
+    name: submodules
+    type: string
+  - default: "1"
+    description: performs a shallow clone where only the most recent commit(s) will
+      be fetched
+    name: depth
+    type: string
+  - default: "true"
+    description: defines if http.sslVerify should be set to true or false in the global
+      git config
+    name: sslVerify
+    type: string
+  - default: ""
+    description: subdirectory inside the "output" workspace to clone the git repo
+      into
+    name: subdirectory
+    type: string
+  - default: "false"
+    description: clean out the contents of the repo's destination directory (if it
+      already exists) before trying to clone the repo there
+    name: deleteExisting
+    type: string
+  - default: ""
+    description: git HTTP proxy server for non-SSL requests
+    name: httpProxy
+    type: string
+  - default: ""
+    description: git HTTPS proxy server for SSL requests
+    name: httpsProxy
+    type: string
+  - default: ""
+    description: git no proxy - opt out of proxying HTTP/HTTPS requests
+    name: noProxy
+    type: string
+  results:
+  - description: The precise commit SHA that was fetched by this Task
+    name: commit
+  steps:
+  - image: gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init:v0.12.1
+    name: clone
+    resources: {}
+    script: "CHECKOUT_DIR=\"$(workspaces.output.path)/$(params.subdirectory)\"\n\nid\necho
+      $(workspaces.output.path) / $(params.subdirectory)\ntouch $(workspaces.output.path)/tt\nls
+      -ld $CHECKOUT_DIR\nls -ld  /workspace\nls -l  /workspace\nls -l  $CHECKOUT_DIR\n\ncleandir()
+      {\n  # Delete any existing contents of the repo directory if it exists.\n  #\n
+      \ # We don't just \"rm -rf $CHECKOUT_DIR\" because $CHECKOUT_DIR might be \"/\"\n
+      \ # or the root of a mounted volume.\n  if [[ -d \"$CHECKOUT_DIR\" ]] ; then\n
+      \   # Delete non-hidden files and directories\n    rm -rf \"$CHECKOUT_DIR\"/*\n
+      \   # Delete files and directories starting with . but excluding ..\n    rm
+      -rf \"$CHECKOUT_DIR\"/.[!.]*\n    # Delete files and directories starting with
+      .. plus any other character\n    rm -rf \"$CHECKOUT_DIR\"/..?*\n  fi\n}\n\nif
+      [[ \"$(params.deleteExisting)\" == \"true\" ]] ; then\n  cleandir\nfi\n\ntest
+      -z \"$(params.httpProxy)\" || export HTTP_PROXY=$(params.httpProxy)\ntest -z
+      \"$(params.httpsProxy)\" || export HTTPS_PROXY=$(params.httpsProxy)\ntest -z
+      \"$(params.noProxy)\" || export NO_PROXY=$(params.noProxy)\n\n/ko-app/git-init
+      \\\n  -url \"$(params.url)\" \\\n  -revision \"$(params.revision)\" \\\n  -refspec
+      \"$(params.refspec)\" \\\n  -path \"$CHECKOUT_DIR\" \\\n  -sslVerify=\"$(params.sslVerify)\"
+      \\\n  -submodules=\"$(params.submodules)\" \\\n  -depth \"$(params.depth)\"\ncd
+      \"$CHECKOUT_DIR\"\nRESULT_SHA=\"$(git rev-parse HEAD | tr -d '\\n')\"\nEXIT_CODE=\"$?\"\nif
+      [ \"$EXIT_CODE\" != 0 ]\nthen\n  exit $EXIT_CODE\nfi\n# Make sure we don't add
+      a trailing newline to the result!\nfind .  \necho -n \"$RESULT_SHA\" > $(results.commit.path)\n"
+  workspaces:
+  - description: The git repo will be cloned onto the volume backing this workspace
+    name: output

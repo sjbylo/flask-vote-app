@@ -1,0 +1,27 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: smoke-test-task
+  labels:
+    app: vote-app-pipeline
+spec:
+  params:
+    - name: test-script
+      description: The test script to run
+      type: string
+      default: "./test-vote-app"
+  workspaces:
+  - name: source
+  steps:
+    - name: apply
+      image: quay.io/openshift/origin-cli:latest
+      workingDir: /workspace/source
+      script: |
+        echo -----------------------------------
+        echo Run the test script ...
+        R=$(oc get `oc get route --no-headers -oname --sort-by=.metadata.creationTimestamp | tail -1` --template={{.spec.host}})
+        $(inputs.params.test-script) $R || sleep 2  # Sometimes see errors in the intial tests
+        $(inputs.params.test-script) $R || sleep 4
+        $(inputs.params.test-script) $R || true
+        echo -----------------------------------
+        exit 0

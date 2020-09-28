@@ -1,0 +1,27 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: apply-manifests
+  labels:
+    app: vote-app-pipeline
+spec:
+  workspaces:
+  - name: source
+  params:
+    - name: manifest_dir
+      description: The directory in source that contains yaml manifests
+      type: string
+      default: "k8s"
+  steps:
+    - name: apply
+      image: quay.io/openshift/origin-cli:latest
+      workingDir: /workspace/source
+      command: ["/bin/bash", "-c"]
+      args:
+        - |-
+          pwd
+          ls -l $(inputs.params.manifest_dir)
+          echo Applying manifests in $(inputs.params.manifest_dir) directory
+          echo oc apply -f $(inputs.params.manifest_dir)
+          oc apply -f $(inputs.params.manifest_dir)
+          echo -----------------------------------

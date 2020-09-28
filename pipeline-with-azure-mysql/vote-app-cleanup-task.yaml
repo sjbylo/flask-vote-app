@@ -1,0 +1,23 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: vote-app-cleanup
+  labels:
+    app: vote-app-pipeline
+spec:
+  params:
+  - name: label
+    type: string
+  steps:
+    - name: run
+      image: quay.io/openshift/origin-cli:latest
+      script: |
+        echo -----------------------------------
+        echo Deleting deployment, app and DB ...
+        oc delete  mysqlservers,mysqlfirewallrule,mysqluser,mysqldatabase --all 
+        #oc delete  pipelinerun,taskrun --all 
+        #oc delete  deploy,po,svc,route,is --all 
+        oc delete deploy,svc,route,is -l app=$(params.label)
+        echo -----------------------------------
+        exit 0
+

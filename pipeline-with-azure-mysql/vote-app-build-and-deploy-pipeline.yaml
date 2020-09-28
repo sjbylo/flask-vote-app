@@ -1,0 +1,107 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: vote-app-build-and-deploy
+  labels:
+    app: vote-app-pipeline
+spec:
+  workspaces:
+  - name: shared-workspace
+  params:
+  - name: deployment-name
+    type: string
+    description: name of the deployment to be patched
+  - name: git-url
+    type: string
+    description: url of the git repo for the code of deployment
+  - name: git-revision
+    type: string
+    description: revision to be used from repo of the code for deployment
+    default: "master"
+  - name: IMAGE
+    type: string
+    description: image to be build from the code
+  tasks:
+  - name: fetch-repository
+    taskRef:
+      name: git-clone
+      kind: ClusterTask
+    workspaces:
+    - name: output
+      workspace: shared-workspace
+    params:
+    - name: url
+      value: $(params.git-url)
+    - name: subdirectory
+      value: ""
+    - name: deleteExisting
+      value: "true"
+    - name: revision
+      value: $(params.git-revision)
+  - name: build-image
+    taskRef:
+      name: buildah-new
+      kind: Task
+    params:
+    - name: TLSVERIFY
+      value: "false"
+    - name: IMAGE
+      value: $(params.IMAGE)
+    workspaces:
+    - name: source
+      workspace: shared-workspace
+    runAfter:
+    - fetch-repository
+  - name: provision-db
+    params:
+    - name: manifest_dir
+      value: deploy-azure-mysql
+    taskRef:
+      name: apply-manifests
+    workspaces:
+    - name: source
+      workspace: shared-workspace
+    runAfter:
+    - fetch-repository
+  - name: deploy-app
+    params:
+    - name: manifest_dir
+      value: deploy
+    taskRef:
+      name: apply-manifests
+    workspaces:
+    - name: source
+      workspace: shared-workspace
+    runAfter:
+    - build-image
+  - name: update-deployment
+    taskRef:
+      name: update-deployment
+    params:
+    - name: deployment
+      value: $(params.deployment-name)
+    - name: IMAGE
+      value: $(params.IMAGE)
+    runAfter:
+    - deploy-app
+  - name: connect-to-db
+    taskRef:
+      name: update-deployment-set-env
+    params:
+    - name: deployment
+      value: $(params.deployment-name)
+    - name: db-server-user
+      value: 'aro-demo-mysqluser'
+    runAfter:
+    - update-deployment
+  - name: smoke-test
+    taskRef:
+      name: smoke-test-task
+#    params:
+#    - name: test-script
+#      value: "deploy"
+    runAfter:
+    - connect-to-db
+    workspaces:
+    - name: source
+      workspace: shared-workspace

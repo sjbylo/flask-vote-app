@@ -1,0 +1,49 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: update-deployment-set-env
+  labels:
+    app: vote-app-pipeline
+spec:
+#  resources:
+  params:
+    - name: deployment
+      description: The name of the deployment 
+      type: string
+    - name: db-server-user
+      description: The name of the db
+      type: string
+    - name: verbose
+      description: Script verbose output
+      type: string
+      default: 'true'
+  steps:
+    - name: deployment-set-env
+      image: quay.io/openshift/origin-cli:latest
+      script: |
+        #!/bin/sh
+        set -eu -o pipefail
+        if [[ "$(params.verbose)" == "true" ]] ; then
+          set -x
+        fi
+
+        echo "Waiting for database user's credentials to be provisioned ..."
+        until oc get secret $(params.db-server-user) 2>/dev/null >&2
+        do
+                sleep 3; echo -n .
+        done
+        echo
+
+        echo "Extract the db user's password etc ..."
+        eval `oc get secret $(params.db-server-user) \
+          -o go-template='{{range $k,$v := .data}}{{printf "%s='\''" $k}}{{if not $v}}{{$v}}{{else}}{{$v | base64decode}}{{end}}{{"'\''\n"}}{{end}}'`
+
+        echo "Inject the MySQL env vars into app ..."
+        oc set env deployment vote-app \
+          ENDPOINT_ADDRESS=$fullyQualifiedServerName \
+          DB_NAME=$MySqlDatabaseName \
+          MASTER_USERNAME=$username@$MySqlServerName \
+          MASTER_PASSWORD=$password \
+          PORT=3306 \
+          DB_TYPE=mysql
+
