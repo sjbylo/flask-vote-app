@@ -6,6 +6,8 @@ spec:
   server: aro-demo-mysqlserver
   dbName: vote
   resourceGroup: aro-demo
+  # Specify a specific username for the user
+  username: user
   roles: 
   #now only supports to grant privileges to a new user, the privileges could be one or more of the below
   #SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, RELOAD, PROCESS, REFERENCES, INDEX, ALTER, SHOW DATABASES, 
@@ -19,8 +21,7 @@ spec:
     - CREATE
     - DROP 
     - REFERENCES
-  # Specify a specific username for the user
-  username: user
+  
   # Specify adminSecret and adminSecretKeyVault if you want to 
   # read the MYSQL server admin creds from a specific keyvault secret
   # adminSecret: somesecret
