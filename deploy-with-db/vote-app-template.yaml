@@ -10,6 +10,7 @@ objects:
       app: vote-app
       app.kubernetes.io/component: vote-app
       app.kubernetes.io/instance: vote-app
+      app.kubernetes.io/part-of: vote-app
     name: vote-app
   spec:
     replicas: 1
@@ -64,7 +65,8 @@ objects:
     labels:
       app: db
       app.kubernetes.io/component: db
-    app.kubernetes.io/instance: db
+      app.kubernetes.io/part-of: vote-app
+      app.kubernetes.io/instance: db
     name: db
   spec:
     replicas: 1
