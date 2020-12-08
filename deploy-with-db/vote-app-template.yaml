@@ -41,6 +41,7 @@ objects:
       app.kubernetes.io/component: vote-app
       app.kubernetes.io/instance: vote-app
       app.kubernetes.io/part-of: vote-app  # For topology view
+      app.openshift.io/runtime: python
     name: vote-app
   spec:
     replicas: 1
@@ -97,6 +98,7 @@ objects:
       app.kubernetes.io/component: db
       app.kubernetes.io/part-of: vote-app  # For topology view
       app.kubernetes.io/instance: db
+      app.openshift.io/runtime: mysql
     name: db
   spec:
     replicas: 1
