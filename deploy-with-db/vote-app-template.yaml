@@ -6,11 +6,13 @@ objects:
 - apiVersion: apps/v1
   kind: Deployment
   metadata:
+    annotations:
+      app.openshift.io/connects-to: '[{"apiVersion":"apps/v1","kind":"Deployment","name":"db"}]'  # For topology view
     labels:
       app: vote-app
       app.kubernetes.io/component: vote-app
       app.kubernetes.io/instance: vote-app
-      app.kubernetes.io/part-of: vote-app
+      app.kubernetes.io/part-of: vote-app  # For topology view
     name: vote-app
   spec:
     replicas: 1
@@ -29,11 +31,11 @@ objects:
           - name: PORT
             value: "3306"
           - name: DB_NAME
-            value: vote
+            value: ${MYSQL_DATABASE}
           - name: MASTER_USERNAME
-            value: user
+            value: ${MYSQL_USER}
           - name: MASTER_PASSWORD
-            value: password
+            value: ${MYSQL_PASSWORD}
           - name: DB_TYPE
             value: mysql
           image: quay.io/sjbylo/flask-vote-app:latest 
@@ -65,7 +67,7 @@ objects:
     labels:
       app: db
       app.kubernetes.io/component: db
-      app.kubernetes.io/part-of: vote-app
+      app.kubernetes.io/part-of: vote-app  # For topology view
       app.kubernetes.io/instance: db
     name: db
   spec:
@@ -81,11 +83,11 @@ objects:
         containers:
         - env:
           - name: MYSQL_DATABASE
-            value: vote
+            value: ${MYSQL_DATABASE}
           - name: MYSQL_PASSWORD
-            value: password
+            value: ${MYSQL_PASSWORD}
           - name: MYSQL_USER
-            value: user
+            value: ${MYSQL_USER}
           image: registry.access.redhat.com/rhscl/mysql-57-rhel7:latest
           imagePullPolicy: IfNotPresent
           name: db
@@ -125,4 +127,28 @@ objects:
       kind: Service
       name: vote-app
       weight: 100
-parameters: []
+parameters:
+- description: Username for MySQL user that will be used for accessing the database.
+  displayName: MySQL Connection Username
+  from: user[A-Z0-9]{3}
+  generate: expression
+  name: MYSQL_USER
+  required: true
+- description: Password for the MySQL connection user.
+  displayName: MySQL Connection Password
+  from: '[a-zA-Z0-9]{16}'
+  generate: expression
+  name: MYSQL_PASSWORD
+  required: true
+- description: Password for the MySQL root user.
+  displayName: MySQL root user Password
+  from: '[a-zA-Z0-9]{16}'
+  generate: expression
+  name: MYSQL_ROOT_PASSWORD
+  required: true
+- description: Name of the MySQL database accessed.
+  displayName: MySQL Database Name
+  name: MYSQL_DATABASE
+  required: true
+  value: sampledb
+
