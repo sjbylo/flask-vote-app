@@ -1,6 +1,34 @@
 apiVersion: v1
 kind: Template
+message: |-
+  The following service(s) have been created in your project: 
+
+         Username: ${MYSQL_USER}
+         Password: ${MYSQL_PASSWORD}
+    Database Name: ${MYSQL_DATABASE}
+
+  For more information about using this template see: https://github.com/sjbylo/flask-vote-app
 metadata:
+  annotations:
+    description: |-
+      Sample web poll application written in Python (Flask).
+    iconClass: icon-python
+    openshift.io/display-name: Simple voting application for demos
+    openshift.io/documentation-url: https://github.com/sjbylo/flask-vote-app
+    openshift.io/long-description: |-
+      This template provides a sample web poll application written in Python (Flask) which connects to a MySQL database.
+      \n
+      Users will be prompted with a poll question and related options. They can vote preferred option(s) and see poll results as a chart. Poll results are then loaded into an internal DB based on sqlite. As alternative, the application can store poll results in an external MySQL database.\n
+      \n
+      The repo has been modified to make it easy to build and run on OpenShift.\n
+      \n
+      The application has also been primed to be easily bound to RDS using the AWS's Service Catalog command line, svcat. Here is an example of that.\n
+      \n
+      This application is intended for demo use only.
+    #openshift.io/provider-display-name: Red Hat, Inc.
+    openshift.io/support-url: https://github.com/sjbylo/flask-vote-app
+    #samples.operator.openshift.io/version: 4.6.4
+    tags: database,mysql,python
   name: vote-app-template
 objects:
 - apiVersion: apps/v1
