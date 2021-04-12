@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: vote-app
+    app.kubernetes.io/component: vote-app
+    app.kubernetes.io/instance: vote-app
+  name: vote-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      deployment: vote-app
+  template:
+    metadata:
+      labels:
+        deployment: vote-app
+    spec:
+      containers:
+      - name: vote-app
+        image: quay.io/sjbylo/flask-vote-app:latest 
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+      restartPolicy: Always
