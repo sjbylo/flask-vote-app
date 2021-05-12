@@ -256,6 +256,7 @@ After the service has been created and the actual load balancer (e.g. ELB in AWS
 oc get svc
 NAME TYPE         CLUSTER-IP     EXTERNAL-IP                                                                  PORT(S)          
 db   LoadBalancer 172.30.193.154 a3faeda4dfe564b05ad14cd157bd2450-1000531162.ap-southeast-1.elb.amazonaws.com 3306:30392/TCP 
+
 mysql -u user -ppassword -h a3faeda4dfe564b05ad14cd157bd2450-1000531162.ap-southeast-1.elb.amazonaws.com
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 ...
@@ -281,7 +282,7 @@ https://che.openshift.io/f?url=https://github.com/sjbylo/flask-vote-app
 ## Tekton CI/CD Pipeline on OpenShift 4.4
 
 This pipeline will provision a MySQL server in Azure, build the vote app, launch the app and connect it to the MySQL database. 
-For this pipeline to work fist set up the [Azure Servie Operator](https://github.com/Azure/azure-service-operator) on OpenShift.
+For this pipeline to work fist set up the [Azure Servie Operator](https://github.com/sjbylo/lab-azure-service-operator) on OpenShift.
 
 Create the Tekton Pipline in a new project called vote-app:
 ```
@@ -294,4 +295,5 @@ To trigger the CI/CD pipeline either go to the OpenShift Console and start the p
 ```
 tkn pipeline start build-and-deploy -r git-repo=vote-app-source -r image=vote-app-image -p deployment-name=vote-app
 ```
+
 
