@@ -1,0 +1,38 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  labels:
+    app.kubernetes.io/instance: vote-app
+    pipeline.openshift.io/strategy: docker
+    pipeline.openshift.io/type: kubernetes
+    tekton.dev/pipeline: vote-app
+  name: vote-app-pipelinerun 
+spec:
+  params:
+  - name: APP_NAME
+    value: vote-app
+  - name: GIT_REPO
+    value: https://github.com/sjbylo/flask-vote-app.git
+  - name: GIT_REVISION
+    value: master
+  - name: IMAGE_NAME
+    value: image-registry.openshift-image-registry.svc:5000/demo/vote-app
+  - name: PATH_CONTEXT
+    value: .
+  pipelineRef:
+    name: vote-app
+  serviceAccountName: pipeline
+  timeout: 1h0m0s
+  workspaces:
+    - name: workspace
+      volumeClaimTemplate:
+        metadata:
+          creationTimestamp: null
+          labels:
+            tekton.dev/pipeline: vote-app
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
