@@ -6,7 +6,7 @@ metadata:
     pipeline.openshift.io/strategy: docker
     pipeline.openshift.io/type: kubernetes
     tekton.dev/pipeline: vote-app
-  name: vote-app-pipelinerun 
+  name: vote-app-pipelinerun-cve
 spec:
   params:
   - name: APP_NAME
@@ -14,7 +14,7 @@ spec:
   - name: GIT_REPO
     value: https://github.com/sjbylo/flask-vote-app.git
   - name: GIT_REVISION
-    value: master
+    value: roxctl-test
   - name: IMAGE_NAME
     value: image-registry.openshift-image-registry.svc:5000/demo/vote-app
   - name: PATH_CONTEXT

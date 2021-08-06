@@ -56,3 +56,12 @@ View the pipeline output with tkn (download tkn from the OpenShift Console)
 tkn pipelinerun logs -L -f
 ```
 
+## Troubleshooting
+
+Sometimes a 401 error can be seen when `roxctl` tries to access the internal registry.  A workaround for this is to delete (and re-generate) the secret:
+E.g.:
+```
+oc delete secrets pipeline-dockercfg-hcbcv
+```
+
+

@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: vote-app
+  name: vote-app-prod
   namespace: openshift-gitops
 spec:
   destination:
