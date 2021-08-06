@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vote-app
+spec:
+  destination:
+    namespace: acs-pipeline-demo
+    server: 'https://kubernetes.default.svc'
+  project: acs-pipeline-demo
+  source:
+    directory:
+      recurse: true
+    path: pipeline/deploy
+    repoURL: >-
+      https://repository-gitea.apps.cluster-zt8j9.zt8j9.sandbox659.opentlc.com/demo/flask-vote-app.git
+    targetRevision: master
