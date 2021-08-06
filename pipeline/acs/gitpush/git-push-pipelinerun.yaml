@@ -1,0 +1,49 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  annotations:
+    pipeline.openshift.io/started-by: opentlc-mgr
+  labels:
+    tekton.dev/pipeline: git-push-pipeline
+  name: git-push-pipeline
+spec:
+  params:
+  - name: GIT_SCRIPT
+    value: |-
+       git branch -v
+       git remote -v
+       git commit -m "Update" . && git push origin $(params.GIT_REVISION)
+#      pwd
+#      ls -a
+#      echo >> Dockerfile
+#      rm -rf * .??*
+#      ls -a
+#      git clone https://repository-gitea.apps.cluster-zt8j9.zt8j9.sandbox659.opentlc.com/demo/flask-vote-app.git .
+#      cd flask-vote-app
+#      git checkout roxctl-test
+#      echo "# test change" >> Dockerfile
+#      git commit -m "Test update to dockerfile" Dockerfile
+#      git push origin roxctl-test
+  pipelineRef:
+    name: git-push-pipeline
+  workspaces:
+  - name: basic-auth
+    secret:
+      secretName: git-basic-auth-secret
+  - name: source
+    persistentVolumeClaim:
+      claimName: pvc-5eb7ec060c
+
+#  workspaces:
+#    - name: workspace
+#      volumeClaimTemplate:
+#        metadata:
+#          creationTimestamp: null
+#          labels:
+#            tekton.dev/pipeline: vote-app
+#        spec:
+#          accessModes:
+#            - ReadWriteOnce
+#          resources:
+#            requests:
+#              storage: 1Gi
