@@ -47,7 +47,7 @@ spec:
     - name: CONTEXT
       value: $(params.PATH_CONTEXT)
     runAfter:
-    - scan-source
+    - sast
     taskRef:
       kind: ClusterTask
       name: buildah
@@ -71,7 +71,7 @@ spec:
     workspaces:
     - name: deployfiles
       workspace: workspace
-  - name: scan-source
+  - name: sast
     params:
     - name: SCRIPT
       value: echo "Scanning source code..."
@@ -108,7 +108,7 @@ spec:
       value: $(params.IMAGE_NAME)
     runAfter:
     - acs-image-scan
-    - check-scap
+    - oscap
     taskRef:
       kind: ClusterTask
       name: acs-image-check
@@ -128,7 +128,7 @@ spec:
     workspaces:
     - name: deployfiles
       workspace: workspace
-  - name: check-scap
+  - name: oscap
     params:
     - name: SCRIPT
       value: echo "Scanning image ..."

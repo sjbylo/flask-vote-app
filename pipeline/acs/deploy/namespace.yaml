@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: vote-app-prod
+  name: vote-app-uat
 spec:
   finalizers:
   - kubernetes
