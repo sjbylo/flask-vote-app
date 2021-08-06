@@ -2,10 +2,10 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: vote-app
-    app.kubernetes.io/component: vote-app
-    app.kubernetes.io/instance: vote-app
-  name: vote-app
+    app: vote-app-prod
+    app.kubernetes.io/component: vote-app-prod
+    app.kubernetes.io/instance: vote-app-prod
+  name: vote-app-prod
   namespace: vote-app-prod
 spec:
   ports:
@@ -13,6 +13,6 @@ spec:
     protocol: TCP
     targetPort: 8080
   selector:
-    deployment: vote-app
+    deployment: vote-app-prod
   sessionAffinity: None
   type: ClusterIP

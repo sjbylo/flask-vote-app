@@ -2,23 +2,23 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: vote-app
-    app.kubernetes.io/component: vote-app
-    app.kubernetes.io/instance: vote-app
-  name: vote-app
+    app: vote-app-prod
+    app.kubernetes.io/component: vote-app-prod
+    app.kubernetes.io/instance: vote-app-prod
+  name: vote-app-prod
   namespace: vote-app-prod
 spec:
   selector:
     matchLabels:
-      deployment: vote-app
+      deployment: vote-app-prod
   template:
     metadata:
       labels:
-        deployment: vote-app
+        deployment: vote-app-prod
     spec:
       containers:
       - image: image-registry.openshift-image-registry.svc:5000/acs-pipeline-demo/vote-app@sha256:7fc3a97ca1d2eab274f9a14a5a8933d88776436f83c26bcee47c32a3eb3ba3a9
-        name: vote-app
+        name: vote-app-prod
         ports:
         - containerPort: 8080
           protocol: TCP
