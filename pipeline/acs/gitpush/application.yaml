@@ -4,13 +4,13 @@ metadata:
   name: vote-app
 spec:
   destination:
-    namespace: acs-pipeline-demo
+    namespace: default
     server: 'https://kubernetes.default.svc'
-  project: acs-pipeline-demo
+  project: default
   source:
     directory:
-      recurse: true
-    path: pipeline/deploy
+      recurse: false
+    path: pipeline/acs/deploy
     repoURL: >-
       https://repository-gitea.apps.cluster-zt8j9.zt8j9.sandbox659.opentlc.com/demo/flask-vote-app.git
     targetRevision: master
