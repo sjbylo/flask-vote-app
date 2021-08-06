@@ -22,7 +22,7 @@ Following are the manual steps.
 Create a demo project
 
 ```
-oc new-project demo
+oc new-project acs-pipeline-demo
 ```
 
 Copy the provided ACS demo secret over (or export credentials from the ACS Console) 
