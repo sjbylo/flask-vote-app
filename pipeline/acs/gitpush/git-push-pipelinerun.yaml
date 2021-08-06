@@ -10,11 +10,12 @@ spec:
   params:
   - name: GIT_SCRIPT
     value: |-
-       git branch -v
-       git remote -v
-       git commit -m "Update" . && git push origin $(params.GIT_REVISION)
-#      pwd
-#      ls -a
+      pwd
+      ls -a
+      git branch -v
+      git remote -v
+      cp vote-app.yaml pipeline/acs/deploy/vote-app.yaml  # Hack
+      git add . && git commit -m "Update" . && git push origin $(params.GIT_REVISION)
 #      echo >> Dockerfile
 #      rm -rf * .??*
 #      ls -a
