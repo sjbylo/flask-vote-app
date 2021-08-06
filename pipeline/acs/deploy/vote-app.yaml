@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
 #      - image: image-registry.openshift-image-registry.svc:5000/acs-pipeline-demo/vote-app@sha256:7fc3a97ca1d2eab274f9a14a5a8933d88776436f83c26bcee47c32a3eb3ba3a9
-      - image: vote-app:prod
+      - image: image-registry.openshift-image-registry.svc:5000/vote-app-prod/vote-app:prod
         name: vote-app-prod
         ports:
         - containerPort: 8080
