@@ -47,7 +47,7 @@ To start the pipeline, use the following PipelineRun resource or to it from the 
 
 ```
 #oc create -f vote-app-pipelinerun-acs.yaml
-sed "s#/demo/#`oc project -q`#g" < vote-app-pipelinerun-acs.yaml | oc create -f - 
+sed "s#/project_name/#`oc project -q`#g" < vote-app-pipelinerun-acs.yaml | oc create -f - 
 ```
 
 View the pipeline output with tkn (download tkn from the OpenShift Console)

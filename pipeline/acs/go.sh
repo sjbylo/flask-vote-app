@@ -12,7 +12,7 @@ oc create -f vote-app-pipeline-acs.yaml
 
 oc delete pipelinerun vote-app-pipelinerun >/dev/null
 
-sed "s#/demo/#/`oc project -q`/#g" < vote-app-pipelinerun-acs.yaml | oc create -f - 
+sed "s#/project_name/#/`oc project -q`/#g" < vote-app-pipelinerun-acs.yaml | oc create -f - 
 
 tkn pipelinerun logs -L -f
 
