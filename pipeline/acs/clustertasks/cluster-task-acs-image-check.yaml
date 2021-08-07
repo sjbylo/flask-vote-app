@@ -31,4 +31,9 @@ spec:
     image: centos
     name: acs-image-check
     resources: {}
-    script: "#!/usr/bin/env bash\nset +x\ncurl -s -k -L -H \"Authorization: Bearer $ROX_API_TOKEN\" https://$ROX_CENTRAL_ENDPOINT/api/cli/download/roxctl-linux --output ./roxctl  > /dev/null\nchmod +x ./roxctl  > /dev/null\n./roxctl image check --print-all-violations --insecure-skip-tls-verify -e $ROX_CENTRAL_ENDPOINT --image $(params.image) "
+    script: |
+      #!/usr/bin/env bash
+      set -x
+      curl -s -k -L -H "Authorization: Bearer $ROX_API_TOKEN" https://$ROX_CENTRAL_ENDPOINT/api/cli/download/roxctl-linux --output ./roxctl  > /dev/null
+      chmod +x ./roxctl  > /dev/null
+      ./roxctl image check --print-all-violations --insecure-skip-tls-verify -e $ROX_CENTRAL_ENDPOINT --image $(params.image) 

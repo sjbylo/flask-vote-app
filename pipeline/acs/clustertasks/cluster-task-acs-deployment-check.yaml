@@ -35,9 +35,29 @@ spec:
     image: centos
     name: acs-deployment-check
     resources: {}
-    script: "#!/usr/bin/env bash\nset +x\n# Debug... \n#echo $POD_NAMESPACE \n#pwd\n#ls -l $(workspaces.deployfiles.path)\n#find $(workspaces.deployfiles.path) -type f | grep -i image-digest \n# Debug \nSHA=`cat $(workspaces.deployfiles.path)/image-digest` \n# Insert image into deployment \nsed \"s/image: .*/image: image-registry.openshift-image-registry.svc:5000\\/$POD_NAMESPACE\\/vote-app@$SHA/g\" < $(workspaces.deployfiles.path)/deploy-all/deployment/vote-app.yaml > $(workspaces.deployfiles.path)/$(params.file)\n#cat $(workspaces.deployfiles.path)/$(params.file)\ncurl -s -k -L -H \"Authorization: Bearer $ROX_API_TOKEN\" https://$ROX_CENTRAL_ENDPOINT/api/cli/download/roxctl-linux --output ./roxctl  > /dev/null\nchmod +x ./roxctl  > /dev/null\n./roxctl deployment check --insecure-skip-tls-verify -e $ROX_CENTRAL_ENDPOINT -f $(workspaces.deployfiles.path)/$(params.file) "
+    script: |
+      #!/usr/bin/env bash
+      set -x
+      # Debug... 
+      #echo $POD_NAMESPACE 
+      #pwd
+      #ls -l $(workspaces.deployfiles.path)
+      #find $(workspaces.deployfiles.path) -type f | grep -i image-digest 
+      # Debug 
+      SHA=`cat $(workspaces.deployfiles.path)/image-digest`   # Better to use the input?
+      # Insert image into deployment 
+      #sed "s/image: .*/image: image-registry.openshift-image-registry.svc:5000\\/$POD_NAMESPACE\\/vote-app@$SHA/g" < $(workspaces.deployfiles.path)/deploy-all/deployment/vote-app.yaml > $(workspaces.deployfiles.path)/$(params.file)
+
+      sed "s/name: vote-app@sha256.*/name: vote-app@$SHA/g" < $(workspaces.deployfiles.path)/deploy-all/deployment/image.yaml > $(workspaces.deployfiles.path)/pipeline/acs/deploy/image.yaml
+      cat $(workspaces.deployfiles.path)/pipeline/acs/deploy/image.yaml
+
+      #cat $(workspaces.deployfiles.path)/$(params.file)
+      curl -s -k -L -H "Authorization: Bearer $ROX_API_TOKEN" https://$ROX_CENTRAL_ENDPOINT/api/cli/download/roxctl-linux --output ./roxctl  > /dev/null
+      chmod +x ./roxctl  > /dev/null
+      ./roxctl deployment check --insecure-skip-tls-verify -e $ROX_CENTRAL_ENDPOINT -f $(workspaces.deployfiles.path)/$(params.file) 
   workspaces:
   - description: |
       The folder containing deployment files
     mountPath: /deployfile
     name: deployfiles
+

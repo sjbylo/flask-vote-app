@@ -12,10 +12,23 @@ spec:
     value: |-
       pwd
       ls -a
+      #git clone 
       git branch -v
       git remote -v
-      cp vote-app.yaml pipeline/acs/deploy/vote-app.yaml  # Hack
-      git add . && git commit -m "Update" . && git push origin $(params.GIT_REVISION)
+      #git checkout $(params.GIT_REVISION)
+      #git pull origin roxctl-test
+      git checkout roxctl-test || true
+      #echo >> vote-app.yaml
+      git status
+      test -f vote-app.yaml && cp vote-app.yaml pipeline/acs/deploy/vote-app.yaml  # Hack
+      ls 
+      git add .
+      git status
+      git commit -m "Build update" .
+      git status
+      #git push origin $(params.GIT_REVISION)
+      git push origin roxctl-test
+      git status
 #      echo >> Dockerfile
 #      rm -rf * .??*
 #      ls -a
@@ -33,7 +46,7 @@ spec:
       secretName: git-basic-auth-secret
   - name: source
     persistentVolumeClaim:
-      claimName: pvc-5eb7ec060c
+      claimName: pvc-85ae44d475
 
 #  workspaces:
 #    - name: workspace
