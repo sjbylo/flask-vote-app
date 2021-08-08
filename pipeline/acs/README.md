@@ -13,13 +13,15 @@ The branch can be chosen when starting the pipeline.
 
 First, spin up a demo cluster for Advanced Cluster Security (ACS) in RHPDS (warning, internal tool).
 
+Set up the secret `secret/git-basic-auth-secret.yaml` to access the repo you want to use. 
+
 If you're really impatient, you can try to run the "./go.sh" script.
 
 Following are the manual steps.
 
 ## Set up as cluster-admin 
 
-Create a demo project
+Create a demo project.  At the moment, the project needs to be named acs-pipeline-demo.
 
 ```
 oc new-project acs-pipeline-demo
@@ -34,7 +36,13 @@ oc get secret roxsecrets -o yaml -n stackrox-pipeline-demo | grep -v '^\s*namesp
 Some of the provided demo cluster tasks have been modified so add them:
 
 ```
-oc create -f clustertasks 
+oc create -f task
+```
+
+Create the secret for your repo:
+
+```
+oc create -f secret
 ```
 
 Create the pipeline
