@@ -1,6 +1,6 @@
 #!/bin/bash -x
 
-P=acs-pipeline-demo2
+P=acs-pipeline-demo
 
 oc new-project $P >/dev/null || oc project $P || exit 1
 
