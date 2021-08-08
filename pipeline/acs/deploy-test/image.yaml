@@ -10,7 +10,7 @@ spec:
   - annotations: null
     from:
       kind: ImageStreamImage
-      name: vote-app@sha256:a7a26a6a1ebfa4195aa822ee693c240b9513485a97e244f116e97dcb6ec7b5ed
+      name: vote-app@sha256:1b66314aebaeb2476dbfb4b99308808397ff4ce3e80c69aeea221fadb1819dd0
       namespace: acs-pipeline-demo
     name: vote-app
     referencePolicy:
