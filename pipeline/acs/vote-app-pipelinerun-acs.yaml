@@ -6,13 +6,12 @@ metadata:
     pipeline.openshift.io/strategy: docker
     pipeline.openshift.io/type: kubernetes
     tekton.dev/pipeline: vote-app
-  name: vote-app-pipelinerun
+  name: vote-app-new-run
 spec:
   params:
   - name: APP_NAME
     value: vote-app
   - name: GIT_REPO
-#    value: https://github.com/sjbylo/flask-vote-app.git
     value: https://simple-gitea-gitea.apps.cluster-s9tpk.s9tpk.sandbox222.opentlc.com/demo/flask-vote-app.git
   - name: GIT_REVISION
     value: master
@@ -25,15 +24,18 @@ spec:
   serviceAccountName: pipeline
   timeout: 1h0m0s
   workspaces:
-    - name: workspace
-      volumeClaimTemplate:
-        metadata:
-          creationTimestamp: null
-          labels:
-            tekton.dev/pipeline: vote-app
-        spec:
-          accessModes:
-            - ReadWriteOnce
-          resources:
-            requests:
-              storage: 1Gi
+  - name: workspace
+    volumeClaimTemplate:
+      metadata:
+        creationTimestamp: null
+        labels:
+          tekton.dev/pipeline: vote-app
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+  - name: basic-auth
+    secret:
+      secretName: git-basic-auth-secret
