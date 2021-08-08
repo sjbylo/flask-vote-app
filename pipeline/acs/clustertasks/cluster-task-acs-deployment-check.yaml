@@ -54,7 +54,7 @@ spec:
       #cat $(workspaces.deployfiles.path)/$(params.file)
       curl -s -k -L -H "Authorization: Bearer $ROX_API_TOKEN" https://$ROX_CENTRAL_ENDPOINT/api/cli/download/roxctl-linux --output ./roxctl  > /dev/null
       chmod +x ./roxctl  > /dev/null
-      ./roxctl deployment check --insecure-skip-tls-verify -e $ROX_CENTRAL_ENDPOINT -f $(workspaces.deployfiles.path)/$(params.file) 
+      ./roxctl deployment check --insecure-skip-tls-verify -e $ROX_CENTRAL_ENDPOINT -f $(workspaces.deployfiles.path)/pipeline/acs/deploy/deploy.yaml
   workspaces:
   - description: |
       The folder containing deployment files

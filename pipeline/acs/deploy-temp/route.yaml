@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/component: vote-app
     app.kubernetes.io/instance: vote-app
   name: vote-app
-  namespace: vote-app-uat
+  namespace: vote-app-test
 spec:
 #  host: vote-app-acs-pipeline-demo.apps.cluster-s9tpk.s9tpk.sandbox222.opentlc.com
   port:

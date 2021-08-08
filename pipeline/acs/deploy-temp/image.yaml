@@ -2,7 +2,7 @@ apiVersion: image.openshift.io/v1
 kind: ImageStream
 metadata:
   name: vote-app
-  namespace: vote-app-uat
+  namespace: vote-app-test
 spec:
   lookupPolicy:
     local: false
@@ -10,7 +10,7 @@ spec:
   - annotations: null
     from:
       kind: ImageStreamImage
-      name: vote-app@sha256:7fc3a97ca1d2eab274f9a14a5a8933d88776436f83c26bcee47c32a3eb3ba3a9
+      name: vote-app@sha256:a7a26a6a1ebfa4195aa822ee693c240b9513485a97e244f116e97dcb6ec7b5ed
       namespace: acs-pipeline-demo
     name: vote-app
     referencePolicy:
