@@ -6,7 +6,7 @@ oc new-project $P >/dev/null || oc project $P || exit 1
 
 oc get secret roxsecrets >/dev/null 2>&1 || oc get secret roxsecrets -o yaml -n stackrox-pipeline-demo | grep -v '^\s*namespace:\s' | oc create -f - || exit 1
 
-oc create -f clustertasks >/dev/null
+oc create -f tasks >/dev/null
 
 oc create -f vote-app-pipeline-acs.yaml
 
