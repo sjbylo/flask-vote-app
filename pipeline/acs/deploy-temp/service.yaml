@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: vote-app-uat
+    app.kubernetes.io/component: vote-app-uat
+    app.kubernetes.io/instance: vote-app-uat
+  name: vote-app-uat
+  namespace: vote-app-uat
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    deployment: vote-app-uat
+  sessionAffinity: None
+  type: ClusterIP
