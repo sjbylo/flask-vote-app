@@ -1,0 +1,158 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  labels:
+    app.kubernetes.io/instance: vote-app
+    pipeline.openshift.io/strategy: docker
+    pipeline.openshift.io/type: kubernetes
+  name: vote-app
+spec:
+  params:
+  - default: vote-app
+    name: APP_NAME
+    type: string
+  - default: https://github.com/sjbylo/flask-vote-app.git
+    name: GIT_REPO
+    type: string
+  - default: master
+    name: GIT_REVISION
+    type: string
+  - default: image-registry.openshift-image-registry.svc:5000/demo/vote-app
+    name: IMAGE_NAME
+    type: string
+  - default: .
+    name: PATH_CONTEXT
+    type: string
+  tasks:
+  - name: fetch-repository
+    params:
+    - name: url
+      value: $(params.GIT_REPO)
+    - name: revision
+      value: $(params.GIT_REVISION)
+    - name: deleteExisting
+      value: "true"
+    taskRef:
+      kind: ClusterTask
+      name: git-clone
+    workspaces:
+    - name: output
+      workspace: workspace
+  - name: build
+    params:
+    - name: IMAGE
+      value: $(params.IMAGE_NAME)
+    - name: TLSVERIFY
+      value: "false"
+    - name: CONTEXT
+      value: $(params.PATH_CONTEXT)
+    runAfter:
+    - sast
+    taskRef:
+      kind: ClusterTask
+      name: buildah
+    workspaces:
+    - name: source
+      workspace: workspace
+  - name: sast
+    params:
+    - name: SCRIPT
+      value: echo "Scanning source code..."
+    - name: ARGS
+      value:
+      - ""
+    runAfter:
+    - fetch-repository
+    taskRef:
+      kind: ClusterTask
+      name: openshift-client
+  - name: acs-image-scan
+    params:
+    - name: rox_central_endpoint
+      value: roxsecrets
+    - name: rox_api_token
+      value: roxsecrets
+    - name: image
+      value: $(params.IMAGE_NAME)
+    - name: output_format
+      value: pretty
+    runAfter:
+    - build
+    taskRef:
+      kind: ClusterTask
+      name: acs-image-scan
+  - name: acs-image-check
+    params:
+    - name: rox_central_endpoint
+      value: roxsecrets
+    - name: rox_api_token
+      value: roxsecrets
+    - name: image
+      value: $(params.IMAGE_NAME)
+    runAfter:
+    - acs-image-scan
+    - oscap
+    taskRef:
+      kind: ClusterTask
+      name: acs-image-check
+  - name: acs-deployment-check
+    params:
+    - name: rox_central_endpoint
+      value: roxsecrets
+    - name: rox_api_token
+      value: roxsecrets
+    - name: file
+      value: vote-app.yaml
+    runAfter:
+    - acs-image-check
+    taskRef:
+      kind: ClusterTask
+      name: acs-deployment-check
+    workspaces:
+    - name: deployfiles
+      workspace: workspace
+  - name: oscap
+    params:
+    - name: SCRIPT
+      value: echo "Scanning image ..."
+    - name: ARGS
+      value:
+      - ""
+    runAfter:
+    - build
+    taskRef:
+      kind: ClusterTask
+      name: openshift-client
+  - name: git-cli
+    params:
+    - name: BASE_IMAGE
+      value: docker.io/alpine/git:v2.26.2@sha256:23618034b0be9205d9cc0846eb711b12ba4c9b468efdd8a59aac1d7b1a23363f
+    - name: GIT_USER_NAME
+      value: dummy
+    - name: GIT_USER_EMAIL
+      value: dummy@dummy.com
+    - name: GIT_SCRIPT
+      value: |
+        echo Using revision $(params.GIT_REVISION)
+        git checkout $(params.GIT_REVISION) 
+        git add .
+        git commit -m "Build update `date`" .
+        git push origin $(params.GIT_REVISION)
+        git status
+    - name: USER_HOME
+      value: /tekton/home
+    - name: VERBOSE
+      value: "true"
+    runAfter:
+    - acs-deployment-check
+    taskRef:
+      kind: Task
+      name: git-cli
+    workspaces:
+    - name: source
+      workspace: workspace
+    - name: basic-auth
+      workspace: basic-auth
+  workspaces:
+  - name: workspace
+  - name: basic-auth
