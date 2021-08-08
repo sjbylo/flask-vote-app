@@ -1,144 +1,41 @@
 apiVersion: tekton.dev/v1beta1
-kind: Pipeline
+kind: PipelineRun
 metadata:
   labels:
     app.kubernetes.io/instance: vote-app
     pipeline.openshift.io/strategy: docker
     pipeline.openshift.io/type: kubernetes
-  name: vote-app
+    tekton.dev/pipeline: vote-app
+  name: vote-app-new-run
 spec:
   params:
-  - default: vote-app
-    name: APP_NAME
-    type: string
-  - default: https://github.com/sjbylo/flask-vote-app.git
-    name: GIT_REPO
-    type: string
-  - default: master
-    name: GIT_REVISION
-    type: string
-  - default: image-registry.openshift-image-registry.svc:5000/demo/vote-app
-    name: IMAGE_NAME
-    type: string
-  - default: .
-    name: PATH_CONTEXT
-    type: string
-  tasks:
-  - name: fetch-repository
-    params:
-    - name: url
-      value: $(params.GIT_REPO)
-    - name: revision
-      value: $(params.GIT_REVISION)
-    - name: deleteExisting
-      value: "true"
-    taskRef:
-      kind: ClusterTask
-      name: git-clone
-    workspaces:
-    - name: output
-      workspace: workspace
-  - name: build
-    params:
-    - name: IMAGE
-      value: $(params.IMAGE_NAME)
-    - name: TLSVERIFY
-      value: "false"
-    - name: CONTEXT
-      value: $(params.PATH_CONTEXT)
-    runAfter:
-    - sast
-    taskRef:
-      kind: ClusterTask
-      name: buildah
-    workspaces:
-    - name: source
-      workspace: workspace
-  - name: deploy
-    params:
-    - name: SCRIPT
-      value: oc $@
-    - name: ARGS
-      value:
-      - apply
-      - -f
-      - /deployfile/vote-app.yaml
-    runAfter:
-    - acs-deployment-check
-    taskRef:
-      kind: ClusterTask
-      name: openshift-client-workspace
-    workspaces:
-    - name: deployfiles
-      workspace: workspace
-  - name: sast
-    params:
-    - name: SCRIPT
-      value: echo "Scanning source code..."
-    - name: ARGS
-      value:
-      - ""
-    runAfter:
-    - fetch-repository
-    taskRef:
-      kind: ClusterTask
-      name: openshift-client
-  - name: acs-image-scan
-    params:
-    - name: rox_central_endpoint
-      value: roxsecrets
-    - name: rox_api_token
-      value: roxsecrets
-    - name: image
-      value: $(params.IMAGE_NAME)
-    - name: output_format
-      value: pretty
-    runAfter:
-    - build
-    taskRef:
-      kind: ClusterTask
-      name: acs-image-scan
-  - name: acs-image-check
-    params:
-    - name: rox_central_endpoint
-      value: roxsecrets
-    - name: rox_api_token
-      value: roxsecrets
-    - name: image
-      value: $(params.IMAGE_NAME)
-    runAfter:
-    - acs-image-scan
-    - oscap
-    taskRef:
-      kind: ClusterTask
-      name: acs-image-check
-  - name: acs-deployment-check
-    params:
-    - name: rox_central_endpoint
-      value: roxsecrets
-    - name: rox_api_token
-      value: roxsecrets
-    - name: file
-      value: vote-app.yaml
-    runAfter:
-    - acs-image-check
-    taskRef:
-      kind: ClusterTask
-      name: acs-deployment-check
-    workspaces:
-    - name: deployfiles
-      workspace: workspace
-  - name: oscap
-    params:
-    - name: SCRIPT
-      value: echo "Scanning image ..."
-    - name: ARGS
-      value:
-      - ""
-    runAfter:
-    - build
-    taskRef:
-      kind: ClusterTask
-      name: openshift-client
+  - name: APP_NAME
+    value: vote-app
+  - name: GIT_REPO
+    value: https://simple-gitea-gitea.apps.cluster-s9tpk.s9tpk.sandbox222.opentlc.com/demo/flask-vote-app.git
+  - name: GIT_REVISION
+    value: master
+  - name: IMAGE_NAME
+    value: image-registry.openshift-image-registry.svc:5000/project_name/vote-app
+  - name: PATH_CONTEXT
+    value: .
+  pipelineRef:
+    name: vote-app
+  serviceAccountName: pipeline
+  timeout: 1h0m0s
   workspaces:
   - name: workspace
+    volumeClaimTemplate:
+      metadata:
+        creationTimestamp: null
+        labels:
+          tekton.dev/pipeline: vote-app
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+  - name: basic-auth
+    secret:
+      secretName: git-basic-auth-secret
