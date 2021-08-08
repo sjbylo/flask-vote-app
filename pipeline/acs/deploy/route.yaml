@@ -10,7 +10,6 @@ metadata:
   name: vote-app
   namespace: vote-app-uat
 spec:
-#  host: vote-app-acs-pipeline-demo.apps.cluster-s9tpk.s9tpk.sandbox222.opentlc.com
   port:
     targetPort: 8080
   to:

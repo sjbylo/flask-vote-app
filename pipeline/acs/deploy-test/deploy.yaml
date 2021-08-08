@@ -17,7 +17,6 @@ spec:
         deployment: vote-app
     spec:
       containers:
-#      - image: image-registry.openshift-image-registry.svc:5000/acs-pipeline-demo/vote-app@sha256:7fc3a97ca1d2eab274f9a14a5a8933d88776436f83c26bcee47c32a3eb3ba3a9
       - image: image-registry.openshift-image-registry.svc:5000/vote-app-test/vote-app:test
         name: vote-app
         ports:
