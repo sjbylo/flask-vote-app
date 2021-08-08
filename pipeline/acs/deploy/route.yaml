@@ -4,10 +4,10 @@ metadata:
   annotations:
     openshift.io/host.generated: "true"
   labels:
-    app: vote-app-uat
-    app.kubernetes.io/component: vote-app-uat
-    app.kubernetes.io/instance: vote-app-uat
-  name: vote-app-uat
+    app: vote-app
+    app.kubernetes.io/component: vote-app
+    app.kubernetes.io/instance: vote-app
+  name: vote-app
   namespace: vote-app-uat
 spec:
 #  host: vote-app-acs-pipeline-demo.apps.cluster-s9tpk.s9tpk.sandbox222.opentlc.com
@@ -15,6 +15,6 @@ spec:
     targetPort: 8080
   to:
     kind: Service
-    name: vote-app-uat
+    name: vote-app
     weight: 100
   wildcardPolicy: None
