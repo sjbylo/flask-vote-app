@@ -123,7 +123,7 @@ spec:
     taskRef:
       kind: ClusterTask
       name: openshift-client
-  - name: git-cli
+  - name: git-push
     params:
     - name: BASE_IMAGE
       value: docker.io/alpine/git:v2.26.2@sha256:23618034b0be9205d9cc0846eb711b12ba4c9b468efdd8a59aac1d7b1a23363f
@@ -135,7 +135,7 @@ spec:
       value: |
         echo Using revision $(params.GIT_REVISION)
         git checkout $(params.GIT_REVISION) 
-        git add .
+        git add pipeline  
         git commit -m "Build update `date`" .
         git push origin $(params.GIT_REVISION)
         git status
