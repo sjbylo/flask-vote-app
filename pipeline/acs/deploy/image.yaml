@@ -10,8 +10,8 @@ spec:
   - annotations: null
     from:
       kind: ImageStreamImage
-      name: vote-app@sha256:d97c2b5bf63958799af41dcca1f47e4272c4920f1d1870a3689a1ce56010fbbe
-      namespace: vote-app-dev
+      name: vote-app@sha256:84a6e5c9ce3d02ed4093e03b158916b5cbe1401d3d6f13b35303d9e0952f9f4f
+      namespace: acs-pipeline-demo
     name: uat
     referencePolicy:
       type: Source
