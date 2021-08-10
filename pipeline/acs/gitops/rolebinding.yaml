@@ -1,8 +1,8 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: vote-app-test-role-binding
-  namespace: vote-app-test
+  name: vote-app-uat-role-binding
+  namespace: vote-app-uat
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole

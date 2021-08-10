@@ -4,7 +4,7 @@ This demo shows the use of roxctl in a Tekton Pipeline.  Is shows scanning/check
 image for CVEs and checking the app deployment manifest for bad practices. 
 
 The demo uses a repo with a simple python application.
-The master branch causes no failures but the "cve" branch causes roxctl checks to fail.
+The master branch causes no failures but the "cve" git reference causes roxctl checks to fail.
 
 The branch can be chosen when starting the pipeline.
 
@@ -63,6 +63,13 @@ View the pipeline output with tkn (download tkn from the OpenShift Console)
 ```
 tkn pipelinerun logs -L -f
 ```
+
+To restart the pipeline run:
+
+```
+oc delete pipelinerun vote-app-dev-pipelinerun -n vote-app-dev && oc create -f pipelinerun.yaml -n vote-app-dev
+```
+
 
 ## Troubleshooting
 

@@ -136,6 +136,7 @@ spec:
         echo Using revision $(params.GIT_REVISION)
         git checkout $(params.GIT_REVISION) 
         git add pipeline  
+        git diff pipeline 
         git commit -m "Build update `date`" .
         git push origin $(params.GIT_REVISION)
         git status
