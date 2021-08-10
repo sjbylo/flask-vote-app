@@ -17,7 +17,7 @@ spec:
   - default: master
     name: GIT_REVISION
     type: string
-  - default: image-registry.openshift-image-registry.svc:5000/dev/vote-app
+  - default: image-registry.openshift-image-registry.svc:5000/vote-app-dev/vote-app:latest
     name: IMAGE_NAME
     type: string
   - default: .

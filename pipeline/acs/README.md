@@ -1,6 +1,6 @@
 # Demo Pipeline using roxctl 
 
-This demo shows the use of roxctl in a Tekton Pipeline.  Is shows scanning/checking a freshly built 
+This demo shows the use of the roxctl CLI in an OpenShift Pipeline (Tekton).  It shows scanning/checking a freshly built 
 image for CVEs and checking the app deployment manifest for bad practices. 
 
 The demo uses a repo with a simple python application.
@@ -13,9 +13,9 @@ The branch can be chosen when starting the pipeline.
 
 First, spin up a demo cluster for Advanced Cluster Security (ACS) in RHPDS (warning, internal tool).
 
-Set up Gitea on the cluster (instructions in gitea/) and migrate this git repo to it. 
+Set up Gitea on the cluster (instructions in gitea/) and migrate this git repo (github.com/sjbylo/flask-vote-app) to it. 
 
-Example git repo:
+Example Gitea git repo:
 
 ```
 https://simple-gitea-gitea.apps.cluster-s9tpk.s9tpk.sandbox222.opentlc.com/dev/flask-vote-app.git
@@ -29,10 +29,9 @@ Configure the git repo URL and hostname in all the needed files:
 ./gitops/argo-application.yaml
 ```
 
-Set up the secret `secret/git-basic-auth-secret.yaml` to access the git repo you want to use. 
+Set up the secret `secret/git-basic-auth-secret.yaml` to allow push to the git repo you want to use. 
 
-
-If you're really impatient, you can try to run the "./setup.sh" script.
+If you're really impatient, you can run the "./setup.sh" script.
 
 Following are the manual steps.
 
@@ -71,8 +70,7 @@ oc create -f vote-app-pipeline-acs.yaml
 To start the pipeline, use the following PipelineRun resource or to it from the OpenShift Console (remember to create and add a PVC) 
 
 ```
-#oc create -f vote-app-pipelinerun-acs.yaml
-sed "s#/project_name/#`oc project -q`#g" < vote-app-pipelinerun-acs.yaml | oc create -f - 
+oc create -f pipelinerun.yaml
 ```
 
 View the pipeline output with tkn (download tkn from the OpenShift Console)
