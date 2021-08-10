@@ -26,7 +26,7 @@ Configure the git repo URL and hostname in all the needed files:
 ```
 ./pipelinerun.yaml
 ./secret/git-basic-auth-secret.yaml
-./gitops/argo-application.yaml
+./gitops/argo-application-dev.yaml
 ```
 
 Set up the secret `secret/git-basic-auth-secret.yaml` to allow push to the git repo you want to use. 
