@@ -10,7 +10,7 @@ spec:
   - annotations: null
     from:
       kind: ImageStreamImage
-      name: vote-app@sha256:02a1ee7bad89fd7c07c18e4b82743c589f9cf4bf80e6842d43e3863d729b952f
+      name: vote-app@sha256:07630c8756bd6c05f319cf892f636362f6e32ed442abb35d7e78e753bbed03d7
       namespace: vote-app-dev
     name: uat
     referencePolicy:

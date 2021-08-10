@@ -17,7 +17,7 @@ spec:
         deployment: vote-app
     spec:
       containers:
-      - image: image-registry.openshift-image-registry.svc:5000/vote-app-dev/vote-app:latest
+      - image: image-registry.openshift-image-registry.svc:5000/vote-app-dev/vote-app@sha256:07630c8756bd6c05f319cf892f636362f6e32ed442abb35d7e78e753bbed03d7
         name: vote-app
         ports:
         - containerPort: 8080
