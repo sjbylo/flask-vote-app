@@ -18,7 +18,7 @@ Set up Gitea on the cluster (instructions in gitea/) and migrate this git repo t
 Example git repo:
 
 ```
-https://simple-gitea-gitea.apps.cluster-s9tpk.s9tpk.sandbox222.opentlc.com/demo/flask-vote-app.git
+https://simple-gitea-gitea.apps.cluster-s9tpk.s9tpk.sandbox222.opentlc.com/dev/flask-vote-app.git
 ```
 
 Configure the git repo URL and hostname in all the needed files:
