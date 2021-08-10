@@ -14,10 +14,12 @@ spec:
       script: |
         echo -----------------------------------
         echo Deleting deployment, app and DB ...
-        oc delete  mysqlservers,mysqlfirewallrule,mysqluser,mysqldatabase --all 
-        #oc delete  pipelinerun,taskrun --all 
-        #oc delete  deploy,po,svc,route,is --all 
+        oc delete  mysqlservers,mysqlfirewallrule,mysqluser,mysqldatabase --all --wait=false
+        #oc delete  pipelinerun,taskrun --all --wait=false
+        #oc delete  deploy,po,svc,route,is --all --wait=false
         oc delete deploy,svc,route,is -l app=$(params.label)
+        oc delete pods --field-selector=status.phase=Succeeded --wait=false
+        oc delete pods --field-selector=status.phase=Error --wait=false
         echo -----------------------------------
         exit 0
 

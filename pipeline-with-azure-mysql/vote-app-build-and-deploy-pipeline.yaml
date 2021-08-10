@@ -51,7 +51,8 @@ spec:
     - name: source
       workspace: shared-workspace
     runAfter:
-    - fetch-repository
+#    - fetch-repository
+    - provision-db
   - name: provision-db
     params:
     - name: manifest_dir

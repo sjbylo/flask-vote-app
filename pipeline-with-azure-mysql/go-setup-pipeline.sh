@@ -29,8 +29,6 @@ tkn pipeline  list
 
 oc get pvc source-pvc || oc create -f persistent_volume_claim.yaml
 
-echo $P > .saved_project 
-
 ######
 # Set up "delete" pipeline
 oc create -f vote-app-cleanup-task.yaml
