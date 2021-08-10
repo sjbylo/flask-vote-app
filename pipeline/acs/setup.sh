@@ -1,6 +1,6 @@
 #!/bin/bash -x
 
-P=vote-app-dev
+P=vote-app-dev   # Project name cannot be changed 
 
 oc new-project $P >/dev/null || oc project $P || exit 1
 
@@ -17,5 +17,6 @@ oc delete pipelinerun pipelinerun 2>/dev/null
 
 oc create -f pipelinerun.yaml
 
+# Download tkn CLI from OpenShift Console
 tkn pipelinerun logs -L -f
 
