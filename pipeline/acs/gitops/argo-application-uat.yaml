@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vote-app-uat
+  namespace: openshift-gitops
+spec:
+  destination:
+    namespace: default
+    server: 'https://kubernetes.default.svc'
+  project: default
+  source:
+    directory:
+      recurse: false
+    path: pipeline/acs/deploy-uat
+    repoURL: https://simple-gitea-gitea.apps.cluster-s9tpk.s9tpk.sandbox222.opentlc.com/uat/flask-vote-app.git
+    targetRevision: master

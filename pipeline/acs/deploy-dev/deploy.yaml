@@ -6,7 +6,7 @@ metadata:
     app.kubernetes.io/component: vote-app
     app.kubernetes.io/instance: vote-app
   name: vote-app
-  namespace: vote-app-uat
+  namespace: vote-app-dev
 spec:
   selector:
     matchLabels:
@@ -17,7 +17,7 @@ spec:
         deployment: vote-app
     spec:
       containers:
-      - image: image-registry.openshift-image-registry.svc:5000/vote-app-uat/vote-app:uat
+      - image: image-registry.openshift-image-registry.svc:5000/vote-app-dev/vote-app:dev
         name: vote-app
         ports:
         - containerPort: 8080

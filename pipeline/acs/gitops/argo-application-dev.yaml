@@ -11,6 +11,6 @@ spec:
   source:
     directory:
       recurse: false
-    path: pipeline/acs/deploy
+    path: pipeline/acs/deploy-dev
     repoURL: https://simple-gitea-gitea.apps.cluster-s9tpk.s9tpk.sandbox222.opentlc.com/dev/flask-vote-app.git
     targetRevision: master
