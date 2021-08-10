@@ -6,18 +6,17 @@ metadata:
     pipeline.openshift.io/strategy: docker
     pipeline.openshift.io/type: kubernetes
     tekton.dev/pipeline: vote-app
-  name: vote-app-pipelinerun-cve
+  name: vote-app-dev-pipelinerun-cve
 spec:
   params:
   - name: APP_NAME
     value: vote-app
   - name: GIT_REPO
-#    value: https://github.com/sjbylo/flask-vote-app.git
     value: https://simple-gitea-gitea.apps.cluster-s9tpk.s9tpk.sandbox222.opentlc.com/demo/flask-vote-app.git
   - name: GIT_REVISION
-    value: roxctl-test
+    value: cve
   - name: IMAGE_NAME
-    value: image-registry.openshift-image-registry.svc:5000/project_name/vote-app
+    value: image-registry.openshift-image-registry.svc:5000/vote-app-dev/vote-app:latest
   - name: PATH_CONTEXT
     value: .
   pipelineRef:
@@ -25,15 +24,18 @@ spec:
   serviceAccountName: pipeline
   timeout: 1h0m0s
   workspaces:
-    - name: workspace
-      volumeClaimTemplate:
-        metadata:
-          creationTimestamp: null
-          labels:
-            tekton.dev/pipeline: vote-app
-        spec:
-          accessModes:
-            - ReadWriteOnce
-          resources:
-            requests:
-              storage: 1Gi
+  - name: workspace
+    volumeClaimTemplate:
+      metadata:
+        creationTimestamp: null
+        labels:
+          tekton.dev/pipeline: vote-app
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+  - name: basic-auth
+    secret:
+      secretName: git-basic-auth-secret

@@ -13,7 +13,24 @@ The branch can be chosen when starting the pipeline.
 
 First, spin up a demo cluster for Advanced Cluster Security (ACS) in RHPDS (warning, internal tool).
 
-Set up the secret `secret/git-basic-auth-secret.yaml` to access the repo you want to use. 
+Set up Gitea on the cluster (instructions in gitea/) and migrate this git repo to it. 
+
+Example git repo:
+
+```
+https://simple-gitea-gitea.apps.cluster-s9tpk.s9tpk.sandbox222.opentlc.com/demo/flask-vote-app.git
+```
+
+Configure the git repo URL and hostname in all the needed files:
+
+```
+./pipelinerun.yaml
+./secret/git-basic-auth-secret.yaml
+./gitops/argo-application.yaml
+```
+
+Set up the secret `secret/git-basic-auth-secret.yaml` to access the git repo you want to use. 
+
 
 If you're really impatient, you can try to run the "./setup.sh" script.
 
