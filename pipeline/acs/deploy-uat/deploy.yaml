@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: vote-app
+    app.kubernetes.io/component: vote-app
+    app.kubernetes.io/instance: vote-app
+  name: vote-app
+  namespace: vote-app-uat
+spec:
+  selector:
+    matchLabels:
+      deployment: vote-app
+  template:
+    metadata:
+      labels:
+        deployment: vote-app
+    spec:
+      containers:
+      - image: image-registry.openshift-image-registry.svc:5000/vote-app-uat/vote-app:uat
+        name: vote-app
+        ports:
+        - containerPort: 8080
+          protocol: TCP
