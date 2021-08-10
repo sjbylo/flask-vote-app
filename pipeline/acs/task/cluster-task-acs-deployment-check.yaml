@@ -48,7 +48,11 @@ spec:
       # Insert image into deployment 
       #sed "s/image: .*/image: image-registry.openshift-image-registry.svc:5000\\/$POD_NAMESPACE\\/vote-app@$SHA/g" < $(workspaces.deployfiles.path)/deploy-all/deployment/vote-app.yaml > $(workspaces.deployfiles.path)/$(params.file)
 
+      find . -type f -exec grep -H acs-pipeline-demo {} \;
+
       sed "s/name: vote-app@sha256.*/name: vote-app@$SHA/" < $(workspaces.deployfiles.path)/deploy-all/image/image.yaml > $(workspaces.deployfiles.path)/pipeline/acs/deploy/image.yaml
+      find . -type f -exec grep -H acs-pipeline-demo {} \;
+
       cat $(workspaces.deployfiles.path)/pipeline/acs/deploy/image.yaml
 
       #cat $(workspaces.deployfiles.path)/$(params.file)
