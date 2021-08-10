@@ -15,16 +15,16 @@ First, spin up a demo cluster for Advanced Cluster Security (ACS) in RHPDS (warn
 
 Set up the secret `secret/git-basic-auth-secret.yaml` to access the repo you want to use. 
 
-If you're really impatient, you can try to run the "./go.sh" script.
+If you're really impatient, you can try to run the "./setup.sh" script.
 
 Following are the manual steps.
 
 ## Set up as cluster-admin 
 
-Create a demo project.  At the moment, the project needs to be named acs-pipeline-demo.
+Create a demo project.  At the moment, the project needs to be named vote-app-dev.
 
 ```
-oc new-project acs-pipeline-demo
+oc new-project vote-app-dev
 ```
 
 Copy the provided ACS demo secret over (or export credentials from the ACS Console) 

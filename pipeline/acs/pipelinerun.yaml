@@ -6,7 +6,7 @@ metadata:
     pipeline.openshift.io/strategy: docker
     pipeline.openshift.io/type: kubernetes
     tekton.dev/pipeline: vote-app
-  name: vote-app-new-run
+  name: vote-app-dev-pipelinerun
 spec:
   params:
   - name: APP_NAME
@@ -16,7 +16,7 @@ spec:
   - name: GIT_REVISION
     value: master
   - name: IMAGE_NAME
-    value: image-registry.openshift-image-registry.svc:5000/project_name/vote-app
+    value: image-registry.openshift-image-registry.svc:5000/vote-app-dev/vote-app:latest
   - name: PATH_CONTEXT
     value: .
   pipelineRef:

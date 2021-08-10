@@ -11,7 +11,7 @@ spec:
     from:
       kind: ImageStreamImage
       name: vote-app@sha256:1b66314aebaeb2476dbfb4b99308808397ff4ce3e80c69aeea221fadb1819dd0
-      namespace: acs-pipeline-demo
+      namespace: vote-app-dev
     name: test
     referencePolicy:
       type: Source

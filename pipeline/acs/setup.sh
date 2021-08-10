@@ -1,6 +1,6 @@
 #!/bin/bash -x
 
-P=acs-pipeline-demo
+P=vote-app-dev
 
 oc new-project $P >/dev/null || oc project $P || exit 1
 
@@ -11,11 +11,12 @@ oc create -f task >/dev/null
 # Secret, needed to commit/push to repo
 oc create -f secret >/dev/null
 
-oc create -f vote-app-pipeline-acs.yaml
+oc create -f pipeline.yaml
 
-oc delete pipelinerun vote-app-pipelinerun >/dev/null
+oc delete pipelinerun pipelinerun >/dev/null
 
-sed "s#/project_name/#/`oc project -q`/#g" < vote-app-pipelinerun-acs.yaml | oc create -f - 
+#sed "s#/project_name/#/`oc project -q`/#g" < vote-app-pipelinerun-acs.yaml | oc create -f - 
+oc create -f pipelinerun.yaml
 
 tkn pipelinerun logs -L -f
 
