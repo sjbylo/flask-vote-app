@@ -3,7 +3,7 @@
 This demo shows the use of the roxctl CLI in an OpenShift Pipeline (Tekton).  It shows scanning/checking a freshly built 
 image for CVEs and checking the app deployment manifest for bad practices. 
 
-The demo uses a repo with a simple python application.
+The demo uses a GitHub repo with a simple python application.
 The master branch causes no failures but the "cve" git reference causes roxctl checks to fail.
 
 The branch can be chosen when starting the pipeline.
@@ -15,13 +15,13 @@ First, spin up a demo cluster for Advanced Cluster Security (ACS) in RHPDS (warn
 
 Set up Gitea on the cluster (instructions in gitea/) and migrate this git repo (github.com/sjbylo/flask-vote-app) to it. 
 
-Example Gitea git repo:
+Example Gitea git repo endpoint running on OpenShift:
 
 ```
 https://simple-gitea-gitea.apps.cluster-s9tpk.s9tpk.sandbox222.opentlc.com/dev/flask-vote-app.git
 ```
 
-Configure the git repo URL and hostname in all the needed files:
+Configure the git repo URL and domain name in all the needed files:
 
 ```
 ./pipelinerun.yaml
