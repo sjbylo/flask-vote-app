@@ -3,7 +3,7 @@ metadata:
 projects:
   - name: flask-vote-app
     source:
-      location: 'https://github.com/kahlai/flask-vote-app.git'
+      location: 'https://github.com/sjbylo/flask-vote-app.git'
       startPoint: master
       type: git
 components:
