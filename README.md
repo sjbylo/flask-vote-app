@@ -276,7 +276,7 @@ You can start a workspace on demand by opening the devfile.yaml file in Eclipse 
 
 As an example, create an account at https://che.openshift.io/ and then open this URL:
 
-https://che.openshift.io/f?url=https://github.com/sjbylo/flask-vote-app
+https://che.openshift.io/f?url=https://github.com/kahlai/flask-vote-app
 
 
 ## Tekton CI/CD Pipeline on OpenShift 4.4
