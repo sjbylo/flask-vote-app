@@ -1,40 +1,54 @@
-schemaVersion: 2.0.0
 metadata:
-  name: python
-  version: 1.0.0
-starterProjects:
-  - name: python-example
-    git:
-      remotes:
-        origin: https://github.com/odo-devfiles/python-ex
+  name: python-
+projects:
+  - name: flask-vote-app
+    source:
+      location: 'https://github.com/kahlai/flask-vote-app.git'
+      startPoint: master
+      type: git
 components:
-  - name: py-web
-    container:
-      image: quay.io/eclipse/che-python-3.7:nightly
-      mountSources: true
-      endpoints:
-        - name: web
-          targetPort: 8080
+  - id: ms-python/python/latest
+    preferences:
+      python.globalModuleInstallation: true
+    type: chePlugin
+  - mountSources: true
+    memoryLimit: 512Mi
+    type: dockerimage
+    alias: python
+    image: quay.io/kahlai/flask-vote-app-ws
+    volumes:
+      - name: piplib
+        containerPath: /home/jboss/.local
+    endpoints:
+      - name: web-endpoint
+        port: 8080
+apiVersion: 1.0.0
 commands:
-  - id: pip-install-requirements
-    exec:
-      commandLine: pip install --user -r requirements.txt
-      group:
-        kind: build
-        isDefault: true
-      component: py-web
-  - id: run-app
-    exec:
-      commandLine: "python app.py"
-      workingDir: ${PROJECTS_ROOT}
-      component: py-web
-      group:
-        kind: run
-        isDefault: true
-  - id: debugpy
-    exec:
-      commandLine: "pip install --user debugpy && python -m debugpy --listen 0.0.0.0:${DEBUG_PORT} app.py"
-      workingDir: ${PROJECTS_ROOT}
-      component: py-web
-      group:
-        kind: debug
+  - name: 1. Run
+    actions:
+      - workdir: '${CHE_PROJECTS_ROOT}/flask-vote-app'
+        type: exec
+        command: python app.py
+        component: python
+  - name: 1. Build
+    actions:
+      - workdir: '${CHE_PROJECTS_ROOT}/flask-vote-app'
+        type: exec
+        command: pip install --user -r requirements.txt
+        component: python
+  - name: Debug current file
+    actions:
+      - referenceContent: |
+          {
+            "version": "0.2.0",
+            "configurations": [
+              {
+                "name": "Python: Current File",
+                "type": "python",
+                "request": "launch",
+                "program": "${file}",
+                "console": "internalConsole"
+              }
+            ]
+          }
+        type: vscode-launch
