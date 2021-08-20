@@ -49,9 +49,12 @@ spec:
       # Insert image into deployment 
       #sed "s/image: .*/image: image-registry.openshift-image-registry.svc:5000\\/$POD_NAMESPACE\\/vote-app@$SHA/g" < $(workspaces.deployfiles.path)/deploy-all/deployment/vote-app.yaml > $(workspaces.deployfiles.path)/$(params.file)
 
-      sed "s/name: vote-app@sha256.*/name: vote-app@$SHA/" < $(workspaces.deployfiles.path)/deploy-all/image/image.yaml > $(workspaces.deployfiles.path)/pipeline/acs/deploy-dev/image.yaml
 
-      cat $(workspaces.deployfiles.path)/pipeline/acs/deploy-dev/image.yaml
+      sed "s#image: .*#image: image-registry.openshift-image-registry.svc:5000/$POD_NAMESPACE/vote-app@$SHA#g" < $(workspaces.deployfiles.path)/deploy-all/deployment/vote-app.yaml > $(workspaces.deployfiles.path)/pipeline/acs/deploy-dev/deploy.yaml
+      cat $(workspaces.deployfiles.path)/pipeline/acs/deploy-dev/deploy.yaml
+
+      sed "s/name: vote-app@sha256.*/name: vote-app@$SHA/" < $(workspaces.deployfiles.path)/deploy-all/image/image.yaml > $(workspaces.deployfiles.path)/pipeline/acs/deploy-uat/image.yaml
+      cat $(workspaces.deployfiles.path)/pipeline/acs/deploy-uat/image.yaml
 
       curl -s -k -L -H "Authorization: Bearer $ROX_API_TOKEN" https://$ROX_CENTRAL_ENDPOINT/api/cli/download/roxctl-linux --output ./roxctl  > /dev/null
       chmod +x ./roxctl  > /dev/null
