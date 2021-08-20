@@ -31,6 +31,8 @@ Configure the git repo URL and domain name in all the needed files:
 
 Set up the secret `secret/git-basic-auth-secret.yaml` to allow push to the git repo you want to use. 
 
+Set up Sonarqube on the cluster (instructions in sonar/)
+
 If you're really impatient, you can run the "./setup.sh" script.
 
 Following are the manual steps.
