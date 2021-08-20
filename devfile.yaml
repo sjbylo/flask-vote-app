@@ -15,7 +15,7 @@ components:
     memoryLimit: 512Mi
     type: dockerimage
     alias: python
-    image: quay.io/kahlai/flask-vote-app-ws
+    image: quay.io/eclipse/che-python-3.7:nightly
     volumes:
       - name: piplib
         containerPath: /home/jboss/.local
