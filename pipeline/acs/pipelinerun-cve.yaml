@@ -12,7 +12,7 @@ spec:
   - name: APP_NAME
     value: vote-app
   - name: GIT_REPO
-    value: https://simple-gitea-gitea.apps.cluster-s9tpk.s9tpk.sandbox222.opentlc.com/dev/flask-vote-app.git
+    value: https://github.com/sjbylo/flask-vote-app.git
   - name: GIT_REVISION
     value: cve
   - name: IMAGE_NAME

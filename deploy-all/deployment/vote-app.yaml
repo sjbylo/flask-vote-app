@@ -6,6 +6,7 @@ metadata:
     app.kubernetes.io/component: vote-app
     app.kubernetes.io/instance: vote-app
   name: vote-app
+  namespace: vote-app-dev
 spec:
   selector:
     matchLabels:

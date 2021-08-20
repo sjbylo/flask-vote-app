@@ -13,7 +13,7 @@ oc create -f secret
 
 oc create -f pipeline.yaml
 
-oc delete pipelinerun pipelinerun 2>/dev/null
+oc delete pipelinerun vote-app-dev-pipelinerun 2>/dev/null
 
 oc create -f pipelinerun.yaml
 
