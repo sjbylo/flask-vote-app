@@ -23,6 +23,9 @@ spec:
   - default: .
     name: PATH_CONTEXT
     type: string
+  - default: 'http://sonarqube.sonar.svc.cluster.local:9000'
+    name: SONAR_HOST_URL
+    type: string
   tasks:
   - name: fetch-repository
     params:
@@ -56,16 +59,20 @@ spec:
       workspace: workspace
   - name: sast
     params:
-    - name: SCRIPT
-      value: echo "Scanning source code..."
-    - name: ARGS
-      value:
-      - ""
+      - name: SONAR_HOST_URL
+        value: $(params.SONAR_HOST_URL)
+      - name: SONAR_PROJECT_KEY
+        value: $(params.APP_NAME)
     runAfter:
-    - fetch-repository
+      - fetch-repository
     taskRef:
-      kind: ClusterTask
-      name: openshift-client
+      kind: Task
+      name: sonarqube-scanner
+    workspaces:
+      - name: source-dir
+        workspace: workspace
+      - name: sonar-settings
+        workspace: sonar-settings
   - name: acs-image-scan
     params:
     - name: rox_central_endpoint
@@ -157,3 +164,4 @@ spec:
   workspaces:
   - name: workspace
   - name: basic-auth
+  - name: sonar-settings

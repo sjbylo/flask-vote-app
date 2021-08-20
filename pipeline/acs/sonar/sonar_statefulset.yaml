@@ -1,0 +1,131 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: sonarqube
+  namespace: sonar
+spec:
+  serviceName: "sonarqube"
+  selector:
+    matchLabels:
+      app: sonarqube
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: sonarqube
+    spec:
+      containers:
+        - name: sonarqube
+          image: quay.io/gpte-devops-automation/sonarqube
+          env:
+            - name: SONARQUBE_JDBC_PASSWORD
+              value: sonar
+            - name: SONARQUBE_JDBC_URL
+              value: 'jdbc:postgresql://postgresql-sonar/sonar'
+            - name: SONARQUBE_JDBC_USERNAME
+              value: sonar
+          lifecycle:
+          ports:
+            - containerPort: 9000
+          volumeMounts:
+          - name: sonarqubedata
+            mountPath: /opt/sonarqube/data
+  volumeClaimTemplates:
+  - metadata:
+      name: sonarqubedata
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 5Gi
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgresql-sonar
+  namespace: sonar
+spec:
+  serviceName: "postgresql"
+  selector:
+    matchLabels:
+      app: postgresql-sonar
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: postgresql-sonar
+    spec:
+      containers:
+        - name: postgres
+          image: postgres
+          env:
+            - name: POSTGRES_USER
+              value: sonar
+            - name: POSTGRES_PASSWORD
+              value: sonar
+            - name: POSTGRES_DB
+              value: sonar
+            - name: PGDATA
+              value: /var/lib/postgresql/data/sonar
+          lifecycle:
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+          - name: postgresql-data
+            mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+  - metadata:
+      name: postgresql-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 5Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgresql-sonar
+  namespace: sonar
+  labels:
+    app: postgresql-sonar
+spec:
+  ports:
+  - port: 5432
+    name: postgresql-sonar
+  clusterIP: None
+  selector:
+    app: postgresql-sonar
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: sonarqube
+  namespace: sonar
+  labels:
+    app: sonarqube
+spec:
+  ports:
+  - port: 9000
+    name: sonarqube
+  clusterIP: None
+  selector:
+    app: sonarqube
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  labels:
+    app: sonarqube
+    app.kubernetes.io/component: sonarqube
+    app.kubernetes.io/instance: sonarqube
+  name: sonarqube
+  namespace: sonar
+spec:
+  to:
+    kind: Service
+    name: sonarqube
+    weight: 100
+  port:
+    targetPort: sonarqube
