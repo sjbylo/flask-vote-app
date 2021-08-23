@@ -39,3 +39,5 @@ spec:
   - name: basic-auth
     secret:
       secretName: git-basic-auth-secret
+  - name: sonar-settings
+    emptyDir: {}
