@@ -14,6 +14,7 @@ The branch can be chosen when starting the pipeline.
 First, spin up a demo cluster for Advanced Cluster Security (ACS) in RHPDS (warning, internal tool).
 (If you set up your own cluster you will need to install ACS onto it and create the API credentials yourself).
 
+To demo the git push step and gitops working, you will need to have write permission to a fork of this repo.  This can be done using github or using another git app, e.g. Gitea.
 Set up Gitea (or similar) on the cluster (instructions in gitea/) and migrate this git repo (github.com/sjbylo/flask-vote-app) to it.
 
 Example Gitea git repo endpoint running on OpenShift:
@@ -22,12 +23,12 @@ Example Gitea git repo endpoint running on OpenShift:
 https://simple-gitea-gitea.apps.cluster-s9tpk.s9tpk.sandbox222.opentlc.com/dev/flask-vote-app.git
 ```
 
-Configure the git repo URL and domain name in all the needed files:
+Configure your 'git repo URL' and 'domain name' in all the needed files:
 
 ```
 ./pipelinerun.yaml
 ./secret/git-basic-auth-secret.yaml
-./gitops/argo-application-dev.yaml
+./gitops/dev/argo-application-dev.yaml
 ```
 
 Set up the secret `secret/git-basic-auth-secret.yaml` to allow push to the git repo you want to use. 
@@ -58,16 +59,16 @@ Some of the provided demo cluster tasks have been modified so add them:
 oc create -f task
 ```
 
-Create the secret for your repo:
+Create the secret for your git repo:
 
 ```
 oc create -f secret
 ```
 
-Create the pipeline
+Create the Tekton pipeline
 
 ```
-oc create -f vote-app-pipeline-acs.yaml
+oc create -f pipeline.yaml
 ```
 
 To start the pipeline, use the following PipelineRun resource or to it from the OpenShift Console (remember to create and add a PVC) 
@@ -91,10 +92,10 @@ oc delete pipelinerun vote-app-dev-pipelinerun -n vote-app-dev && oc create -f p
 
 ## Troubleshooting
 
-Sometimes a 401 error can be seen when `roxctl` tries to access the internal registry.  A workaround for this is to delete (and re-generate) the secret:
+Sometimes a 401 error can be seen when `roxctl` tries to access the internal registry.  A workaround for this is to delete the secret, which will be re-generated. 
 E.g.:
 ```
-oc delete secrets pipeline-dockercfg-hcbcv
+oc delete secrets pipeline-dockercfg-hcbcv -n vote-app-dev
 ```
 
 

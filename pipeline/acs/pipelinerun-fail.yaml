@@ -6,7 +6,7 @@ metadata:
     pipeline.openshift.io/strategy: docker
     pipeline.openshift.io/type: kubernetes
     tekton.dev/pipeline: vote-app
-  name: vote-app-dev-pipelinerun-cve
+  name: vote-app-dev-pipelinerun-fail
 spec:
   params:
   - name: APP_NAME
@@ -14,7 +14,7 @@ spec:
   - name: GIT_REPO
     value: https://github.com/sjbylo/flask-vote-app.git
   - name: GIT_REVISION
-    value: cve
+    value: master
   - name: IMAGE_NAME
     value: image-registry.openshift-image-registry.svc:5000/vote-app-dev/vote-app:latest
   - name: PATH_CONTEXT
@@ -22,7 +22,6 @@ spec:
   pipelineRef:
     name: vote-app
   serviceAccountName: pipeline
-  timeout: 1h0m0s
   workspaces:
   - name: workspace
     volumeClaimTemplate:
@@ -39,5 +38,3 @@ spec:
   - name: basic-auth
     secret:
       secretName: git-basic-auth-secret
-  - name: sonar-settings
-    emptyDir: {}
