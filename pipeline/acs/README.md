@@ -12,8 +12,9 @@ The branch can be chosen when starting the pipeline.
 ## Set up the Demo
 
 First, spin up a demo cluster for Advanced Cluster Security (ACS) in RHPDS (warning, internal tool).
+(If you set up your own cluster you will need to install ACS onto it and create the API credentials yourself).
 
-Set up Gitea on the cluster (instructions in gitea/) and migrate this git repo (github.com/sjbylo/flask-vote-app) to it. 
+Set up Gitea (or similar) on the cluster (instructions in gitea/) and migrate this git repo (github.com/sjbylo/flask-vote-app) to it.
 
 Example Gitea git repo endpoint running on OpenShift:
 
@@ -33,7 +34,7 @@ Set up the secret `secret/git-basic-auth-secret.yaml` to allow push to the git r
 
 Set up Sonarqube on the cluster (instructions in sonar/)
 
-If you're really impatient, you can run the "./setup.sh" script.
+Now (if you're really impatient) you can run the "./setup.sh" script.
 
 Following are the manual steps.
 
