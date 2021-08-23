@@ -1,8 +1,7 @@
 # Any of these base images should work...
-# This open registry may go away!
+# Note that this open registry may go away!
 FROM registry.access.redhat.com/ubi8/python-38
 #FROM registry.access.redhat.com/ubi8/python-38:1-9
-
 
 # Authenticated registry:
 #FROM registry.redhat.io/ubi8/python-38         
