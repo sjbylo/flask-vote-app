@@ -22,7 +22,7 @@ components:
     endpoints:
       - name: web-endpoint
         port: 8080
-apiVersion: 1.0.0
+apiVersion: 2.0.0
 commands:
   - name: 1. Build
     actions:
