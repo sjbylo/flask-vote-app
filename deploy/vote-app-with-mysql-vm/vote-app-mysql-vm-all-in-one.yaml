@@ -1,0 +1,192 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: vote-app
+    app.kubernetes.io/component: vote-app
+    app.kubernetes.io/instance: vote-app
+    app.kubernetes.io/part-of: vote-app
+  name: vote-app
+  annotations:
+    app.openshift.io/connects-to: >-
+      [{"apiVersion":"kubevirt.io/v1","kind":"VirtualMachine","name":"mysql-demo"}]
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      deployment: vote-app
+  template:
+    metadata:
+      labels:
+        deployment: vote-app
+    spec:
+      containers:
+        - env:
+            - name: ENDPOINT_ADDRESS
+              value: db
+            - name: PORT
+              value: "3306"
+            - name: DB_NAME
+              value: vote
+            - name: MASTER_USERNAME
+              value: user
+            - name: MASTER_PASSWORD
+              value: password
+            - name: DB_TYPE
+              value: mysql
+          image: quay.io/sjbylo/flask-vote-app:latest
+          name: vote-app
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: vote-app
+    app.kubernetes.io/component: vote-app
+    app.kubernetes.io/instance: vote-app
+  name: vote-app
+spec:
+  ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    deployment: vote-app
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: db
+    app.kubernetes.io/component: db
+    app.kubernetes.io/instance: db
+  name: db
+spec:
+  ports:
+    - name: 3306-tcp
+      port: 3306
+      protocol: TCP
+      targetPort: 3306
+  selector:
+    kubevirt.io/domain: mysql-demo
+  type: ClusterIP
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  labels:
+    app: vote-app
+    app.kubernetes.io/component: vote-app
+    app.kubernetes.io/instance: vote-app
+  name: vote-app
+spec:
+  port:
+    targetPort: 8080-tcp
+  to:
+    kind: Service
+    name: vote-app
+    weight: 100
+---
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  labels:
+    app: mysql-demo
+    app.kubernetes.io/part-of: vote-app
+    flavor.template.kubevirt.io/small: "true"
+    os.template.kubevirt.io/centos8: "true"
+    vm.kubevirt.io/template: centos8-server-small
+    vm.kubevirt.io/template.namespace: openshift
+    vm.kubevirt.io/template.revision: "1"
+    vm.kubevirt.io/template.version: v0.15.1
+    workload.template.kubevirt.io/server: "true"
+  name: mysql-demo
+spec:
+  dataVolumeTemplates:
+    - metadata:
+        name: mysql-demo-rootdisk
+      spec:
+        pvc:
+          accessModes:
+            - ReadWriteMany
+          resources:
+            requests:
+              storage: 20Gi
+          storageClassName: ocs-storagecluster-ceph-rbd
+          volumeMode: Block
+        source:
+          pvc:
+            name: centos8
+            namespace: openshift-virtualization-os-images
+  running: true
+  template:
+    metadata:
+      annotations:
+        vm.kubevirt.io/flavor: small
+        vm.kubevirt.io/os: centos8
+        vm.kubevirt.io/workload: server
+      labels:
+        flavor.template.kubevirt.io/small: "true"
+        kubevirt.io/domain: mysql-demo
+        kubevirt.io/size: small
+        os.template.kubevirt.io/centos8: "true"
+        vm.kubevirt.io/name: mysql-demo
+        workload.template.kubevirt.io/server: "true"
+    spec:
+      domain:
+        cpu:
+          cores: 1
+          sockets: 1
+          threads: 1
+        devices:
+          disks:
+            - disk:
+                bus: virtio
+              name: cloudinitdisk
+            - bootOrder: 1
+              disk:
+                bus: virtio
+              name: rootdisk
+          interfaces:
+            - masquerade: {}
+              model: virtio
+              name: default
+          networkInterfaceMultiqueue: true
+        machine:
+          type: pc-q35-rhel8.4.0
+        resources:
+          requests:
+            memory: 2Gi
+      evictionStrategy: LiveMigrate
+      hostname: mysql-demo
+      networks:
+        - name: default
+          pod: {}
+      terminationGracePeriodSeconds: 180
+      volumes:
+        - cloudInitNoCloud:
+            userData: |
+              #cloud-config
+              user: demo
+              password: demo
+              chpasswd:
+                expire: false
+              # Run commands at first boot only
+              runcmd:
+              - rpm -ivh https://dev.mysql.com/get/mysql80-community-release-el8-2.noarch.rpm
+              - yum install mysql-server -y
+              - systemctl start mysqld  
+              - systemctl enable mysqld
+              - mysql -e "CREATE USER 'user'@'%' IDENTIFIED BY 'password'"
+              - mysql -e "GRANT ALL PRIVILEGES ON * . * TO 'user'@'%'"
+              - mysql -uuser -ppassword -e "create database vote"
+          name: cloudinitdisk
+        - dataVolume:
+            name: mysql-demo-rootdisk
+          name: rootdisk
+
