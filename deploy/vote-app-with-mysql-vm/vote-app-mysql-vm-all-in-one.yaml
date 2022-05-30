@@ -100,7 +100,7 @@ metadata:
     app.kubernetes.io/part-of: vote-app
     flavor.template.kubevirt.io/small: "true"
     os.template.kubevirt.io/centos8: "true"
-    vm.kubevirt.io/template: centos8-server-small
+#    vm.kubevirt.io/template: centos8-server-small
     vm.kubevirt.io/template.namespace: openshift
     vm.kubevirt.io/template.revision: "1"
     vm.kubevirt.io/template.version: v0.15.1
@@ -121,6 +121,7 @@ spec:
           volumeMode: Block
         source:
           pvc:
+            # If needed, change the PVC with your Centos8 Cloud OS
             name: centos8
             namespace: openshift-virtualization-os-images
   running: true
