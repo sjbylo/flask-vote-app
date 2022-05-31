@@ -3,6 +3,7 @@ import random
 import json
 import socket
 import flask
+import time
 
 from datetime import datetime
 from flask import Flask, request, make_response, render_template
@@ -133,7 +134,16 @@ if __name__ == '__main__':
 
     print(("Connect to : " + dburi))
 
-    db.create_all()
+    wait = 1
+    while True:
+        try:
+            db.create_all()
+        except Exception as e: 
+            print(e)
+            print ("Database connection failed ... sleep\n")
+        time.sleep(wait)
+        wait = 10
+
     db.session.commit()
     hostname = socket.gethostname()
          
