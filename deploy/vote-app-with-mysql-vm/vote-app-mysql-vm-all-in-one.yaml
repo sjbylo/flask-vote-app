@@ -15,6 +15,7 @@ spec:
   selector:
     matchLabels:
       deployment: vote-app
+  progressDeadlineSeconds: 300
   template:
     metadata:
       labels:
@@ -122,7 +123,7 @@ spec:
         source:
           pvc:
             # If needed, change the PVC with your Centos8 Cloud OS
-            name: centos8
+            name: centos-stream8
             namespace: openshift-virtualization-os-images
   running: true
   template:
