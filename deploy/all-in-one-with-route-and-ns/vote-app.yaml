@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: demo
+  name: vote-app
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -11,7 +11,7 @@ metadata:
     app.kubernetes.io/component: vote-app
     app.kubernetes.io/instance: vote-app
   name: vote-app
-  namespace: demo
+  namespace: vote-app
 spec:
   replicas: 1
   selector:
@@ -38,7 +38,7 @@ metadata:
     app.kubernetes.io/component: vote-app
     app.kubernetes.io/instance: vote-app
   name: vote-app
-  namespace: demo
+  namespace: vote-app
 spec:
   ports:
   - name: 8080-tcp
@@ -57,7 +57,7 @@ metadata:
     app.kubernetes.io/component: vote-app
     app.kubernetes.io/instance: vote-app
   name: vote-app
-  namespace: demo
+  namespace: vote-app
 spec:
   port:
     targetPort: 8080-tcp
