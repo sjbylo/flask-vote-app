@@ -134,15 +134,19 @@ if __name__ == '__main__':
 
     print(("Connect to : " + dburi))
 
+    # Keep trying to connect the DB, e.g. waiting for it to be reachable
     wait = 1
-    while True:
+    while wait:
         try:
             db.create_all()
+            wait = 0 
         except Exception as e: 
             print(e)
             print ("Database connection failed ... sleep\n")
-        time.sleep(wait)
-        wait = 10
+            time.sleep(wait)
+            wait = 10
+
+    print("Database connection ok")
 
     db.session.commit()
     hostname = socket.gethostname()
