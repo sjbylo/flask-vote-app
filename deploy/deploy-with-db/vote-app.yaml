@@ -1,9 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  annotations:
+    app.openshift.io/connects-to: '[{"apiVersion":"apps/v1","kind":"Deployment","name":"db"}]'  # For topology view
   labels:
     app: vote-app
     app.kubernetes.io/component: vote-app
+    app.kubernetes.io/part-of: vote-app  # For topology view
     app.kubernetes.io/instance: vote-app
   name: vote-app
 spec:
@@ -61,6 +64,7 @@ metadata:
   labels:
     app: db
     app.kubernetes.io/component: db
+    app.kubernetes.io/part-of: vote-app  # For topology view
     app.kubernetes.io/instance: db
   name: db
 spec:
