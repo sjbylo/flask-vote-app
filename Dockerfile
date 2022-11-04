@@ -1,6 +1,7 @@
 # Any of these base images should work...
 # Note that this open registry may go away!
-FROM registry.access.redhat.com/ubi8/python-38
+FROM registry.access.redhat.com/ubi8/python-36
+#FROM registry.access.redhat.com/ubi8/python-38. # Causing 'Working outside of application context' runtime error 
 #FROM registry.access.redhat.com/ubi8/python-38:1-9
 
 # Authenticated registry:
