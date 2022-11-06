@@ -9,8 +9,6 @@ metadata:
     app.kubernetes.io/instance: vote-app
   name: python-36
 spec:
-#  lookupPolicy:
-#    local: false
   tags:
   - annotations:
       openshift.io/imported-from: registry.access.redhat.com/ubi8/python-36
@@ -18,10 +16,7 @@ spec:
       kind: DockerImage
       name: registry.access.redhat.com/ubi8/python-36
     generation: null
-#    importPolicy: {}
     name: latest
-#    referencePolicy:
-#      type: ""
 ---
 apiVersion: image.openshift.io/v1
 kind: ImageStream
@@ -32,8 +27,6 @@ metadata:
     app.kubernetes.io/instance: vote-app
   name: vote-app
 spec:
-#  lookupPolicy:
-#    local: false
 ---
 apiVersion: build.openshift.io/v1
 kind: BuildConfig
@@ -48,8 +41,6 @@ spec:
     to:
       kind: ImageStreamTag
       name: vote-app:latest
-#  postCommit: {}
-#  resources: {}
   source:
     git:
       uri: https://github.com/sjbylo/flask-vote-app.git
@@ -89,7 +80,6 @@ spec:
   selector:
     matchLabels:
       deployment: vote-app
-#  strategy: {}
   template:
     metadata:
       labels:
@@ -114,7 +104,6 @@ spec:
         ports:
         - containerPort: 8080
           protocol: TCP
-#        resources: {}
 ---
 apiVersion: v1
 kind: Service
@@ -161,12 +150,10 @@ spec:
         - name: MYSQL_USER
           value: user
         image: registry.access.redhat.com/rhscl/mysql-57-rhel7:latest
-#        imagePullPolicy: IfNotPresent
         name: db
         ports:
         - containerPort: 3306
           protocol: TCP
-#      restartPolicy: Always
 ---
 apiVersion: v1
 kind: Service
@@ -184,7 +171,6 @@ spec:
     targetPort: 3306
   selector:
     deployment: db
-##  type: ClusterIP
 ---
 apiVersion: route.openshift.io/v1
 kind: Route
