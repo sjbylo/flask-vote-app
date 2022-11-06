@@ -1,0 +1,204 @@
+---
+# This manifest will launch mysql, start the build, then launch the app from the resulting image
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  labels:
+    app: vote-app
+    app.kubernetes.io/component: vote-app
+    app.kubernetes.io/instance: vote-app
+  name: python-36
+spec:
+#  lookupPolicy:
+#    local: false
+  tags:
+  - annotations:
+      openshift.io/imported-from: registry.access.redhat.com/ubi8/python-36
+    from:
+      kind: DockerImage
+      name: registry.access.redhat.com/ubi8/python-36
+    generation: null
+#    importPolicy: {}
+    name: latest
+#    referencePolicy:
+#      type: ""
+---
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  labels:
+    app: vote-app
+    app.kubernetes.io/component: vote-app
+    app.kubernetes.io/instance: vote-app
+  name: vote-app
+spec:
+#  lookupPolicy:
+#    local: false
+---
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    app: vote-app
+    app.kubernetes.io/component: vote-app
+    app.kubernetes.io/instance: vote-app
+  name: vote-app
+spec:
+  output:
+    to:
+      kind: ImageStreamTag
+      name: vote-app:latest
+#  postCommit: {}
+#  resources: {}
+  source:
+    git:
+      uri: https://github.com/sjbylo/flask-vote-app.git
+    type: Git
+  strategy:
+    dockerStrategy:
+      from:
+        kind: ImageStreamTag
+        name: python-36:latest
+    type: Docker
+  triggers:
+  - github:
+      secret: 43_QzZ3jGLs1s9tyFVkt
+    type: GitHub
+  - generic:
+      secret: nVHbJo3LTSwmIyIN0eR_
+    type: Generic
+  - type: ConfigChange
+  - imageChange: {}
+    type: ImageChange
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    app.openshift.io/connects-to: '[{"apiVersion":"apps/v1","kind":"Deployment","name":"db"}]'  # For topology view
+    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"vote-app:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"vote-app\")].image"}]'
+    openshift.io/generated-by: OpenShiftNewApp
+  labels:
+    app: vote-app
+    app.kubernetes.io/component: vote-app
+    app.kubernetes.io/part-of: vote-app  # For topology view
+    app.kubernetes.io/instance: vote-app
+  name: vote-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      deployment: vote-app
+#  strategy: {}
+  template:
+    metadata:
+      labels:
+        deployment: vote-app
+    spec:
+      containers:
+      - env:
+        - name: ENDPOINT_ADDRESS
+          value: db
+        - name: PORT
+          value: "3306"
+        - name: DB_NAME
+          value: vote
+        - name: MASTER_USERNAME
+          value: user
+        - name: MASTER_PASSWORD
+          value: password
+        - name: DB_TYPE
+          value: mysql
+        image: ' '
+        name: vote-app
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+#        resources: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: vote-app
+    app.kubernetes.io/component: vote-app
+    app.kubernetes.io/instance: vote-app
+  name: vote-app
+spec:
+  ports:
+  - name: 8080-tcp
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    deployment: vote-app
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: db
+    app.kubernetes.io/component: db
+    app.kubernetes.io/part-of: vote-app  # For topology view
+    app.kubernetes.io/instance: db
+  name: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      deployment: db
+  template:
+    metadata:
+      labels:
+        deployment: db
+    spec:
+      containers:
+      - env:
+        - name: MYSQL_DATABASE
+          value: vote
+        - name: MYSQL_PASSWORD
+          value: password
+        - name: MYSQL_USER
+          value: user
+        image: registry.access.redhat.com/rhscl/mysql-57-rhel7:latest
+#        imagePullPolicy: IfNotPresent
+        name: db
+        ports:
+        - containerPort: 3306
+          protocol: TCP
+#      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: db
+    app.kubernetes.io/component: db
+    app.kubernetes.io/instance: db
+  name: db
+spec:
+  ports:
+  - name: 3306-tcp
+    port: 3306
+    protocol: TCP
+    targetPort: 3306
+  selector:
+    deployment: db
+##  type: ClusterIP
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  labels:
+    app: vote-app
+    app.kubernetes.io/component: vote-app
+    app.kubernetes.io/instance: vote-app
+  name: vote-app
+spec:
+#  host: hostname will be auto-generated
+  port:
+    targetPort: 8080-tcp
+  to:
+    kind: Service
+    name: vote-app
+    weight: 100
