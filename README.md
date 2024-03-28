@@ -284,7 +284,7 @@ https://che.openshift.io/f?url=https://github.com/sjbylo/flask-vote-app
 This pipeline will provision a MySQL server in Azure, build the vote app, launch the app and connect it to the MySQL database. 
 For this pipeline to work fist set up the [Azure Servie Operator](https://github.com/sjbylo/lab-azure-service-operator) on OpenShift.
 
-Create the Tekton Pipline in a new project called vote-app:
+Create the Tekton Pipline in a new project called vote-app: 
 ```
 oc new-project vote-app
 cd pipeline
