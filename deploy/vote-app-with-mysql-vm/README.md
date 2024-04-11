@@ -1,6 +1,9 @@
-# Deploy vote-app with a VM running Centos and MySQL Community 
+# Deploy vote-app with a VM running Centos8 and MySQL Community 
 
-This yaml requires a root disk "source" PVC be created.
+This yaml should work out-of-the-box as long as the "centos-stream8" DataSource exists in the "openshift-virtualization-os-images" namespace. 
+
+If not, then .... 
+... this requires a root disk "source" PVC be created.
 Use the source creation feature (e.g. download from URL) or the PVC "With Data upload" features to create it.
 Upload an image from https://cloud.centos.org/centos/
 e.g.
@@ -15,7 +18,7 @@ or something newer.
             namespace: openshift-virtualization-os-images
 ```
 
-Then create application:
+Then create the application:
 
 ```
 oc apply -f vote-app-mysql-vm-all-in-one.yaml
