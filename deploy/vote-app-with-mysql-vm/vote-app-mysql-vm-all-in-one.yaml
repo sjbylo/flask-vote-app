@@ -51,7 +51,7 @@ spec:
           value: password
         - name: DB_TYPE
           value: mysql
-        image: image-registry.openshift-image-registry.svc:5000/demo/vote-app@sha256:f55b83c63dbfe0a363df859889f437c31144b5aee92e5cae9387f92de7bdc0ca
+        image: quay.io/sjbylo/flask-vote-app:latest
         imagePullPolicy: Always
         name: vote-app
         ports:
