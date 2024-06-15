@@ -32,7 +32,6 @@ spec:
     metadata:
       annotations:
         openshift.io/generated-by: OpenShiftWebConsole
-      creationTimestamp: null
       labels:
         app: vote-app
         deployment: vote-app
@@ -72,7 +71,6 @@ metadata:
   annotations:
     app.openshift.io/connects-to: '[{"apiVersion":"kubevirt.io/v1","kind":"VirtualMachine","name":"mysql-demo"}]'
     openshift.io/generated-by: OpenShiftWebConsole
-  creationTimestamp: "2024-04-11T10:18:38Z"
   labels:
     app: vote-app
     app.kubernetes.io/component: vote-app
@@ -100,7 +98,6 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  creationTimestamp: "2024-04-11T09:06:50Z"
   labels:
     app: db
     app.kubernetes.io/component: db
@@ -138,14 +135,10 @@ metadata:
           "min": 1610612736
         }
       ]
-  creationTimestamp: "2024-04-11T10:05:24Z"
-  finalizers:
-  - kubevirt.io/virtualMachineControllerFinalize
-  generation: 3
   labels:
     app: mysql-demo
     app.kubernetes.io/part-of: vote-app
-    vm.kubevirt.io/template: centos-stream8-server-small
+    vm.kubevirt.io/template: rhel9-server-small
     vm.kubevirt.io/template.namespace: openshift
     vm.kubevirt.io/template.revision: "1"
     vm.kubevirt.io/template.version: v0.25.0
@@ -155,12 +148,11 @@ spec:
   - apiVersion: cdi.kubevirt.io/v1beta1
     kind: DataVolume
     metadata:
-      creationTimestamp: null
       name: mysql-demo-rootdisk
     spec:
       sourceRef:
         kind: DataSource
-        name: centos-stream8
+        name: rhel9
         namespace: openshift-virtualization-os-images
       storage:
         resources:
@@ -171,9 +163,8 @@ spec:
     metadata:
       annotations:
         vm.kubevirt.io/flavor: small
-        vm.kubevirt.io/os: centos-stream8
+        vm.kubevirt.io/os: rhel9
         vm.kubevirt.io/workload: server
-      creationTimestamp: null
       labels:
         kubevirt.io/domain: mysql-demo
         kubevirt.io/size: small
@@ -209,12 +200,25 @@ spec:
       terminationGracePeriodSeconds: 180
       volumes:
       - cloudInitNoCloud:
-          userData: "#cloud-config\nuser: demo\npassword: demo\nchpasswd:\n  expire:
-            false\n# Run commands at first boot only\nruncmd:\n- rpm -ivh https://dev.mysql.com/get/mysql80-community-release-el8-2.noarch.rpm\n-
-            yum install mysql-server -y\n- systemctl start mysqld  \n- systemctl enable
-            mysqld\n- mysql -e \"CREATE USER 'user'@'%' IDENTIFIED BY 'password'\"\n-
-            mysql -e \"GRANT ALL PRIVILEGES ON * . * TO 'user'@'%'\"\n- mysql -uuser
-            -ppassword -e \"create database vote\"\n"
+         userData: |-
+           #cloud-config
+           user: demo
+           password: demo
+           chpasswd: { expire: False }
+           rh_subscription:
+             activation-key: rhel
+             org: 6340056
+           packages:
+           - dnf-automatic
+           runcmd:
+           - systemctl enable --now dnf-automatic-install.timer
+           #- rpm -ivh https://dev.mysql.com/get/mysql80-community-release-el9-1.noarch.rpm
+           - yum install mysql-server -y
+           - systemctl start mysqld
+           - systemctl enable mysqld
+           - mysql -e "CREATE USER 'user'@'%' IDENTIFIED BY 'password'"
+           - mysql -e "GRANT ALL PRIVILEGES ON * . * TO 'user'@'%'"
+           - mysql -uuser -ppassword -e "create database vote"
         name: cloudinitdisk
       - dataVolume:
           name: mysql-demo-rootdisk
