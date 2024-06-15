@@ -205,6 +205,7 @@ spec:
            user: demo
            password: demo
            chpasswd: { expire: False }
+           # See: https://www.redhat.com/en/blog/subscribing-rhel-vms-in-openshift-virtualization 
            rh_subscription:
              activation-key: rhel
              org: 6340056
