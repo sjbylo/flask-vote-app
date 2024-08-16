@@ -212,6 +212,7 @@ spec:
            packages:
            - dnf-automatic
            runcmd:
+           # This script will not work if a proxy is needed.
            - systemctl enable --now dnf-automatic-install.timer
            #- rpm -ivh https://dev.mysql.com/get/mysql80-community-release-el9-1.noarch.rpm
            - yum install mysql-server -y
