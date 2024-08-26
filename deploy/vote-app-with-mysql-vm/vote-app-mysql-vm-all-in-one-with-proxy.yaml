@@ -213,6 +213,9 @@ spec:
                no_proxy="localhost,127.0.0.1,.example.com,.lan"
            runcmd:
            - source /etc/environment
+           - export http_proxy="http://10.0.1.8:3128"
+           - export https_proxy="http://10.0.1.8:3128"
+           - export no_proxy="localhost,127.0.0.1,.example.com,.lan"
            - yum install mysql-server -y
            - systemctl start mysqld
            - systemctl enable mysqld
