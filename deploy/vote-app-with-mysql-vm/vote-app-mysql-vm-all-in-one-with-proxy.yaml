@@ -217,7 +217,7 @@ spec:
            - systemctl start mysqld
            - systemctl enable mysqld
            - mysql -e "CREATE USER 'user'@'%' IDENTIFIED BY 'password'"
-           - mysql -e "GRANT ALL PRIVILEGES ON * . * TO 'user'@'%'"
+           - mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'user'@'%'"
            - mysql -uuser -ppassword -e "create database vote"
         name: cloudinitdisk
       - dataVolume:
