@@ -206,14 +206,10 @@ spec:
            password: demo
            chpasswd: { expire: False }
            # See: https://www.redhat.com/en/blog/subscribing-rhel-vms-in-openshift-virtualization 
-           write_files:
-           - path: /etc/environment
-             content: |
-               http_proxy="http://10.0.1.8:3128"
-               https_proxy="http://10.0.1.8:3128"
-               no_proxy="localhost,127.0.0.1,.example.com,.lan"
-           runcmd:
-           - sudo sed -i -e "s#^proxy_hostname =.*#proxy_hostname = 10.0.1.8 #" -e "s#^proxy_port =.*#proxy_port = 3128#" /etc/rhsm/rhsm.conf
+           http_proxy: "http://10.0.1.8:3128"
+           https_proxy: "http://10.0.1.8:3128"
+           bootcmd:
+           - sed -i -e "s#^proxy_hostname =.*#proxy_hostname = 10.0.1.8 #" -e "s#^proxy_port =.*#proxy_port = 3128#" /etc/rhsm/rhsm.conf
            rh_subscription:
              activation-key: rhel
              org: 6340056
