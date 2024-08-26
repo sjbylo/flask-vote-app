@@ -138,10 +138,10 @@ metadata:
   labels:
     app: mysql-demo
     app.kubernetes.io/part-of: vote-app
-    vm.kubevirt.io/template: rhel9-server-small
+    vm.kubevirt.io/template: centos-stream9-server-small
     vm.kubevirt.io/template.namespace: openshift
     vm.kubevirt.io/template.revision: "1"
-    vm.kubevirt.io/template.version: v0.25.0
+    vm.kubevirt.io/template.version: v0.27.0
   name: mysql-demo
 spec:
   dataVolumeTemplates:
@@ -152,7 +152,7 @@ spec:
     spec:
       sourceRef:
         kind: DataSource
-        name: rhel9
+        name: centos-stream9
         namespace: openshift-virtualization-os-images
       storage:
         resources:
