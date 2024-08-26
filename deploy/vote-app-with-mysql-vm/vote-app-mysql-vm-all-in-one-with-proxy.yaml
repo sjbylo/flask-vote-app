@@ -1,0 +1,262 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    alpha.image.policy.openshift.io/resolve-names: '*'
+    app.openshift.io/connects-to: '[{"apiVersion":"kubevirt.io/v1","kind":"VirtualMachine","name":"mysql-demo"},{"apiVersion":"kubevirt.io/v1","kind":"VirtualMachine","name":"mysql-demo"},{"apiVersion":"kubevirt.io/v1","kind":"VirtualMachine","name":"mysql-demo"},{"apiVersion":"kubevirt.io/v1","kind":"VirtualMachine","name":"mysql-demo"},{"apiVersion":"kubevirt.io/v1","kind":"VirtualMachine","name":"mysql-demo"},{"apiVersion":"kubevirt.io/v1","kind":"VirtualMachine","name":"mysql-demo"}]'
+    app.openshift.io/route-disabled: "false"
+    deployment.kubernetes.io/revision: "2"
+    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"vote-app:latest","namespace":"demo"},"fieldPath":"spec.template.spec.containers[?(@.name==\"vote-app\")].image","pause":"false"}]'
+  labels:
+    app: vote-app
+    app.kubernetes.io/component: vote-app
+    app.kubernetes.io/instance: vote-app
+    app.kubernetes.io/name: vote-app
+    app.kubernetes.io/part-of: vote-app
+    app.openshift.io/runtime: python
+  name: vote-app
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: vote-app
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftWebConsole
+      labels:
+        app: vote-app
+        deployment: vote-app
+    spec:
+      containers:
+      - env:
+        - name: ENDPOINT_ADDRESS
+          value: db
+        - name: PORT
+          value: "3306"
+        - name: DB_NAME
+          value: vote
+        - name: MASTER_USERNAME
+          value: user
+        - name: MASTER_PASSWORD
+          value: password
+        - name: DB_TYPE
+          value: mysql
+        image: quay.io/sjbylo/flask-vote-app:latest
+        imagePullPolicy: Always
+        name: vote-app
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.openshift.io/connects-to: '[{"apiVersion":"kubevirt.io/v1","kind":"VirtualMachine","name":"mysql-demo"}]'
+    openshift.io/generated-by: OpenShiftWebConsole
+  labels:
+    app: vote-app
+    app.kubernetes.io/component: vote-app
+    app.kubernetes.io/instance: vote-app
+    app.kubernetes.io/name: vote-app
+    app.kubernetes.io/part-of: vote-app
+    app.openshift.io/runtime-version: latest
+  name: vote-app
+spec:
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: 8080-tcp
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: vote-app
+    deployment: vote-app
+  sessionAffinity: None
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: db
+    app.kubernetes.io/component: db
+    app.kubernetes.io/instance: db
+  name: db
+spec:
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: 3306-tcp
+    port: 3306
+    protocol: TCP
+    targetPort: 3306
+  selector:
+    kubevirt.io/domain: mysql-demo
+  sessionAffinity: None
+  type: ClusterIP
+---
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  annotations:
+    kubemacpool.io/transaction-timestamp: "2024-04-11T10:22:55.868959422Z"
+    kubevirt.io/latest-observed-api-version: v1
+    kubevirt.io/storage-observed-api-version: v1alpha3
+    vm.kubevirt.io/validations: |
+      [
+        {
+          "name": "minimal-required-memory",
+          "path": "jsonpath::.spec.domain.resources.requests.memory",
+          "rule": "integer",
+          "message": "This VM requires more memory.",
+          "min": 1610612736
+        }
+      ]
+  labels:
+    app: mysql-demo
+    app.kubernetes.io/part-of: vote-app
+    vm.kubevirt.io/template: rhel9-server-small
+    vm.kubevirt.io/template.namespace: openshift
+    vm.kubevirt.io/template.revision: "1"
+    vm.kubevirt.io/template.version: v0.25.0
+  name: mysql-demo
+spec:
+  dataVolumeTemplates:
+  - apiVersion: cdi.kubevirt.io/v1beta1
+    kind: DataVolume
+    metadata:
+      name: mysql-demo-rootdisk
+    spec:
+      sourceRef:
+        kind: DataSource
+        name: rhel9
+        namespace: openshift-virtualization-os-images
+      storage:
+        resources:
+          requests:
+            storage: 30Gi
+  running: true
+  template:
+    metadata:
+      annotations:
+        vm.kubevirt.io/flavor: small
+        vm.kubevirt.io/os: rhel9
+        vm.kubevirt.io/workload: server
+      labels:
+        kubevirt.io/domain: mysql-demo
+        kubevirt.io/size: small
+    spec:
+      domain:
+        cpu:
+          cores: 1
+          sockets: 1
+          threads: 1
+        devices:
+          disks:
+          - disk:
+              bus: virtio
+            name: rootdisk
+          - disk:
+              bus: virtio
+            name: cloudinitdisk
+          interfaces:
+          - masquerade: {}
+            model: virtio
+            name: default
+          networkInterfaceMultiqueue: true
+          rng: {}
+        machine:
+          type: pc-q35-rhel9.2.0
+        resources:
+          requests:
+            memory: 2Gi
+      evictionStrategy: LiveMigrate
+      networks:
+      - name: default
+        pod: {}
+      terminationGracePeriodSeconds: 180
+      volumes:
+      - cloudInitNoCloud:
+         userData: |-
+           #cloud-config
+           user: demo
+           password: demo
+           chpasswd: { expire: False }
+           # See: https://www.redhat.com/en/blog/subscribing-rhel-vms-in-openshift-virtualization 
+           rh_subscription:
+             activation-key: rhel
+             org: 6340056
+           write_files:
+           - path: /etc/environment
+             content: |
+               http_proxy="http://10.0.1.8:3128"
+               https_proxy="http://10.0.1.8:3128"
+               no_proxy="localhost,127.0.0.1,.example.com,.lan"
+           runcmd:
+           - sudo sed -i -e "s#^proxy_hostname =.*#proxy_hostname = 10.0.1.8 #" -e "s#^proxy_port =.*#proxy_port = 3128#" /etc/rhsm/rhsm.conf
+           packages:
+           - dnf-automatic
+           runcmd:
+           - source /etc/environment
+           # This script will not work if a proxy is needed.
+           - systemctl enable --now dnf-automatic-install.timer
+           #- rpm -ivh https://dev.mysql.com/get/mysql80-community-release-el9-1.noarch.rpm
+           - yum install mysql-server -y
+           - systemctl start mysqld
+           - systemctl enable mysqld
+           - mysql -e "CREATE USER 'user'@'%' IDENTIFIED BY 'password'"
+           - mysql -e "GRANT ALL PRIVILEGES ON * . * TO 'user'@'%'"
+           - mysql -uuser -ppassword -e "create database vote"
+        name: cloudinitdisk
+      - dataVolume:
+          name: mysql-demo-rootdisk
+        name: rootdisk
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  annotations:
+    app.openshift.io/connects-to: '[{"apiVersion":"kubevirt.io/v1","kind":"VirtualMachine","name":"mysql-demo"}]'
+    openshift.io/host.generated: "true"
+  labels:
+    app: vote-app
+    app.kubernetes.io/component: vote-app
+    app.kubernetes.io/instance: vote-app
+    app.kubernetes.io/name: vote-app
+    app.kubernetes.io/part-of: vote-app
+    app.openshift.io/runtime-version: latest
+  name: vote-app
+spec:
+  port:
+    targetPort: 8080-tcp
+  tls:
+    insecureEdgeTerminationPolicy: Redirect
+    termination: edge
+  to:
+    kind: Service
+    name: vote-app
+    weight: 100
+  wildcardPolicy: None
