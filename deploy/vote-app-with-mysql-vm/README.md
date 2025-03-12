@@ -25,7 +25,7 @@ Tested with Centos-Stream9 and RHEL9.
 ## Create a DataSource
 
 Use the 
-<img src="https://docs.redhat.com/en/documentation/openshift_container_platform/4.13/html/virtualization/virtual-machine-templates#virt-creating-and-using-boot-sources" alt="source creation feature" width="500">
+[source creation feature](https://docs.redhat.com/en/documentation/openshift_container_platform/4.13/html/virtualization/virtual-machine-templates#virt-creating-and-using-boot-sources)
 when creating a PVC (e.g. download from URL) or "With Data upload" features to create it.
 
 Upload an image from https://cloud.centos.org/centos/
