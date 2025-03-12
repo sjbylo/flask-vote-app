@@ -1,6 +1,6 @@
 # Deploy vote-app + MySQL with a VM running either RHEL or Centos-Stream9
 
-This yaml should work out-of-the-box as long as the "centos-stream9" DataSource exists in the "openshift-virtualization-os-images" namespace which is normally created after a default installation of OpenShift Virtualization.   If not, then ... see below "Create a DataSource". 
+This yaml should work out-of-the-box as long as the "rhel9" or "centos-stream9" DataSource exists in the "openshift-virtualization-os-images" namespace which is normally created after a default installation of OpenShift Virtualization.   If not, then ... see below "Create a DataSource". 
 
 <img src="./images/vote-app-plus-vm-demo.png" alt="This is what it looks like" width="500">
 
