@@ -17,16 +17,14 @@ oc new-project myproj
 oc apply -f vote-app-mysql-vm-all-in-one-with-proxy.yaml
 ```
 
-Note that it will take up to 5 mins for the MySQL VM to launch and run its cloud-init script to install, configure and run MySQL.  See the log file /var/log/cloud-init-output.log to troubleshoot. 
+Note that it will take up to 5 mins for the MySQL VM to launch and run its cloud-init script to install, configure and run MySQL, after which the application will come up and be ready to use.  See the log file /var/log/cloud-init-output.log to troubleshoot. 
 
 Tested with Centos-Stream9 and RHEL9.
 
 
 ## Create a DataSource
 
-Use the 
-[source creation feature](https://docs.redhat.com/en/documentation/openshift_container_platform/4.13/html/virtualization/virtual-machine-templates#virt-creating-and-using-boot-sources)
-when creating a PVC (e.g. download from URL) or "With Data upload" features to create it.
+Use the [source creation feature](https://docs.redhat.com/en/documentation/openshift_container_platform/4.13/html/virtualization/virtual-machine-templates#virt-creating-and-using-boot-sources) when creating a PVC (e.g. download from URL) or "With Data upload" features to create it.
 
 Download an image from https://cloud.centos.org/centos/
 e.g.
