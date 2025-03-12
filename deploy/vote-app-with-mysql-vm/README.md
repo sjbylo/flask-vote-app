@@ -2,8 +2,7 @@
 
 This yaml should work out-of-the-box as long as the "centos-stream9" DataSource exists in the "openshift-virtualization-os-images" namespace which is normally created after a default installation of OpenShift Virtualization.   If not, then ... see below "Create a DataSource". 
 
-![My Image](./images/vote-app-plus-vm-demo.png "This is what it looks like")
-<img src="./images/vote-app-plus-vm-demo.png" alt="This is what it looks like" width="200">
+<img src="./images/vote-app-plus-vm-demo.png" alt="This is what it looks like" width="500">
 
 Create the application:
 
