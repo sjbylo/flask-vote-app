@@ -19,6 +19,7 @@ Note that it will take up to 5 mins for the MySQL VM to launch and run its cloud
 
 Tested with Centos-Stream9 and RHEL9.
 
+[Demo](./images/vote-app-plus-vm-demo.png)
 
 ## Create a DataSource
 
