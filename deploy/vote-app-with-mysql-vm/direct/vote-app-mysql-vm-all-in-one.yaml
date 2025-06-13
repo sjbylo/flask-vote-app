@@ -121,7 +121,6 @@ apiVersion: kubevirt.io/v1
 kind: VirtualMachine
 metadata:
   annotations:
-    kubemacpool.io/transaction-timestamp: "2024-04-11T10:22:55.868959422Z"
     kubevirt.io/latest-observed-api-version: v1
     kubevirt.io/storage-observed-api-version: v1alpha3
     vm.kubevirt.io/validations: |
