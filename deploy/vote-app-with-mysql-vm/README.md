@@ -50,4 +50,29 @@ Them add this yaml snip-it to your VM definition in the "vote-app-mysql-vm-all-i
             namespace: openshift-virtualization-os-images
 ```
 
+## ArgoCD
+
+Use the following Application resource if you want to use ArgoCD
+
+```
+kind: Application
+metadata:
+  name: myapp
+  namespace: openshift-gitops
+spec:
+  destination:
+    namespace: demo-gitops
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: deploy/vote-app-with-mysql-vm/direct
+    repoURL: https://github.com/sjbylo/flask-vote-app.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: false
+    syncOptions:
+    - CreateNamespace=true
+```
 
