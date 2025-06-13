@@ -11,6 +11,10 @@ Create the application:
 ```
 oc new-project myproj
 oc apply -f direct/vote-app-mysql-vm-all-in-one.yaml
+
+or
+
+oc apply -f https://raw.githubusercontent.com/sjbylo/flask-vote-app/refs/heads/master/deploy/vote-app-with-mysql-vm/direct/vote-app-mysql-vm-all-in-one.yaml 
 ```
 
 If OpenShift is configured with the cluster-wide proxy, use the following. Be sure to edit the 3 "*_proxy" vars in the vote-app-mysql-vm-all-in-one-with-proxy.yaml file to suit your environment:
