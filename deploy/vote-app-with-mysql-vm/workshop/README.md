@@ -24,7 +24,7 @@ Don't forget to change the `YOUR-OPENSHIFT-NAMESPACE` in the yaml code to match 
 apiVersion: argoproj.io/v1beta1
 kind: ArgoCD
 metadata:
-  name: YOUR-OPENSHIFT-NAMESPACE
+  name: argocd
   namespace: YOUR-OPENSHIFT-NAMESPACE
 spec:
   controller:
@@ -144,7 +144,7 @@ Let’s take a look at the Application manifest used for this deployment and bre
 ```
 kind: Application
 metadata:
-  name: vote-app-mixed
+  name: vote-app
   namespace: YOUR-OPENSHIFT-NAMESPACE
 spec:
   destination:
