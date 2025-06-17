@@ -1,8 +1,11 @@
 # Mixed Pod + VM OpenShift Virtualization GitOps demo
 
-Use OpenShift Virtualization & GitOps to deploy a vote-app pod and a MySQL VM (running either RHEL or Centos-Stream9).
 
-This yaml should work out-of-the-box with OpenShift Virt as long as the "rhel9" or "centos-stream9" DataSource exists in the "openshift-virtualization-os-images" namespace which is normally created after a default installation of OpenShift Virtualization (air-gapped installations will require extra configuration). If not, then see below on how to "Create a DataSource". 
+You can now use OpenShift Virtualization & GitOps together to deploy a demo vote application pod and a MySQL VM.
+
+You can learn more about GitOps from this [GitOps Workshop Guide](https://openshiftdemos.github.io/openshift-gitops-workshop/openshift-gitops-workshop/index.html).
+
+The yaml code in this repository should work out-of-the-box with OpenShift Virt as long as the "rhel9" or "centos-stream9" (others may work too) DataSource exists in the "openshift-virtualization-os-images" namespace which is normally created after a default installation of OpenShift Virtualization (air-gapped installations will require extra configuration). If not, then see below on how to "Create a DataSource". 
 
 <img src="./images/vote-app-plus-vm-demo.png" alt="This is what it looks like" width="500">
 
