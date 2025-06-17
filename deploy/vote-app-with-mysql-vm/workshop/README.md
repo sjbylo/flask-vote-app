@@ -1,22 +1,24 @@
 # WORK IN PROGRESS
+# Workshop - Mixed Pod + VM OpenShift Virtualization GitOps Demo
 
-# Workshop - Mixed Pod + VM OpenShift Virtualization GitOps demo
+GitOps is a way to manage infrastructure and applications using Git as the single source of truth.
+It automates deployment by syncing the desired state in Git with the live environment.
+Every change is tracked in Git, providing a full audit trail for transparency and accountability.
 
-Use OpenShift Virtualization & GitOps to deploy a demo vote application pod and a MySQL VM (running either RHEL or Centos-Stream).
+Use OpenShift Virtualization & GitOps to deploy a demo vote application pod and a MySQL VM.
 
 You can learn more about GitOps from this [GitOps Workshop Guide](https://openshiftdemos.github.io/openshift-gitops-workshop/openshift-gitops-workshop/index.html).
 
-
+Once the application is ddpleoyed this is what you will see.
 <img src="./images/vote-app-plus-vm-demo.png" alt="This is what it looks like" width="500">
 
+We will use the OpenShift GitOps Operator (based on the ArgoCD project) to implement GitOps and deploy our demo application. 
 
-We will use OpenShift GitOps Operator (based on ArgoCD project) to implement GitOps and deploy our demo application. 
-
-First, you will provision an instance of ArgoCD into your OpenShift namespace which you can use for yourself.  
+First, you will provision your own instance of ArgoCD into your OpenShift namespace.
 
 Add the following ArgoCD resource into your namespace.  There are many ways to do this, e.g. via the OpenShift Console or via the command line.
 
-Don't forget to change the `YOUR-OPENSHIFT-NAMESPACE` to your OpenShift namespace. 
+Don't forget to change the `YOUR-OPENSHIFT-NAMESPACE` in the yaml code to match your OpenShift namespace. 
 
 ```
 apiVersion: argoproj.io/v1beta1
@@ -127,12 +129,17 @@ Log into ArgoCD with your usual OpenShift credentials and, on the next page, all
 Here is one way to find the ArgoCD Route.  The other way is to look at the main menu on the left under Networking -> Routes. 
 
 ```
-oc get route -n USER_PLACEHOLDER-argocd USER_PLACEHOLDER-argo-server -o jsonpath='{.spec.host}{"\n"}'
+oc get route -n YOUR-NAMESPACE your-argo-server -o jsonpath='{.spec.host}{"\n"}'
 ```
 
-You will now see the ArgoCD UI. 
+You will now see the ArgoCD UI in your browser.
 
 Create the vote-app Application using the following Application resource. Note, this will only work for clusters with direct access to the Internet. 
+
+In Argo CD, a managed set of manifests is called an Application. 
+To enable Argo CD to deploy these manifests to your cluster, you need to define them using an Application Custom Resource (CR).
+Let’s take a look at the Application manifest used for this deployment and break it down:
+
 
 ```
 kind: Application
@@ -155,7 +162,7 @@ spec:
 ```
 
 - `destination`: describes into which cluster and namespace to apply the yaml resources (using the locally-resolvable URL for the cluster)
-- `project default`: is an ArgoCD concept and has nothing to do with any OpenShift projects
+- `project default`: is an ArgoCD concept and has nothing to do with OpenShift projects
 - `source`: describes from which git repository and the directory path to fetch the yaml resources
 - `prune`: resources, that have been removed from the Git repo, will be automatically pruned
 - `selfHeal` false: manual changes made to the kubernetes resources, e.g. using oc or kubectl, will not be "healed"
@@ -163,14 +170,15 @@ spec:
 Note that after the VM status is `Running` it will still `take up to 5 mins` for the MySQL VM to launch and run its `cloud-init` script to install, configure and run MySQL, 
 after which the vote application will connect to the database and be ready to use.  
 
-Log into the MySQL VM's Console and check out how the cloud-init script was executed.  See the log file at /var/log/cloud-init-output.log.
+Using the Virtualization menu item, find and then log into the MySQL VM's Console and check out how the cloud-init script was executed.  
+See the log file at /var/log/cloud-init-output.log.
 
-Also, verify that mysql is running in the VM with "ps -ef | grep -i mysql".  Optional, connect to MySQL and view the database contents.
+Also, verify that MySQL is running in the VM with "ps -ef | grep -i mysql".  Optional, connect to MySQL and view the database contents.
 
 
 ## Self healing
 
-Notice that we set the following in the above yaml resource.  We set the application to NOT self heal.  Let's test this now. 
+Notice that we set the following in the above yaml resource.  We set the application to NOT `self heal`.  Let's test this now. 
 
 ```
 spec:
@@ -184,9 +192,9 @@ Since `selfHeal` was set to false, we will delete one of the kubernetes resource
 
 Now, delete the vote-app route in your namespace. 
 
-What happens? 
+What happened? 
 
-It does not get re-created automatically!   
+It does not get re-created automatically!  Why not? 
 
 Set selfHeal to "auto" in the ArgoCD UI.  Go to the Application, click `Details` and make the change for the vote-app to self heal. 
 Save the changes.   
