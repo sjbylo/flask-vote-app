@@ -262,6 +262,10 @@ Create the above Application by:
 
 `IMPORTANT: Be sure to change the values in the above Application manifest: both namespaces & repoURL`
 
+You should see the provisioned application which looks like this:
+
+<img src="./images/vote-app-plus-vm-demo.png" alt="Vote App in ArgoCD" width="500">
+
 Note that after the VM status is `Running` it will still `take up to 5 mins` for the MySQL VM to launch and run its `cloud-init` script to install, configure and run MySQL, 
 after which the vote application will connect to the database and be ready to use.  
 
@@ -269,6 +273,7 @@ Using the Virtualization menu item, find and then log into the MySQL VM's Consol
 See the log file at /var/log/cloud-init-output.log.
 
 Also, verify that MySQL is running in the VM with "ps -ef | grep -i mysql".  Bonus activity, if you know how, connect to MySQL and view the database contents.
+
 
 ## View the VM in the Console
 
