@@ -19,9 +19,45 @@ Once the application is deployed this is what you will see in OpenShift's Topolo
 
 We will use the OpenShift GitOps Operator (based on the ArgoCD project) to implement GitOps and deploy our demo application. 
 
+
+## Find and access your Git Repo URL
+
+Before we do anything, we need to take a look at your application manifests (yaml code) in our lab git server (Gitea), hosted on OpenShift.
+
+It is always very important to have selected the correct OpenShift project in the top left of the Console.  
+
+Select "Gitea" project now. 
+
+Determine Gitea's Route which you will find in the Gitea namespace (Go to Menu -> Networking -> Routes).  
+
+Log into Gitea using your username and password as provided in the lab. 
+
+Note your repository, which is a copy of the source code of the original flask-vote-app app, and fetch the repo URL.  
+
+Your Git repo URL will look something like this:
+
+```
+http://gitea-with-repositories-gitea.apps.sandbox.openshift.com/user1/flask-vote-app.git
+```
+
+Once you log in, you will see your code repo with the name, e.g. "user1/flask-vote-app"
+
+Look into the folder "deploy/vote-app-with-mysql-vm/direct" and open the file `vote-app-mysql-vm-all-in-one.yaml`.
+
+In the file, you will see all the Kubernetes resources that are needed to deploy the application. 
+
+Note the following:
+  - `kind: Deployment` (name: vote-app) - this is the configuration that will provision the vote-app in a pod
+  - `kind: Service` (name: db) - this is configuration that will enable the pod to access the MySQL VM via the pod network
+  - `kind: VirtualMachine` - this is the configuration that will provision the MySQL VM
+  - `kind: Route` - this is the configuration that will provide north-south ingress into the vote-app application
+
+
+Later on in the workshop you will make changes to the code and see the changes take effect in OpenShift. 
+
 ## Create a new Project 
 
-Create a new project for yourself to work in and remember the project name.  Use a unique name, e.g. gitops-user1
+Create a new project for yourself to work in and remember the project name.  Use a unique name, e.g. `gitops-user1`
 
 You can do this in the OpenShift Console under `Home -> Projects -> Create Project` or from the command line with "oc new-project my-project".
 
@@ -41,7 +77,7 @@ apiVersion: argoproj.io/v1beta1
 kind: ArgoCD
 metadata:
   name: argocd
-  namespace: YOUR-OPENSHIFT-NAMESPACE      # <<== Add your namespace here
+  namespace: YOUR-OPENSHIFT-NAMESPACE      # <<== Add your namespace here, e.g. gitops-user1
 spec:
   controller:
     processors: {}
@@ -142,10 +178,10 @@ In the Console, go to Workloads -> Pods (ensure your project is selected above).
 After about 3-4 mins, you should see all the ArgoCD pods, running and ready (1/1), similar to the following: 
 
 - argocd-application-controller-0
-- argocd-dex-server-7cc677db56-wd597
-- argocd-redis-7f4b689446-m694j
-- argocd-repo-server-6d8d548d5d-zlchr
-- argocd-server-967895867-zts7f
+- argocd-dex-server-xxxxx-xxxxx
+- argocd-redis-xxxxx-xxxxx
+- argocd-repo-server-xxxxx-xxxxx
+- argocd-server-xxxxx-xxxxx
 
 
 Find the Route that was created and access it to open the ArgoCD UI at the login page.
@@ -171,32 +207,6 @@ Log into ArgoCD with your usual OpenShift credentials (use the `LOG IN VIA OPENS
 Create the vote-app Application using the following Application resource (note, this will only work for clusters with direct access to the Internet).
 
 
-## Find and access your Git Repo URL
-
-Log into Gitea via its Route which you will find in your namespace (Menu -> Networking -> Routes).  
-Note that your repository (source copy of the original flask-vote-app app) and fetch the repo URL.  
-
-Your Git repo URL will look something like this:
-
-```
-http://gitea-with-repositories-gitea.apps.sandbox.openshift.com/user1/flask-vote-app.git
-```
-
-Once you log in, you will see your code repo with the name, e.g. "user1/flask-vote-app"
-
-Look into the folder "deploy/vote-app-with-mysql-vm/direct" and open the file `vote-app-mysql-vm-all-in-one.yaml`.
-
-In the file, you will see all the Kubernetes resources that are needed to deploy the application. 
-
-Note the following:
-  - `kind: Deployment` (name: vote-app) - this is the configuration that will provision the vote-app in a pod
-  - `kind: Service` (name: db) - this is configuration that will enable the pod to access the MySQL VM via the pod network
-  - `kind: VirtualMachine` - this is the configuration that will provision the MySQL VM
-  - `kind: Route` - this is the configuration that will provide north-south ingress into the vote-app application
-
-
-Later on in the workshop you will make changes to the code and see the changes take effect in OpenShift. 
-
 
 ## Create the Demo Application
 
@@ -210,10 +220,10 @@ Let’s take a look at the Application manifest used for this deployment and bre
 kind: Application
 metadata:
   name: vote-app
-  namespace: YOUR-OPENSHIFT-NAMESPACE             # <<== Add your namespace here
+  namespace: YOUR-OPENSHIFT-NAMESPACE             # <<== Add your namespace here, e.g. gitops-user1
 spec:
   destination:
-    namespace: YOUR-OPENSHIFT-NAMESPACE           # <<== Add your namespace here
+    namespace: YOUR-OPENSHIFT-NAMESPACE           # <<== Add your namespace here, e.g. gitops-user1
     server: https://kubernetes.default.svc
 
   project: default
@@ -223,11 +233,13 @@ spec:
     repoURL: http://HOST/YOUR-REPO-PATH.git       # <<== add your repo URL here
     targetRevision: HEAD
 
+```
+<!--
 #  syncPolicy:
 #    automated:
 #      prune: true
 #      selfHeal: false
-```
+-->
 
 - `destination`: describes into which cluster and namespace to apply the yaml resources (using the locally-resolvable URL for the cluster)
 - `project default`: is an ArgoCD concept and has nothing to do with OpenShift projects
@@ -244,7 +256,7 @@ Create the above Application by:
 - Click SAVE and then
 - Click the CREATE button
 
-`Be sure to change the values in the below Application manifest: both namespaces & repoURL`
+`IMPORTANT: Be sure to change the values in the above Application manifest: both namespaces & repoURL`
 
 Note that after the VM status is `Running` it will still `take up to 5 mins` for the MySQL VM to launch and run its `cloud-init` script to install, configure and run MySQL, 
 after which the vote application will connect to the database and be ready to use.  
