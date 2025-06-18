@@ -30,7 +30,7 @@ Before we do anything, we need to take a look at your application manifests (yam
 Note that whenever you are working in the OpenShift Console, it is always very important to select the correct OpenShift project in the top left of the Console.  
 
 For example:
-<img src="./images/project-gitops-user1.png" alt="Project selection example" >
+<img src="./images/project-gitops-user1.png" alt="Project selection example" width="80">
 
 Now, select the "Gitea" project.
 
