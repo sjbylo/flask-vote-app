@@ -22,7 +22,7 @@ metadata:
 apiVersion: pfe.rhpds.com/v1
 kind: Gitea
 metadata:
-  name: gitea-with-repositories
+  name: gitea
   namespace: gitea
 spec:
   giteaSsl: false          # Important, so ArgoCD can easily access the repos
@@ -32,7 +32,7 @@ spec:
 #  giteaAdminPasswordLength: 6 
   giteaAdminEmail: email@address.com
 
-  giteaDisableRegistration: false
+  giteaDisableRegistration: true
 
   giteaCreateUsers: true
   giteaGenerateUserFormat: "user%d"
@@ -45,6 +45,15 @@ spec:
     name: flask-vote-app
     private: false
 ```
+
+## Create read access to the gitea project for all users
+
+Users need to find the Route hostname to use to access their repos.
+
+```
+oc adm policy add-role-to-group view system:authenticated -n gitea
+```
+
 
 ## Example status of "Gitea" when complate. 
 
@@ -70,8 +79,8 @@ status:
     reason: Running
     status: "True"
     type: Running
-  giteaHostname: gitea-with-repositories-gitea.apps.demo1.example.com
-  giteaRoute: http://gitea-with-repositories-gitea.apps.demo1.example.com
+  giteaHostname: gitea-gitea.apps.demo1.example.com
+  giteaRoute: http://gitea-gitea.apps.demo1.example.com
   repoMigrationComplete: true
   userPassword: password
   userSetupComplete: true

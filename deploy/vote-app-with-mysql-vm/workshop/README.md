@@ -21,9 +21,11 @@ We will use the OpenShift GitOps Operator (based on the ArgoCD project) to imple
 
 ## Create a new Project 
 
-Create a project for yourself to work in and remember the project name.
+Create a new project for yourself to work in and remember the project name.  Use a unique name, e.g. gitops-user1
 
-You can go this in the OpenShift Console (Home -> Projects -> Create Project) or from the command line with "oc new-project my-project".
+You can do this in the OpenShift Console under `Home -> Projects -> Create Project` or from the command line with "oc new-project my-project".
+
+You will use this project for all further activities.
 
 
 ## Provision your own instance of OpenShift GitOps (ArgoCD)
@@ -138,7 +140,7 @@ spec:
 Wait 5 mins for all the pods in your namespace to be Running and Ready, i.e. (1/1). 
 
 Find the Route that was created and access it to open the ArgoCD UI at the login page.
-Log into ArgoCD with your usual OpenShift credentials and, on the next page, allow the `access permissions`.
+Log into ArgoCD with your usual OpenShift credentials (use the `LOG IN VIA OPENSHIFT` button) and, on the next page, allow the `access permissions`.
 
 Here is one way to find the ArgoCD Route.  The other way is to look at the main menu on the left under Networking -> Routes. 
 
@@ -216,9 +218,10 @@ spec:
 
 Create the above Application by:
 
-- Clicking on the "Create Application" button in the ArgoCD UI
+- Clicking on the "CREATE APPLICATION" button in the ArgoCD UI
 - Click on the "EDIT AS YAML" button
-- Copy and paste and then edit the yaml
+- Copy and paste and then
+- `Edit the yaml` as indicated above
 - Click SAVE and then
 - Click the CREATE button
 
