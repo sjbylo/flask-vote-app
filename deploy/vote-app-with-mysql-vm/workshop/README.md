@@ -11,6 +11,8 @@ Every change is tracked in Git, providing a full audit trail for transparency an
 
 You can learn more about GitOps from this [GitOps Workshop Guide](https://openshiftdemos.github.io/openshift-gitops-workshop/openshift-gitops-workshop/index.html).
 
+## Virt + GitOps Workshop
+
 Use OpenShift Virtualization & GitOps to deploy a demo vote application pod and a MySQL VM.
 
 Once the application is deployed this is what you will see in OpenShift's Topology View:
@@ -19,6 +21,7 @@ Once the application is deployed this is what you will see in OpenShift's Topolo
 
 We will use the OpenShift GitOps Operator (based on the ArgoCD project) to implement GitOps and deploy our demo application. 
 
+First, delete any of the resources that may have been created in the cluster due to previous labs.
 
 ## Find and access your Git Repo URL
 
@@ -267,6 +270,13 @@ See the log file at /var/log/cloud-init-output.log.
 
 Also, verify that MySQL is running in the VM with "ps -ef | grep -i mysql".  Bonus activity, if you know how, connect to MySQL and view the database contents.
 
+## View the VM in the Console
+
+Go and view your new MySQL VM in the Console.
+
+Go to Administration -> Virtualization -> mysql-demo -> Configuration -> Initial Run -> Cloud-init Edit -> Script (toggle button) 
+to view the cloud-init script which sets the demo user & password and also installs and configured MySQL.  This is the script that is run when the VM is started for the first time. 
+
 
 ## Self Healing
 
@@ -287,11 +297,41 @@ Now, delete the vote-app route in your namespace.
 What happened? 
 
 It does not get re-created automatically!  Why not? 
+Answer: `Because the Application is not set to 'self heal'`.
 
-Set selfHeal to "auto" in the ArgoCD UI.  Go to the Application, click `Details` and make the change for the vote-app to self heal. 
-Save the changes.   
+Set selfHeal to "auto" in the ArgoCD UI.  Go to the Application, click `Details`, scroll down and make the change to self heal.  Click on ENABLE-AUTO-SYNC to enable it.  Ensure `PRUNE RESOURCES` and `SELF HEAL` are also enabled!
 
-Make a change in OpenShift and see it "heals":
+Go back to the main UI and you should see "Auto sync is enabled".
+
+Now, make a very human mistake and delete some of the vote-app resources in your project. 
+
+Make a change in OpenShift and see it "heal", for example: 
+
+- Delete the route and/or
+- Delete the vote-app Deployment and/or
+- Stop the MySQL VM
+- Delete the MySQL VM
+
+
+## Implement Rollback
+
+Imagine a change is made in git by the platform team and then rolled out to OpenShift via GitOps.  
+
+But, there is a problem!  You can rollback to the previous revision (or commit) that is known to work.
+
+Make a change to the "vote-app-mysql-vm-all-in-one.yaml" file in your repo.  E.g. change the vote-app deployment `replicas` to "3", e.g. "replicas: 3".
+
+Commit the change, by entering "Changed replicas = 3" into the `Subject` line of the commit. 
+
+Ensure the Application is re-synchronized via the UI.
+
+Now try out the "HISTORY AND ROLLBACK" button and change the configuration back to the previous one. 
+
+You should be able to roll back to a previous state.
+
+Note: See the [ArgoCD Core Concepts](https://argo-cd.readthedocs.io/en/stable/core_concepts/#core-concepts) for an explanation on the difference between `Refresh` and `Sync`.
+- `Refresh` Compare the latest code in Git with the live state. Figure out what is different.
+- `Sync` The process of making an application move to its target state. E.g. by applying changes to a Kubernetes cluster.
 
 
 ## Clean up 
