@@ -37,11 +37,11 @@ Now, select the "Gitea" project.
 
 Determine Gitea's Route which you will find in the Gitea namespace (Go to Menu -> Networking -> Routes).  
 
-Log into Gitea using your username and password as provided by your lap proctors (these are usually the same as for the Virtualization Workshop). 
+Log into Gitea using your username and password as provided by your lab proctors (these credentials are usually the same as for the Virtualization Workshop). 
 
 After logging into Gitea, note your repository (which is a copy of the source code of the original flask-vote-app) and fetch the repo URL.  
 
-Your Git repo URL will look something like this (starting in "http" and ending in "flask-vote-app.git"):
+Your Git repo URL will look something like this (starting with "http://" and ending in "flask-vote-app.git").  Make a note of it:
 
 ```
 http://gitea-with-repositories-gitea.apps.sandbox.openshift.com/user1/flask-vote-app.git
@@ -67,9 +67,10 @@ Later on in the workshop you will make changes to the code and see the changes t
 
 Create a new project for yourself to work in and remember the project name.  Use a unique name, e.g. `gitops-user1`
 
-You can do this in the OpenShift Console under `Home -> Projects -> Create Project` or from the command line with "oc new-project my-project".
+You can do this in the OpenShift Console under `Home -> Projects -> Create Project` or from the command line with "oc new-project my-project". 
+You can run the CLI commands in a `OpenShift command line terminal` (open from the top right of the OpenShift Console, where you will see the ">_" icon).
 
-You will use this project for all further activities.
+You will use the project you just cerated for all further activities.
 
 
 ## Provision your own instance of OpenShift GitOps (ArgoCD)
@@ -197,10 +198,10 @@ Find the Route that was created and access it to open the ArgoCD UI at the login
 Here is one way to find the ArgoCD Route from the command line.
 
 ```
-oc get route -n YOUR-NAMESPACE argocd -o jsonpath='{.spec.host}{"\n"}'
+oc get route -n YOUR-NAMESPACE argocd-server -o jsonpath='{.spec.host}{"\n"}'
 ```
 
-The other way is to look at the main menu on the left under Networking -> Routes. 
+The other way is to look at the main menu in the OpenShift Console on the left, under Networking -> Routes. 
 
 The route should `look similar` to this one:
 
@@ -208,18 +209,18 @@ The route should `look similar` to this one:
 https://argocd-server-gitops-user1.apps.cluster-xxxxx.dynamic.redhatworkshops.io/
 ```
 
-Open the URL in another tab and you will now see the ArgoCD UI in your browser.
+Open the URL in another tab and you will now see the ArgoCD login page in your browser.
 
-Log into ArgoCD with your usual OpenShift credentials (use the `LOG IN VIA OPENSHIFT` button) and, on the next page, allow the `access permissions`.
+Log into ArgoCD with your usual OpenShift credentials (use the `LOG IN VIA OPENSHIFT` button, not the username and password fields below it) 
+and, on the next page, allow the `access permissions`.
 
-Create the vote-app Application using the following Application resource (note, this will only work for clusters with direct access to the Internet).
-
+In the next section we will provision the vote-app Application.
 
 
 ## Create the Demo Application
 
-In Argo CD, a managed set of Kubernetes manifests is called an Application. 
-To enable Argo CD to deploy these manifests to your cluster, you need to define them using an `Application Custom Resource` (CR).
+In Argo CD, a managed set of Kubernetes manifests is called an `Application`. 
+To enable Argo CD to deploy these manifests to your cluster, you need to define them using an `Application` `Custom Resource` (CR).
 
 Let’s take a look at the Application manifest used for this deployment and break it down:
 
@@ -241,13 +242,11 @@ spec:
     repoURL: http://HOST/YOUR-REPO-PATH.git       # <<== add your repo URL here
     targetRevision: HEAD
 
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: false
 ```
-<!--
-#  syncPolicy:
-#    automated:
-#      prune: true
-#      selfHeal: false
--->
 
 - `destination`: describes into which cluster and namespace to apply the yaml resources (using the locally-resolvable URL for the cluster)
 - `project default`: is an ArgoCD concept and has nothing to do with OpenShift projects
@@ -259,12 +258,12 @@ Create the above Application by:
 
 - Clicking on the "CREATE APPLICATION" button in the ArgoCD UI
 - Click on the "EDIT AS YAML" button
-- Copy and paste and then
-- `Edit the yaml` as indicated above
+- Copy and paste the above yaml code and then
+- `Edit the code` by changing the three values, as indicated above
 - Click SAVE and then
-- Click the CREATE button
+- Click the CREATE button to create the Application
 
-`IMPORTANT: Be sure to change the values in the above Application manifest: both namespaces & repoURL`
+`IMPORTANT: Be sure to change the three values in the above Application manifest: both "namespaces" & "repoURL"`
 
 You should see the provisioned application which looks like this:
 
