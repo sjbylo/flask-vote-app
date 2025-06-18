@@ -1,8 +1,3 @@
-# WORK IN PROGRESS
-to do:
-- Include both a manual sync and auto-sync scenario.
-- Add a Git change mid-workshop and show ArgoCD’s detection of drift.
-
 # Workshop - Mixed Pod + VM OpenShift Virtualization GitOps Demo
 
 GitOps is a way to manage infrastructure and applications using Git as the single source of truth.
