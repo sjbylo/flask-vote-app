@@ -29,6 +29,9 @@ Before we do anything, we need to take a look at your application manifests (yam
 
 Note that whenever you are working in the OpenShift Console, it is always very important to select the correct OpenShift project in the top left of the Console.  
 
+For example:
+<img src="./images/project-gitops-user1.png" alt="Project selection example" >
+
 Now, select the "Gitea" project.
 
 Determine Gitea's Route which you will find in the Gitea namespace (Go to Menu -> Networking -> Routes).  
@@ -264,7 +267,7 @@ Create the above Application by:
 
 You should see the provisioned application which looks like this:
 
-<img src="./images/argocd-ui-with-vote-app.png" alt="Vote App in ArgoCD" width="500">
+<img src="./images/argocd-ui-with-vote-app.png" alt="Vote App in ArgoCD" width="900">
 
 Note that after the VM status is `Running` it will still `take up to 5 mins` for the MySQL VM to launch and run its `cloud-init` script to install, configure and run MySQL, 
 after which the vote application will connect to the database and be ready to use.  
