@@ -86,3 +86,11 @@ status:
   userSetupComplete: true
 ```
 
+## Run the setup script instead
+
+Set number of users in setup.sh script
+
+```
+./setup.sh admin-password user-password <path-to-file-with-all-api-urls>
+```
+
