@@ -9,13 +9,13 @@ GitOps is a way to manage infrastructure and applications using Git as the singl
 It automates deployment by syncing the desired state in Git with the live environment.
 Every change is tracked in Git, providing a full audit trail for transparency and accountability.
 
-Use OpenShift Virtualization & GitOps to deploy a demo vote application pod and a MySQL VM.
-
 You can learn more about GitOps from this [GitOps Workshop Guide](https://openshiftdemos.github.io/openshift-gitops-workshop/openshift-gitops-workshop/index.html).
 
-Once the application is deployed this is what you will see.
+Use OpenShift Virtualization & GitOps to deploy a demo vote application pod and a MySQL VM.
 
-<img src="./images/vote-app-plus-vm-demo.png" alt="This is what it looks like" width="500">
+Once the application is deployed this is what you will see in OpenShift's Topology View:
+
+<img src="./images/vote-app-plus-vm-demo.png" alt="Pod and VM working together as one application" width="500">
 
 We will use the OpenShift GitOps Operator (based on the ArgoCD project) to implement GitOps and deploy our demo application. 
 
@@ -41,7 +41,7 @@ apiVersion: argoproj.io/v1beta1
 kind: ArgoCD
 metadata:
   name: argocd
-  namespace: YOUR-OPENSHIFT-NAMESPACE
+  namespace: YOUR-OPENSHIFT-NAMESPACE      # <<== Add your namespace here
 spec:
   controller:
     processors: {}
@@ -137,23 +137,41 @@ spec:
     ca: {}
 ```
 
-Wait 5 mins for all the pods in your namespace to be Running and Ready, i.e. (1/1). 
+In the Console, go to Workloads -> Pods (ensure your project is selected above).
+
+After about 3-4 mins, you should see all the ArgoCD pods, running and ready (1/1), similar to the following: 
+
+- argocd-application-controller-0
+- argocd-dex-server-7cc677db56-wd597
+- argocd-redis-7f4b689446-m694j
+- argocd-repo-server-6d8d548d5d-zlchr
+- argocd-server-967895867-zts7f
+
 
 Find the Route that was created and access it to open the ArgoCD UI at the login page.
+
+Here is one way to find the ArgoCD Route from the command line.
+
+```
+oc get route -n YOUR-NAMESPACE argocd -o jsonpath='{.spec.host}{"\n"}'
+```
+
+The other way is to look at the main menu on the left under Networking -> Routes. 
+
+The route should `look similar` to this one:
+
+```
+https://argocd-server-gitops-user1.apps.cluster-xxxxx.dynamic.redhatworkshops.io/
+```
+
+Open the URL in another tab and you will now see the ArgoCD UI in your browser.
+
 Log into ArgoCD with your usual OpenShift credentials (use the `LOG IN VIA OPENSHIFT` button) and, on the next page, allow the `access permissions`.
-
-Here is one way to find the ArgoCD Route.  The other way is to look at the main menu on the left under Networking -> Routes. 
-
-```
-oc get route -n YOUR-NAMESPACE your-argo-server -o jsonpath='{.spec.host}{"\n"}'
-```
-
-You will now see the ArgoCD UI in your browser.
 
 Create the vote-app Application using the following Application resource (note, this will only work for clusters with direct access to the Internet).
 
 
-## Know your Git Repo URL
+## Find and access your Git Repo URL
 
 Log into Gitea via its Route which you will find in your namespace (Menu -> Networking -> Routes).  
 Note that your repository (source copy of the original flask-vote-app app) and fetch the repo URL.  
@@ -169,6 +187,7 @@ Once you log in, you will see your code repo with the name, e.g. "user1/flask-vo
 Look into the folder "deploy/vote-app-with-mysql-vm/direct" and open the file `vote-app-mysql-vm-all-in-one.yaml`.
 
 In the file, you will see all the Kubernetes resources that are needed to deploy the application. 
+
 Note the following:
   - `kind: Deployment` (name: vote-app) - this is the configuration that will provision the vote-app in a pod
   - `kind: Service` (name: db) - this is configuration that will enable the pod to access the MySQL VM via the pod network
