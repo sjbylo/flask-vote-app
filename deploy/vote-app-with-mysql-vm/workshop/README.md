@@ -264,7 +264,7 @@ Create the above Application by:
 
 You should see the provisioned application which looks like this:
 
-<img src="./images/vote-app-plus-vm-demo.png" alt="Vote App in ArgoCD" width="500">
+<img src="./images/argocd-ui-with-vote-app.png" alt="Vote App in ArgoCD" width="500">
 
 Note that after the VM status is `Running` it will still `take up to 5 mins` for the MySQL VM to launch and run its `cloud-init` script to install, configure and run MySQL, 
 after which the vote application will connect to the database and be ready to use.  
