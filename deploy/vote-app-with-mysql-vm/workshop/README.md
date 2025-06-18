@@ -24,36 +24,37 @@ We will use the OpenShift GitOps Operator (based on the ArgoCD project) to imple
 
 Before we do anything, we need to take a look at your application manifests (yaml code) in our lab git server (Gitea), hosted on OpenShift.
 
-It is always very important to have selected the correct OpenShift project in the top left of the Console.  
+Note that whenever you are working in the OpenShift Console, it is always very important to select the correct OpenShift project in the top left of the Console.  
 
-Select "Gitea" project now. 
+Now, select the "Gitea" project.
 
 Determine Gitea's Route which you will find in the Gitea namespace (Go to Menu -> Networking -> Routes).  
 
-Log into Gitea using your username and password as provided in the lab. 
+Log into Gitea using your username and password as provided by your lap proctors (these are usually the same as for the Virtualization Workshop). 
 
-Note your repository, which is a copy of the source code of the original flask-vote-app app, and fetch the repo URL.  
+After logging into Gitea, note your repository (which is a copy of the source code of the original flask-vote-app) and fetch the repo URL.  
 
-Your Git repo URL will look something like this:
+Your Git repo URL will look something like this (starting in "http" and ending in "flask-vote-app.git"):
 
 ```
 http://gitea-with-repositories-gitea.apps.sandbox.openshift.com/user1/flask-vote-app.git
 ```
 
-Once you log in, you will see your code repo with the name, e.g. "user1/flask-vote-app"
+After you have logged in, you will see your repository with the name, e.g. "user1/flask-vote-app".
 
 Look into the folder "deploy/vote-app-with-mysql-vm/direct" and open the file `vote-app-mysql-vm-all-in-one.yaml`.
 
 In the file, you will see all the Kubernetes resources that are needed to deploy the application. 
 
-Note the following:
-  - `kind: Deployment` (name: vote-app) - this is the configuration that will provision the vote-app in a pod
-  - `kind: Service` (name: db) - this is configuration that will enable the pod to access the MySQL VM via the pod network
-  - `kind: VirtualMachine` - this is the configuration that will provision the MySQL VM
-  - `kind: Route` - this is the configuration that will provide north-south ingress into the vote-app application
+Note the following definitions:
 
+  - `kind: Deployment` (name: vote-app) - provisions the Python based vote-app in a pod
+  - `kind: Service` (name: db) - provides a static name & IP to allow the pod to access the MySQL VM, via the pod network
+  - `kind: VirtualMachine` - will provision the MySQL VM
+  - `kind: Route` - will provide north-south ingress into the vote-app application pod
 
 Later on in the workshop you will make changes to the code and see the changes take effect in OpenShift. 
+
 
 ## Create a new Project 
 
