@@ -315,11 +315,12 @@ Make a change in OpenShift and see it "heal", for example:
 
 ## Implement Rollback
 
-Imagine a change is made in git by the platform team and then rolled out to OpenShift via GitOps.  
+Imagine a change is rolled out via git by the platform team and then synced with OpenShift.
 
-But, there is a problem!  You can rollback to the previous revision (or commit) that is known to work.
+But, there is a problem!
+- You can rollback to the previous revision (or git commit) that is known to work!
 
-Make a change to the "vote-app-mysql-vm-all-in-one.yaml" file in your repo.  E.g. change the vote-app deployment `replicas` to "3", e.g. "replicas: 3".
+Via Gitea, make a change to the "vote-app-mysql-vm-all-in-one.yaml" file in your repo.  E.g. change the vote-app deployment `replicas` to "3", e.g. "replicas: 3".
 
 Commit the change, by entering "Changed replicas = 3" into the `Subject` line of the commit. 
 
@@ -327,7 +328,7 @@ Ensure the Application is re-synchronized via the UI.
 
 Now try out the "HISTORY AND ROLLBACK" button and change the configuration back to the previous one. 
 
-You should be able to roll back to a previous state.
+You should be able to roll back to the previous state.
 
 Note: See the [ArgoCD Core Concepts](https://argo-cd.readthedocs.io/en/stable/core_concepts/#core-concepts) for an explanation on the difference between `Refresh` and `Sync`.
 - `Refresh` Compare the latest code in Git with the live state. Figure out what is different.
