@@ -199,7 +199,7 @@ Here is one way to find the ArgoCD Route from the command line.
 oc get route -n YOUR-NAMESPACE argocd-server -o jsonpath='{.spec.host}{"\n"}'
 ```
 
-The other way to find the route is to look at the main menu in the OpenShift Console, on the left, under `Networking -> Routes`. 
+Another way to find the route is to look at the main menu in the OpenShift Console, on the left, under `Networking -> Routes`. 
 
 The route should `look similar` to this one:
 
@@ -209,7 +209,7 @@ https://argocd-server-gitops-user1.apps.cluster-xxxxx.dynamic.redhatworkshops.io
 
 Open the URL in another tab and you will now see the ArgoCD login page in your browser.
 
-Log into ArgoCD with your usual OpenShift credentials (use the `LOG IN VIA OPENSHIFT` button, not the username and password fields below it) 
+Use the `LOG IN VIA OPENSHIFT` button to log into ArgoCD with your user's OpenShift credentials (DO NOT use the `username` and `password` fields below it!) 
 and, on the next page, allow the `access permissions`.
 
 `In the next section we will provision the vote-app Application.`
