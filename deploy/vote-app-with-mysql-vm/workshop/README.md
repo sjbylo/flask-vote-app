@@ -321,7 +321,7 @@ Make a change in OpenShift and see it is "healed" by ArgoCD, for example:
 - Delete the vote-app Deployment and/or
 - Stop the MySQL VM
 
-You should see those resources being re-instated.
+You should see those resources being re-instated, as defined in your Gitea repository.
 
 `Ensure the application is working again before moving on`
 
@@ -330,12 +330,13 @@ You should see those resources being re-instated.
 
 Imagine a change is rolled out, via a git change, by the platform team and then sync-ed with OpenShift.
 
-But, there is a problem!
+But, there is a problem - the change has caused an outage!
 - You can rollback to the previous revision (or git commit) that is known to work!
 
-Via Gitea, make a change to the "vote-app-mysql-vm-all-in-one.yaml" file in your repo.  E.g. change the vote-app deployment `replicas` to "3", e.g. "replicas: 3".
+Via Gitea, make a change to the "_vote-app-mysql-vm-all-in-one.yaml_" file in your Gitea repo by clicking on the `_Edit File_` button (to the right).  
+E.g. change the vote-app deployment `replicas` to "3", e.g. "replicas: 3".
 
-Commit the change, by entering "Changed replicas = 3" into the `Subject` line of the commit. 
+At the bottom of the page, commit the change, by entering "Changed replicas = 3" into the `Subject` line of the commit. 
 
 Ensure the Application is re-synchronized via the UI.  
 
