@@ -10,8 +10,8 @@ Follow the instructions from the above guide, OR follow these below:
 oc apply -k https://github.com/rhpds/gitea-operator/OLMDeploy
 ```
 
-Wait for deployment of the Operator and then create the Gitea instance.
-Ensure giteaUserPassword is set to your prefered password, eg the password already provided by the lab environment.
+Wait for deployment of the Operator.  Check the pods are running AND ready in the gitea-operator project.
+
 
 Create the gitea namespace
 
@@ -20,6 +20,11 @@ oc new-project gitea
 ```
 
 Create Gitea instance (check the changes needed)
+
+> Ensure giteaUserPassword is set to your prefered password, e.g. the password already provided by the lab environment.
+> Create the correct number of users for your workshop
+
+Import this yaml into the gitea project:
 
 ```
 #apiVersion: v1
@@ -54,6 +59,7 @@ spec:
     private: false
 ```
 
+
 ## Create read access to the gitea project for all users
 
 Users need to find the Route hostname to use to access their repos.
@@ -64,6 +70,8 @@ oc adm policy add-role-to-group view system:authenticated -n gitea
 
 
 ## Example status of "Gitea" when complate. 
+
+Check the status of the gitea instance and ensure it looks like the below before moving to the next step!
 
 Note: "userSetupComplete: true" and "repoMigrationComplete: true"
 
