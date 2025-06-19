@@ -35,14 +35,13 @@ Determine Gitea's Route which you will find in the Gitea namespace (Go to Menu -
 Log into Gitea using your username and password as provided by your lab proctors (these credentials are usually the same as for the Virtualization Workshop). 
 
 After logging into Gitea, note your repository (a copy of the source code of the original flask-vote-app) and fetch the repo URL.  
+You will see your repository with the name, e.g. "user1/flask-vote-app".
 
 Your Git repo URL will look something like this (starting with "http://" and ending in "flask-vote-app.git").  Make a note of it:
 
 ```
-http://gitea-with-repositories-gitea.apps.sandbox.openshift.com/user1/flask-vote-app.git
+http://gitea-gitea.apps.sandbox.openshift.com/user1/flask-vote-app.git
 ```
-
-After you have logged in, you will see your repository with the name, e.g. "user1/flask-vote-app".
 
 Look into the folder "deploy/vote-app-with-mysql-vm/direct" and open the file `vote-app-mysql-vm-all-in-one.yaml`.
 
