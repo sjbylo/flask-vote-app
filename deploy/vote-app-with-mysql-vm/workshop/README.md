@@ -352,9 +352,6 @@ Now delete the application.
 
 On the ArgoCD UI, drill down into your Application tile, click on delete and watch all the resources be removed. 
 
-
-## The End
-
 That is the end of the Virt + GitOps workshop.  You have learned how to configure OpenShift GitOps (ArgoCD) and use it to provision and manage applications
 in OpenShift, via Git.
 
