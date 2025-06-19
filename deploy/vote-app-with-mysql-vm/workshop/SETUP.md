@@ -2,9 +2,9 @@
 
 ## Install of Gitea for each user
 
-Use this [Gitea Operator](https://github.com/rhpds/gitea-operator) to provide a Gitea server so each user has access to their own repository and can make code changes.
+We will use this [Gitea Operator](https://github.com/rhpds/gitea-operator) to provide a Gitea server so each user has access to their own repository and can make code changes.
 
-Follow the instructions from the above guide, or follow these below:
+Follow the instructions from the above guide, OR follow these below:
 
 ```
 oc apply -k https://github.com/rhpds/gitea-operator/OLMDeploy
@@ -13,12 +13,20 @@ oc apply -k https://github.com/rhpds/gitea-operator/OLMDeploy
 Wait for deployment of the Operator and then create the Gitea instance.
 Ensure giteaUserPassword is set to your prefered password, eg the password already provided by the lab environment.
 
+Create the gitea namespace
+
 ```
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: gitea
----
+oc new-project gitea
+```
+
+Create Gitea instance (check the changes needed)
+
+```
+#apiVersion: v1
+#kind: Namespace
+#metadata:
+#  name: gitea
+#---
 apiVersion: pfe.rhpds.com/v1
 kind: Gitea
 metadata:
@@ -36,7 +44,7 @@ spec:
 
   giteaCreateUsers: true
   giteaGenerateUserFormat: "user%d"
-  giteaUserNumber: 30                 # <<== Ensure you provision enough users
+  giteaUserNumber: 3                  # <<== Ensure you provision enough users
   giteaUserPassword: password         # <<== Change the password here for all users
 
   giteaMigrateRepositories: true
@@ -81,7 +89,7 @@ status:
     type: Running
   giteaHostname: gitea-gitea.apps.demo1.example.com
   giteaRoute: http://gitea-gitea.apps.demo1.example.com
-  repoMigrationComplete: true
+  repoMigrationComplete: true                           # <<== wait for this to be true
   userPassword: password
   userSetupComplete: true
 ```
