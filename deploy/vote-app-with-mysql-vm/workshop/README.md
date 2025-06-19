@@ -25,9 +25,7 @@ We will provision a demo app into OpenShift.  But, from what yaml code?
 Before we do anything, we need to take a look at your application manifests (yaml code) in our lab's git server (Gitea).
 
 > **Note:** Note that whenever you are working in the OpenShift Console, it is always very important to select the correct OpenShift project in the top left of the Console.  
-
 > For example:
-
 > <img src="./images/project-gitops-user1.png" alt="Project selection example" width="150">
 
 Using the above selector, select the "Gitea" project in the OpenShift Console. 
