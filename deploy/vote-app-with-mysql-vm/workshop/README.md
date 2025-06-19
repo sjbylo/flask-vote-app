@@ -335,10 +335,10 @@ But, then there is a problem - the change has caused an outage!!
 - You can rollback to the previous revision (or git commit) that is known to work!
 
 Via Gitea, make a change to the "_vote-app-mysql-vm-all-in-one.yaml_" file in your Gitea repo by clicking on the `Edit File` button (to the right).  
-E.g. change the vote-app deployment `replicas` from "1" to "3", e.g. "replicas: 3".
 
-Make the change by removing the whole of the route resource at the very bottom of the file:
+Make the change by `removing the whole of the route resource` at the very bottom of the file!
 
+Delete, or comment out, these lines:
 ```
 apiVersion: route.openshift.io/v1
 kind: Route
