@@ -16,7 +16,7 @@ Once the application is deployed this is what you will see in OpenShift's Topolo
 
 We will use the OpenShift GitOps Operator (based on the [ArgoCD Project](https://argo-cd.readthedocs.io/)) to implement GitOps and deploy our demo application. 
 
-First, delete any of the resources that may have been created in the cluster due to previous labs, e.g. Virtual Machines.
+Before we start, delete any of the resources that may have been created in the cluster due to previous labs, e.g. Virtual Machines.
 
 
 ## Find and access your Git Repo URL
@@ -30,7 +30,7 @@ Before we do anything, we need to take a look at your application manifests (yam
 
 Using the above selector, select the "Gitea" project in the OpenShift Console. 
 
-Determine Gitea's Route which you will find in the Gitea namespace (Go to Menu -> Networking -> Routes).  
+Determine Gitea's Route which you will find in the Gitea project (Go to Menu -> Networking -> Routes).  
 
 Log into Gitea using your username and password as provided by your lab proctors (these credentials are usually the same as for the Virtualization Workshop). 
 
@@ -56,31 +56,33 @@ Note the following definitions:
 
 Later on in the workshop you will make changes to the code and see the changes take effect in OpenShift. 
 
+`Before moving onto the next section, ensure you have made of note of the URL for your Gitea repository.  It will be needed later!`
+
 
 ## Create a new Project 
 
 Create a new project for yourself to work in and remember the project name.  Use a unique name, e.g. `gitops-user1`
 
-You can do this in the OpenShift Console under `Home -> Projects -> Create Project` or from the command line with "oc new-project my-project". 
+You can do this in the OpenShift Console under `Home -> Projects -> Create Project` or from the command line with "oc new-project gitops-user1". 
 You can run the CLI commands in a `OpenShift command line terminal` (open from the top right of the OpenShift Console, where you will see the ">_" icon).
 
-You will use the project you just cerated for all further activities.
+`You will use the project you just cerated for all further activities.`
 
 
 ## Provision your own instance of OpenShift GitOps (ArgoCD)
 
-First, you will provision your own instance of ArgoCD into your OpenShift namespace.
+First, you will provision your own instance of ArgoCD into your OpenShift project.
 
-Add the following ArgoCD resource into your namespace.  There are many ways to do this, e.g. via the OpenShift Console or via the command line.
+Add the following ArgoCD resource into your project.  There are many ways to do this, e.g. via the OpenShift Console or via the command line.
 
-Don't forget to change the `YOUR-OPENSHIFT-NAMESPACE` in the yaml code to match your OpenShift namespace. 
+Don't forget to change the `YOUR-OPENSHIFT-NAMESPACE` in the yaml code to match your OpenShift project/namespace. 
 
 ```
 apiVersion: argoproj.io/v1beta1
 kind: ArgoCD
 metadata:
   name: argocd
-  namespace: YOUR-OPENSHIFT-NAMESPACE      # <<== Add your namespace here, e.g. gitops-user1
+  namespace: YOUR-OPENSHIFT-NAMESPACE      # <<== Add your namespace/project here, e.g. gitops-user1
 spec:
   controller:
     processors: {}
@@ -208,25 +210,24 @@ Open the URL in another tab and you will now see the ArgoCD login page in your b
 Log into ArgoCD with your usual OpenShift credentials (use the `LOG IN VIA OPENSHIFT` button, not the username and password fields below it) 
 and, on the next page, allow the `access permissions`.
 
-In the next section we will provision the vote-app Application.
+`In the next section we will provision the vote-app Application.`
 
 
-## Create the Demo Application
+## Provision the Demo Application
 
-In Argo CD, a managed set of Kubernetes manifests is called an `Application`. 
-To enable Argo CD to deploy these manifests to your cluster, you need to define them using an `Application` `Custom Resource` (CR).
+In ArgoCD, a managed set of Kubernetes manifests is called an `Application`. 
+To enable ArgoCD to deploy these manifests to your cluster, you need to define them using an `Application` `Custom Resource` (CR).
 
 Let’s take a look at the Application manifest used for this deployment and break it down:
-
 
 ```
 kind: Application
 metadata:
   name: vote-app
-  namespace: YOUR-OPENSHIFT-NAMESPACE             # <<== Add your namespace here, e.g. gitops-user1
+  namespace: YOUR-OPENSHIFT-NAMESPACE             # <<== Add your namespace/project here, e.g. gitops-user1
 spec:
   destination:
-    namespace: YOUR-OPENSHIFT-NAMESPACE           # <<== Add your namespace here, e.g. gitops-user1
+    namespace: YOUR-OPENSHIFT-NAMESPACE           # <<== Add your namespace/project here, e.g. gitops-user1
     server: https://kubernetes.default.svc
 
   project: default
@@ -242,7 +243,7 @@ spec:
       selfHeal: false
 ```
 
-- `destination`: describes into which cluster and namespace to apply the yaml resources (using the locally-resolvable URL for the cluster)
+- `destination`: describes into which cluster and namespace/project to apply the yaml resources (using the locally-resolvable URL for the cluster)
 - `project default`: is an ArgoCD concept and has nothing to do with OpenShift projects
 - `source`: describes from which git repository and the directory path to fetch the yaml resources
 - `prune`: resources, that have been removed from the Git repo, will be automatically pruned
@@ -254,10 +255,10 @@ Create the above Application by:
 - Click on the "EDIT AS YAML" button
 - Copy and paste the above yaml code and then
 - `Edit the code` by changing the three values, as indicated above
-- Click SAVE and then
+- Click SAVE and then (note that all the fields in the form have been populated from the yaml)
 - Click the CREATE button to create the Application
 
-`IMPORTANT: Be sure to change the three values in the above Application manifest: both "namespaces" & "repoURL"`
+> `IMPORTANT: Be sure to change the three values in the above Application manifest: both "namespaces" & "repoURL"`
 
 You should see the provisioned application which looks like this:
 
@@ -294,7 +295,7 @@ spec:
 
 Since `selfHeal` was set to false, we will delete one of the kubernetes resources of the application.
 
-Now, delete the vote-app route in your namespace. 
+Now, delete the vote-app route in your namespace/project. 
 
 What happened? 
 
