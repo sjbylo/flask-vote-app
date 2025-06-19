@@ -8,21 +8,22 @@ You can learn more about GitOps from this [GitOps Workshop Guide](https://opensh
 
 ## Virt + GitOps Workshop
 
-Use OpenShift Virtualization & GitOps to deploy a demo vote application pod and a MySQL VM.
+Use OpenShift Virtualization & GitOps to deploy a demo application pod and a MySQL VM.
 
 Once the application is deployed this is what you will see in OpenShift's Topology View:
 
 <img src="./images/vote-app-plus-vm-demo.png" alt="Pod and VM working together as one application" width="500">
 
-We will use the OpenShift GitOps Operator (based on the ArgoCD project) to implement GitOps and deploy our demo application. 
+We will use the OpenShift GitOps Operator (based on the [ArgoCD Project](https://argo-cd.readthedocs.io/)) to implement GitOps and deploy our demo application. 
 
-First, delete any of the resources that may have been created in the cluster due to previous labs.
+First, delete any of the resources that may have been created in the cluster due to previous labs, e.g. Virtual Machines.
+
 
 ## Find and access your Git Repo URL
 
 Before we do anything, we need to take a look at your application manifests (yaml code) in our lab git server (Gitea), hosted on OpenShift.
 
-Note that whenever you are working in the OpenShift Console, it is always very important to select the correct OpenShift project in the top left of the Console.  
+> **Note:** Note that whenever you are working in the OpenShift Console, it is always very important to select the correct OpenShift project in the top left of the Console.  
 
 For example:
 
