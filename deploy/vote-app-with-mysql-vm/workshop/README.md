@@ -370,7 +370,7 @@ spec:
   wildcardPolicy: None
 ```
 
-At the bottom of the page, commit the change, by entering "Route deleted!" into the `Subject` line of the commit (this message will show up in ArgoCD soon).
+At the bottom of the page, commit the change, after entering "Route deleted!" into the `Subject` line of the commit (this message will show up in ArgoCD soon).
 
 Ensure the Application is automatically re-synchronized via the UI.  
 
