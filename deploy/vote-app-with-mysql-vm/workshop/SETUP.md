@@ -25,7 +25,7 @@ metadata:
   name: gitea
   namespace: gitea
 spec:
-  giteaSsl: false          # Important, so ArgoCD can easily access the repos
+  giteaSsl: false                     # Important, so ArgoCD can easily access the repos
 
   giteaAdminUser: admin
   giteaAdminPassword: "some-password"
@@ -36,8 +36,8 @@ spec:
 
   giteaCreateUsers: true
   giteaGenerateUserFormat: "user%d"
-  giteaUserNumber: 30
-  giteaUserPassword: password      # <<== Change the password here for all users
+  giteaUserNumber: 30                 # <<== Ensure you provision enough users
+  giteaUserPassword: password         # <<== Change the password here for all users
 
   giteaMigrateRepositories: true
   giteaRepositoriesList:
@@ -86,9 +86,11 @@ status:
   userSetupComplete: true
 ```
 
-## Run the setup script instead
+## (OPTIONAL) Run the setup script instead
 
-Set number of users in setup.sh script
+If there are several clusters to configure, use this script.
+
+Set number of users in setup.sh script.
 
 ```
 ./setup.sh admin-password user-password <path-to-file-with-all-api-urls>
