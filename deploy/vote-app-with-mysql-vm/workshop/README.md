@@ -312,7 +312,7 @@ Answer: `Because the Application is not set to 'self heal'` (as explained above)
 
 Set selfHeal to "auto" in the ArgoCD UI.  To do that, go to the Application, click `Details`, scroll down and make the change to self heal.  Click on ENABLE-AUTO-SYNC to enable it.  Ensure `PRUNE RESOURCES` and `SELF HEAL` are also enabled!
 
-Go back to the main ArgoCD UI and see "Auto sync is enabled" is showing under "Sync status".
+Go back to the main ArgoCD UI and see "_Auto sync is enabled_" is showing under "Sync status".
 
 Now, make a very human mistake and delete some other vote-app resources in your project. 
 
