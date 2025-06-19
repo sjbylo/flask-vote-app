@@ -268,8 +268,7 @@ You should see the provisioned application which looks like this:
 
 > Note that after the VM status is `Running` it will still `take up to 5 mins` for the MySQL VM to run its `cloud-init` script to install, configure and run MySQL, after which the vote application will connect to the database and be ready to use.  
 
-`Bonus activity`: Using the Virtualization menu item, find and then log into the MySQL VM's Console and check the output of the cloud-init script.  
-See the log file at /var/log/cloud-init-output.log.  Also, verify that MySQL is running in the VM with "ps -ef | grep -i mysql".  If you know how, connect to MySQL and view the database contents.
+- `Bonus activity`: Using the Virtualization menu item, find and then log into the MySQL VM's Console and check the output of the cloud-init script.  See the log file at /var/log/cloud-init-output.log.  Also, verify that MySQL is running in the VM with "ps -ef | grep -i mysql".  If you know how, connect to MySQL and view the database contents.
 
 Now, find the vote-app route in your project/namespace (e.g. project gitops-user1) and open the application in your browser to check it is working.  You should be able to make a single vote and view the result. 
 
