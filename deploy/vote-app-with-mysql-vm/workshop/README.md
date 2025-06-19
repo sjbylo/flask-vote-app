@@ -264,20 +264,21 @@ You should see the provisioned application which looks like this:
 
 <img src="./images/argocd-ui-with-vote-app.png" alt="Vote App in ArgoCD" width="900">
 
-Note that after the VM status is `Running` it will still `take up to 5 mins` for the MySQL VM to launch and run its `cloud-init` script to install, configure and run MySQL, 
-after which the vote application will connect to the database and be ready to use.  
+> Note that after the VM status is `Running` it will still `take up to 5 mins` for the MySQL VM to run its `cloud-init` script to install, configure and run MySQL, after which the vote application will connect to the database and be ready to use.  
 
 Using the Virtualization menu item, find and then log into the MySQL VM's Console and check the output of the cloud-init script.  
 See the log file at /var/log/cloud-init-output.log.
 
 Also, verify that MySQL is running in the VM with "ps -ef | grep -i mysql".  Bonus activity, if you know how, connect to MySQL and view the database contents.
 
+`At this point you should have the demo application up and running`
+
 
 ## View the VM in the Console
 
 Go and view your new MySQL VM in the Console.
 
-Go to Administration -> Virtualization -> mysql-demo -> Configuration -> Initial Run -> Cloud-init Edit -> Script (toggle button) 
+Go to Administration -> Virtualization -> mysql-demo -> Configuration -> Initial Run -> Cloud-init Edit -> Script (the toggle button) 
 to view the cloud-init script which sets the demo user & password and also installs and configured MySQL.  This is the script that is run when the VM is started for the first time. 
 
 
@@ -295,7 +296,7 @@ spec:
 
 Since `selfHeal` was set to false, we will delete one of the kubernetes resources of the application.
 
-Now, delete the vote-app route in your namespace/project. 
+Now, delete the vote-app `route` in your namespace/project. 
 
 What happened? 
 
@@ -304,16 +305,18 @@ Answer: `Because the Application is not set to 'self heal'`.
 
 Set selfHeal to "auto" in the ArgoCD UI.  Go to the Application, click `Details`, scroll down and make the change to self heal.  Click on ENABLE-AUTO-SYNC to enable it.  Ensure `PRUNE RESOURCES` and `SELF HEAL` are also enabled!
 
-Go back to the main UI and you should see "Auto sync is enabled".
+Go back to the main UI and you should see "Auto sync is enabled" under "Sync status".
 
 Now, make a very human mistake and delete some of the vote-app resources in your project. 
 
-Make a change in OpenShift and see it "heal", for example: 
+Make a change in OpenShift and see it "healed" by ArgoCD, for example: 
 
 - Delete the route and/or
 - Delete the vote-app Deployment and/or
 - Stop the MySQL VM
 - Delete the MySQL VM
+
+You should see those resources being re-provisioned. 
 
 
 ## Implement Rollback
