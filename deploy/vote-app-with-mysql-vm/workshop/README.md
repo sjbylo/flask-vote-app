@@ -247,17 +247,17 @@ spec:
 
 - `destination`: describes into which cluster and namespace/project to apply the yaml resources (using the locally-resolvable URL for the cluster)
 - `project default`: is an ArgoCD concept and has nothing to do with OpenShift projects
-- `source`: describes from which git repository and the directory path to fetch the yaml resources
+- `source`: describes from which git repository, and the directory path, to fetch the yaml resources
 - `prune`: resources, that have been removed from the Git repo, will be automatically pruned
-- `selfHeal` false: manual changes made to the kubernetes resources, e.g. using oc or kubectl, will not be "healed"
+- `selfHeal` false: manual changes or deletions, made to the kubernetes resources, will not be automatically "healed"
 
 Create the above Application by:
 
 - Clicking on the "CREATE APPLICATION" button in the ArgoCD UI
 - Click on the "EDIT AS YAML" button
-- Copy and paste the above yaml code and then
+- Copy and paste the above `Application` yaml code and then
 - `Edit the code` by changing the three values, as indicated above
-- Click SAVE and then (note that all the fields in the form have been populated from the yaml)
+- Click SAVE and then (note that all the fields in the form have now been populated from the yaml)
 - Click the CREATE button to create the Application
 
 > `IMPORTANT: Be sure to change the three values in the above Application manifest: both "namespaces" & "repoURL"`
@@ -268,10 +268,8 @@ You should see the provisioned application which looks like this:
 
 > Note that after the VM status is `Running` it will still `take up to 5 mins` for the MySQL VM to run its `cloud-init` script to install, configure and run MySQL, after which the vote application will connect to the database and be ready to use.  
 
-Using the Virtualization menu item, find and then log into the MySQL VM's Console and check the output of the cloud-init script.  
-See the log file at /var/log/cloud-init-output.log.
-
-Also, verify that MySQL is running in the VM with "ps -ef | grep -i mysql".  Bonus activity, if you know how, connect to MySQL and view the database contents.
+`For bonus points`: Using the Virtualization menu item, find and then log into the MySQL VM's Console and check the output of the cloud-init script.  
+See the log file at /var/log/cloud-init-output.log.  Also, verify that MySQL is running in the VM with "ps -ef | grep -i mysql".  Bonus activity, if you know how, connect to MySQL and view the database contents.
 
 Now, find the vote-app route in your project/namespace (e.g. project gitops-user1) and open the application in your browser to check it is working.  You should be able to make a single vote and view the result. 
 
