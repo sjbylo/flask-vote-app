@@ -199,7 +199,7 @@ Here is one way to find the ArgoCD Route from the command line.
 oc get route -n YOUR-NAMESPACE argocd-server -o jsonpath='{.spec.host}{"\n"}'
 ```
 
-The other way is to look at the main menu in the OpenShift Console on the left, under Networking -> Routes. 
+The other way to find the route is to look at the main menu in the OpenShift Console, on the left, under `Networking -> Routes`. 
 
 The route should `look similar` to this one:
 
