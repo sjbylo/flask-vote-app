@@ -272,7 +272,7 @@ You should see the provisioned application which looks like this:
 
 Now, find the vote-app route in your project/namespace (e.g. project gitops-user1) and open the application in your browser to check it is working.  You should be able to make a single vote and view the result. 
 
-It should look this this:
+It should look like this:
 
 <img src="./images/vote-app-results.png" alt="Vote App Results" width="900">
 
@@ -323,6 +323,8 @@ Make a change in OpenShift and see it is "healed" by ArgoCD, for example:
 You should see those resources being re-instated, as defined in your Gitea repository.
 
 `Ensure the application is working again before moving on`
+
+> Note: If you restarted or recreated the VM, you will need to bounce (or restart) the vote-app pods so they can re-connect.
 
 
 ## Implement Rollback
