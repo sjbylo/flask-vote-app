@@ -273,6 +273,10 @@ Also, verify that MySQL is running in the VM with "ps -ef | grep -i mysql".  Bon
 
 Now, find the vote-app route in your project/namespace (e.g. project gitops-user1) and open the application in your browser to check it is working.  You should be able to make a single vote and view the result. 
 
+It should look this this:
+
+<img src="./images/vote-app-results.png" alt="Vote App Results" width="500">
+
 `At this point you should have the demo application up and running`
 
 
