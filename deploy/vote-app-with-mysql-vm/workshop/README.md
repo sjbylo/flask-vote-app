@@ -300,7 +300,7 @@ spec:
       selfHeal: false 
 ```
 
-Since `selfHeal` was set to false, if any application resource in OpenShift is deleted it will not be re-created automatically. 
+Since `selfHeal` was set to false, if any application resource in OpenShift is deleted `it WILL NOT be` re-created automatically. 
 We can try this out if we delete one of the kubernetes resources of the application.
 
 Now, delete the vote-app `route` in your namespace/project.  Note that this will break the application and make it inaccessible!
