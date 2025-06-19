@@ -66,7 +66,7 @@ Create a new project for yourself to work in and remember the project name.  Use
 You can do this in the OpenShift Console under `Home -> Projects -> Create Project` or from the command line with "oc new-project gitops-user1". 
 You can run the CLI commands in an `OpenShift command line terminal`.
 
-> open from the top right of the OpenShift Console, where you will see the ">_" icon.
+> Note: you can open the terminal from the top right of the OpenShift Console, where you will see the ">_" icon.
 
 `You will use the project you just cerated for all further activities.`
 
