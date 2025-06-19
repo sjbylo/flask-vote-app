@@ -71,7 +71,7 @@ oc adm policy add-role-to-group view system:authenticated -n gitea
 
 ## Example status of "Gitea" when complate. 
 
-Check the status of the gitea instance and ensure it looks like the below before moving to the next step!
+Check the status of the gitea instance and ensure it looks like the below `before moving to the next step!`
 
 Note: "userSetupComplete: true" and "repoMigrationComplete: true"
 
@@ -106,7 +106,7 @@ status:
 
 If there are several clusters to configure, use this script.
 
-Set number of users in setup.sh script.
+Set number of users in setup.sh script.  Get the api URLs of the workshop env. from demo.redhat.com.
 
 ```
 ./setup.sh admin-password user-password <path-to-file-with-all-api-urls>
