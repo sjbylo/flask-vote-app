@@ -271,6 +271,8 @@ See the log file at /var/log/cloud-init-output.log.
 
 Also, verify that MySQL is running in the VM with "ps -ef | grep -i mysql".  Bonus activity, if you know how, connect to MySQL and view the database contents.
 
+Now, find the vote-app route in your project/namespace (e.g. project gitops-user1) and open the application in your browser to check it is working.  You should be able to make a single vote and view the result. 
+
 `At this point you should have the demo application up and running`
 
 
@@ -278,13 +280,13 @@ Also, verify that MySQL is running in the VM with "ps -ef | grep -i mysql".  Bon
 
 Go and view your new MySQL VM in the Console.
 
-Go to Administration -> Virtualization -> mysql-demo -> Configuration -> Initial Run -> Cloud-init Edit -> Script (the toggle button) 
+Go to `Administration -> Virtualization -> mysql-demo -> Configuration -> Initial Run -> Cloud-init Edit -> Script (the toggle button)`
 to view the cloud-init script which sets the demo user & password and also installs and configured MySQL.  This is the script that is run when the VM is started for the first time. 
 
 
-## Self Healing
+## Self Healing via GitOps
 
-Notice that we set the following in the above yaml resource.  We set the application to NOT `self heal`.  Let's test this now. 
+Notice that we set the following in the above `Application` yaml resource.  We set the application to NOT `self heal`.  Let's test this now. 
 
 ```
 spec:
@@ -294,34 +296,35 @@ spec:
       selfHeal: false 
 ```
 
-Since `selfHeal` was set to false, we will delete one of the kubernetes resources of the application.
+Since `selfHeal` was set to false, if any application resource in OpenShift is deleted it will not be re-created automatically. 
+We can try this out if we delete one of the kubernetes resources of the application.
 
-Now, delete the vote-app `route` in your namespace/project. 
+Now, delete the vote-app `route` in your namespace/project.  Note that this will break the application and make it inaccessible!
 
 What happened? 
 
-It does not get re-created automatically!  Why not? 
-Answer: `Because the Application is not set to 'self heal'`.
+The route resource is not re-created automatically!  Why not? 
+Answer: `Because the Application is not set to 'self heal'` (as explained above). 
 
-Set selfHeal to "auto" in the ArgoCD UI.  Go to the Application, click `Details`, scroll down and make the change to self heal.  Click on ENABLE-AUTO-SYNC to enable it.  Ensure `PRUNE RESOURCES` and `SELF HEAL` are also enabled!
+Set selfHeal to "auto" in the ArgoCD UI.  Do do that, go to the Application, click `Details`, scroll down and make the change to self heal.  Click on ENABLE-AUTO-SYNC to enable it.  Ensure `PRUNE RESOURCES` and `SELF HEAL` are also enabled!
 
-Go back to the main UI and you should see "Auto sync is enabled" under "Sync status".
+Go back to the main ArgoCD UI and see "Auto sync is enabled" is showing under "Sync status".
 
-Now, make a very human mistake and delete some of the vote-app resources in your project. 
+Now, make a very human mistake and delete some other vote-app resources in your project. 
 
-Make a change in OpenShift and see it "healed" by ArgoCD, for example: 
+Make a change in OpenShift and see it is "healed" by ArgoCD, for example: 
 
-- Delete the route and/or
 - Delete the vote-app Deployment and/or
 - Stop the MySQL VM
-- Delete the MySQL VM
 
-You should see those resources being re-provisioned. 
+You should see those resources being re-instated.
+
+`Ensure the application is working again before moving on`
 
 
 ## Implement Rollback
 
-Imagine a change is rolled out via git by the platform team and then synced with OpenShift.
+Imagine a change is rolled out, via a git change, by the platform team and then sync-ed with OpenShift.
 
 But, there is a problem!
 - You can rollback to the previous revision (or git commit) that is known to work!
@@ -330,15 +333,17 @@ Via Gitea, make a change to the "vote-app-mysql-vm-all-in-one.yaml" file in your
 
 Commit the change, by entering "Changed replicas = 3" into the `Subject` line of the commit. 
 
-Ensure the Application is re-synchronized via the UI.
+Ensure the Application is re-synchronized via the UI.  
 
-Now try out the "HISTORY AND ROLLBACK" button and change the configuration back to the previous one. 
+> Note: If Auto-Sync is not set, you may need to click on the `Sync` button.
+
+Now try out the "HISTORY AND ROLLBACK" button and change the configuration back to the previous one (the working version, with one pod). 
 
 You should be able to roll back to the previous state.
 
-Note: See the [ArgoCD Core Concepts](https://argo-cd.readthedocs.io/en/stable/core_concepts/#core-concepts) for an explanation on the difference between `Refresh` and `Sync`.
-- `Refresh` Compare the latest code in Git with the live state. Figure out what is different.
-- `Sync` The process of making an application move to its target state. E.g. by applying changes to a Kubernetes cluster.
+> Note: See the [ArgoCD Core Concepts](https://argo-cd.readthedocs.io/en/stable/core_concepts/#core-concepts) for an explanation on the difference between `Refresh` and `Sync`.
+> - `Refresh` Compare the latest code in Git with the live state. Figure out what is different.
+> - `Sync` The process of making an application move to its target state. E.g. by applying changes to a Kubernetes cluster.
 
 
 ## Clean up 
@@ -347,9 +352,10 @@ Now delete the application.
 
 On the ArgoCD UI, drill down into your Application tile, click on delete and watch all the resources be removed. 
 
+
 ## The End
 
-That is the end of the Virt + GitOps workshop.  You have learned how to configure OpenShift GitOps (ArgoCD) and use it to provision and manage application 
+That is the end of the Virt + GitOps workshop.  You have learned how to configure OpenShift GitOps (ArgoCD) and use it to provision and manage applications
 in OpenShift, via Git.
 
 
