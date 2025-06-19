@@ -317,10 +317,12 @@ Now, make a very human mistake and delete some other vote-app resources in your 
 
 Make a change in OpenShift and see it is "healed" by ArgoCD, for example: 
 
+- Delete the vote-app or the VM's Service resource and/or
 - Delete the vote-app Deployment and/or
+- Delete the Route again and/or
 - Stop the MySQL VM
 
-You should see those resources being re-instated, as defined in your Gitea repository.
+You should see those resources being re-instated, as defined in your Gitea repository (the desired state).
 
 `Ensure the application is working again before moving on`
 
@@ -332,13 +334,14 @@ You should see those resources being re-instated, as defined in your Gitea repos
 Imagine a change is rolled out by the platform team (via a change in git) and then sync-ed with OpenShift.
 
 But, then there is a problem - the change has caused an outage!!
-- You can rollback to the previous revision (or git commit) that is known to work!
+- You can rollback to the previous revision (or `git commit`) which is known to work!
 
 Via Gitea, make a change to the "_vote-app-mysql-vm-all-in-one.yaml_" file in your Gitea repo by clicking on the `Edit File` button (to the right).  
 
 Make the change by `removing the whole of the route resource` at the very bottom of the file!
 
-Delete, or comment out, these lines:
+Delete all these lines:
+
 ```
 apiVersion: route.openshift.io/v1
 kind: Route
@@ -367,13 +370,13 @@ spec:
   wildcardPolicy: None
 ```
 
-At the bottom of the page, commit the change, by entering "Replicas = 3" into the `Subject` line of the commit (this message will show up in ArgoCD soon).
+At the bottom of the page, commit the change, by entering "Route deleted!" into the `Subject` line of the commit (this message will show up in ArgoCD soon).
 
 Ensure the Application is automatically re-synchronized via the UI.  
 
 > Note: If Auto-Sync is not set, you may need to click on the `Sync` button.
 
-Deleting the Route stops the application working. Check that it has now truly failed since there is no way to access the application from outside OpenShift (ingress route is missing).
+Deleting the Route stops the application working. Check that it has now truly failed since there is no way to access the application from outside OpenShift (ingress Route is missing).
 
 Now try out the "HISTORY AND ROLLBACK" button and change the configuration back to the previous working one.
 
