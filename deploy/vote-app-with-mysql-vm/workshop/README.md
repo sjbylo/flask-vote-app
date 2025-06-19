@@ -1,4 +1,4 @@
-# Workshop - Mixed Pod + VM OpenShift Virtualization GitOps Demo
+# Mixed Pod + VM OpenShift Virtualization GitOps Workshop
 
 GitOps is a way to manage infrastructure and applications using Git as the single source of truth.
 It automates deployment by syncing the desired state in Git with the live environment.
@@ -64,7 +64,8 @@ Later on in the workshop you will make changes to the code and see the changes t
 Create a new project for yourself to work in and remember the project name.  Use a unique name, e.g. `gitops-user1`
 
 You can do this in the OpenShift Console under `Home -> Projects -> Create Project` or from the command line with "oc new-project gitops-user1". 
-You can run the CLI commands in a `OpenShift command line terminal` (open from the top right of the OpenShift Console, where you will see the ">_" icon).
+You can run the CLI commands in a `OpenShift command line terminal`
+> open from the top right of the OpenShift Console, where you will see the ">_" icon.
 
 `You will use the project you just cerated for all further activities.`
 
