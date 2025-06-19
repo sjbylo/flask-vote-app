@@ -324,28 +324,60 @@ You should see those resources being re-instated, as defined in your Gitea repos
 
 `Ensure the application is working again before moving on`
 
-> Note: If you restarted or recreated the VM, you will need to bounce (or restart) the vote-app pods so they can re-connect.
+> Note: If you restarted or recreated the VM, you will need to bounce (or restart) the vote-app pods so they can re-connect!
 
 
 ## Implement Rollback
 
-Imagine a change is rolled out, via a git change, by the platform team and then sync-ed with OpenShift.
+Imagine a change is rolled out by the platform team (via a change in git) and then sync-ed with OpenShift.
 
-But, there is a problem - the change has caused an outage!
+But, then there is a problem - the change has caused an outage!!
 - You can rollback to the previous revision (or git commit) that is known to work!
 
 Via Gitea, make a change to the "_vote-app-mysql-vm-all-in-one.yaml_" file in your Gitea repo by clicking on the `Edit File` button (to the right).  
-E.g. change the vote-app deployment `replicas` to "3", e.g. "replicas: 3".
+E.g. change the vote-app deployment `replicas` from "1" to "3", e.g. "replicas: 3".
 
-At the bottom of the page, commit the change, by entering "Changed replicas = 3" into the `Subject` line of the commit. 
+Make the change by removing the whole of the route resource at the very bottom of the file:
 
-Ensure the Application is re-synchronized via the UI.  
+```
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  annotations:
+    app.openshift.io/connects-to: '[{"apiVersion":"kubevirt.io/v1","kind":"VirtualMachine","name":"mysql-demo"}]'
+    openshift.io/host.generated: "true"
+  labels:
+    app: vote-app
+    app.kubernetes.io/component: vote-app
+    app.kubernetes.io/instance: vote-app
+    app.kubernetes.io/name: vote-app
+    app.kubernetes.io/part-of: vote-app
+    app.openshift.io/runtime-version: latest
+  name: vote-app
+spec:
+  port:
+    targetPort: 8080-tcp
+  tls:
+    insecureEdgeTerminationPolicy: Redirect
+    termination: edge
+  to:
+    kind: Service
+    name: vote-app
+    weight: 100
+  wildcardPolicy: None
+```
+
+At the bottom of the page, commit the change, by entering "Replicas = 3" into the `Subject` line of the commit (this message will show up in ArgoCD soon).
+
+Ensure the Application is automatically re-synchronized via the UI.  
 
 > Note: If Auto-Sync is not set, you may need to click on the `Sync` button.
 
-Now try out the "HISTORY AND ROLLBACK" button and change the configuration back to the previous one (the working version, with one pod). 
+Deleting the Route stops the application working. Check that it has now truly failed since there is no way to access the application from outside OpenShift (ingress route is missing).
 
-You should be able to roll back to the previous state.
+Now try out the "HISTORY AND ROLLBACK" button and change the configuration back to the previous working one.
+
+You should be able to roll back to the previous state and the application will start working properly again. 
 
 > Note: See the [ArgoCD Core Concepts](https://argo-cd.readthedocs.io/en/stable/core_concepts/#core-concepts) for an explanation on the difference between `Refresh` and `Sync`.
 > - `Refresh` Compare the latest code in Git with the live state. Figure out what is different.
@@ -356,9 +388,8 @@ You should be able to roll back to the previous state.
 
 Now delete the application.
 
-On the ArgoCD UI, drill down into your Application tile, click on delete and watch all the resources be removed. 
+On the ArgoCD UI, drill down into your Application tile, click on the `DELETE` button and watch all the resources be removed. 
 
-That is the end of the Virt + GitOps workshop.  You have learned how to configure OpenShift GitOps (ArgoCD) and use it to provision and manage applications
+You have reached the end of the Virt + GitOps workshop.  You have learned how to configure OpenShift GitOps (ArgoCD) and use it to provision and manage mixed (VM + Pod) applications
 in OpenShift, via Git.
-
 
