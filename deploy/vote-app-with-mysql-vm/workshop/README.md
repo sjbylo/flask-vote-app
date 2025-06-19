@@ -21,21 +21,22 @@ First, delete any of the resources that may have been created in the cluster due
 
 ## Find and access your Git Repo URL
 
-Before we do anything, we need to take a look at your application manifests (yaml code) in our lab git server (Gitea), hosted on OpenShift.
+We will provision a demo app into OpenShift.  But, from what yaml code?
+Before we do anything, we need to take a look at your application manifests (yaml code) in our lab's git server (Gitea).
 
 > **Note:** Note that whenever you are working in the OpenShift Console, it is always very important to select the correct OpenShift project in the top left of the Console.  
 
-For example:
+> For example:
 
-<img src="./images/project-gitops-user1.png" alt="Project selection example" width="150">
+> <img src="./images/project-gitops-user1.png" alt="Project selection example" width="150">
 
-Now, select the "Gitea" project.
+Using the above selector, select the "Gitea" project in the OpenShift Console. 
 
 Determine Gitea's Route which you will find in the Gitea namespace (Go to Menu -> Networking -> Routes).  
 
 Log into Gitea using your username and password as provided by your lab proctors (these credentials are usually the same as for the Virtualization Workshop). 
 
-After logging into Gitea, note your repository (which is a copy of the source code of the original flask-vote-app) and fetch the repo URL.  
+After logging into Gitea, note your repository (a copy of the source code of the original flask-vote-app) and fetch the repo URL.  
 
 Your Git repo URL will look something like this (starting with "http://" and ending in "flask-vote-app.git").  Make a note of it:
 
