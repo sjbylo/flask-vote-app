@@ -275,7 +275,7 @@ Now, find the vote-app route in your project/namespace (e.g. project gitops-user
 
 It should look this this:
 
-<img src="./images/vote-app-results.png" alt="Vote App Results" width="500">
+<img src="./images/vote-app-results.png" alt="Vote App Results" width="900">
 
 `At this point you should have the demo application up and running`
 
