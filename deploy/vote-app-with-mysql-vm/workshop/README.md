@@ -8,7 +8,7 @@ You can learn more about GitOps from this [GitOps Workshop Guide](https://opensh
 
 ## Virt + GitOps Workshop
 
-Use OpenShift Virtualization & GitOps to deploy a demo application pod and a MySQL VM.
+In this workshop you will learn how to deploy a demo application (pod and a MySQL VM) using OpenShift Virtualization & GitOps.
 
 Once the application is deployed this is what you will see in OpenShift's Topology View:
 
