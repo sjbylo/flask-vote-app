@@ -4,8 +4,6 @@ GitOps is a way to manage infrastructure and applications using Git as the singl
 It automates deployment by syncing the desired state in Git with the live environment.
 Every change is tracked in Git, providing a full audit trail for transparency and accountability.
 
-You can learn more about GitOps from this [GitOps Workshop Guide](https://openshiftdemos.github.io/openshift-gitops-workshop/openshift-gitops-workshop/index.html).
-
 ## Virt + GitOps Workshop
 
 In this workshop you will learn how to deploy a demo application (pod and a MySQL VM) using OpenShift Virtualization & GitOps.
@@ -66,7 +64,7 @@ Create a new project for yourself to work in and remember the project name.  Use
 You can do this in the OpenShift Console under `Home -> Projects -> Create Project` or from the command line with "oc new-project gitops-user1". 
 You can run the CLI commands in an `OpenShift command line terminal`.
 
-> Note: you can open the terminal from the top right of the OpenShift Console, where you will see the ">_" icon.
+> Note: you can access the command line (terminal) from the top right of the OpenShift Console, where you will see the ">_" icon.
 
 `You will use the project you just cerated for all further activities.`
 
@@ -184,16 +182,13 @@ In the Console, go to Workloads -> Pods (ensure your project - e.g. project gito
 
 After about 3-4 mins, you should see all the ArgoCD pods, running and ready (1/1), similar to the following: 
 
-- argocd-application-controller-0
-- argocd-dex-server-xxxxx-xxxxx
-- argocd-redis-xxxxx-xxxxx
-- argocd-repo-server-xxxxx-xxxxx
-- argocd-server-xxxxx-xxxxx
+<img src="./images/-argocd-pods.png" alt="ArgoCD pods" width="500">
 
-
-Find the Route that was created `in YOUR PROJECT` and access it to open the ArgoCD UI at the login page.
+Find the Route that was created in `YOUR PROJECT` (e.g. gitops-user1) and access it to open the ArgoCD UI at the login page.
 
 Here is one way to find the ArgoCD Route from the command line.
+
+> Note: you can access the command line (terminal) from the top right of the OpenShift Console, where you will see the ">_" icon.
 
 ```
 oc get route -n YOUR-PROJECT argocd-server -o jsonpath='{.spec.host}{"\n"}'
@@ -268,7 +263,7 @@ You should see the provisioned application which looks like this:
 
 > Note that after the VM status is `Running` it will still `take up to 5 mins` for the MySQL VM to run its `cloud-init` script to install, configure and run MySQL, after which the vote application will connect to the database and be ready to use.  
 
-- `Bonus activity`: Using the Virtualization menu item, find and then log into the MySQL VM's Console and check the output of the cloud-init script.  See the log file at /var/log/cloud-init-output.log.  Also, verify that MySQL is running in the VM with "ps -ef | grep -i mysql".  If you know how, connect to MySQL and view the database contents.
+- `Bonus activity`: Staying in the Administrator View, go to the `Virtualization -> VirtualMachines` menu item, find and then log into the MySQL VM's Console and check the output of the cloud-init script.  See the log file at /var/log/cloud-init-output.log.  Also, verify that MySQL is running in the VM with "ps -ef | grep -i mysql".  If you know how, connect to MySQL and view the database contents.
 
 Now, find the vote-app route in your project (e.g. project gitops-user1) and open the application in your browser to check it is working.  You should be able to make a single vote and view the result. 
 
@@ -279,11 +274,11 @@ It should look like this:
 `At this point you should have the demo application up and running`
 
 
-## View the VM in the Console
+## View the VM in the OpenShift Console
 
-Go and view your new MySQL VM in the Console.
+Go and view your new MySQL VM in the OpenShift Console.
 
-Go to `Administration -> Virtualization -> mysql-demo -> Configuration -> Initial Run -> Cloud-init Edit -> Script (the toggle button)`
+Go to `Administration -> Virtualization -> VirtualMachines -> mysql-demo -> Configuration -> Initial Run -> Cloud-init Edit -> Script (the toggle button)`
 to view the cloud-init script which sets the demo user & password and also installs and configured MySQL.  This is the script that is run when the VM is started for the first time. 
 
 
@@ -395,4 +390,6 @@ On the ArgoCD UI, drill down into your Application tile, click on the `DELETE` b
 
 You have reached the end of the Virt + GitOps workshop.  You have learned how to configure OpenShift GitOps (ArgoCD) and use it to provision and manage mixed (VM + Pod) applications
 in OpenShift, via Git.
+
+You can learn more about GitOps from this [GitOps Workshop Guide](https://openshiftdemos.github.io/openshift-gitops-workshop/openshift-gitops-workshop/index.html).
 
