@@ -75,16 +75,16 @@ You can run the CLI commands in an `OpenShift command line terminal`.
 
 First, you will provision your own instance of ArgoCD into your OpenShift project.
 
-Add the following ArgoCD resource into your project.  There are many ways to do this, e.g. via the OpenShift Console or via the command line.
+Add the following ArgoCD resource into your project (e.g. project gitops-user1).  There are many ways to do this, e.g. via the OpenShift Console or via the command line.
 
-Don't forget to change the `YOUR-OPENSHIFT-NAMESPACE` in the yaml code to match your OpenShift project/namespace. 
+Don't forget to change the `YOUR-OPENSHIFT-PROJECT` in the yaml code to match your OpenShift project. 
 
 ```
 apiVersion: argoproj.io/v1beta1
 kind: ArgoCD
 metadata:
   name: argocd
-  namespace: YOUR-OPENSHIFT-NAMESPACE      # <<== Add your namespace/project here, e.g. gitops-user1
+  namespace: YOUR-OPENSHIFT-PROJECT      # <<== Add your project here, e.g. gitops-user1
 spec:
   controller:
     processors: {}
@@ -180,7 +180,7 @@ spec:
     ca: {}
 ```
 
-In the Console, go to Workloads -> Pods (ensure your project is selected above).
+In the Console, go to Workloads -> Pods (ensure your project - e.g. project gitops-user1 - is selected above).
 
 After about 3-4 mins, you should see all the ArgoCD pods, running and ready (1/1), similar to the following: 
 
@@ -191,12 +191,12 @@ After about 3-4 mins, you should see all the ArgoCD pods, running and ready (1/1
 - argocd-server-xxxxx-xxxxx
 
 
-Find the Route that was created and access it to open the ArgoCD UI at the login page.
+Find the Route that was created `in YOUR PROJECT` and access it to open the ArgoCD UI at the login page.
 
 Here is one way to find the ArgoCD Route from the command line.
 
 ```
-oc get route -n YOUR-NAMESPACE argocd-server -o jsonpath='{.spec.host}{"\n"}'
+oc get route -n YOUR-PROJECT argocd-server -o jsonpath='{.spec.host}{"\n"}'
 ```
 
 Another way to find the route is to look at the main menu in the OpenShift Console, on the left, under `Networking -> Routes`. 
@@ -226,17 +226,17 @@ Let’s take a look at the Application manifest used for this deployment and bre
 kind: Application
 metadata:
   name: vote-app
-  namespace: YOUR-OPENSHIFT-NAMESPACE             # <<== Add your namespace/project here, e.g. gitops-user1
+  namespace: YOUR-OPENSHIFT-PROJECT               # <<== Add your project here, e.g. gitops-user1
 spec:
   destination:
-    namespace: YOUR-OPENSHIFT-NAMESPACE           # <<== Add your namespace/project here, e.g. gitops-user1
+    namespace: YOUR-OPENSHIFT-PROJECT             # <<== Add your project here, e.g. gitops-user1
     server: https://kubernetes.default.svc
 
-  project: default
+  project: default                                # <<== NO NOT CHANGE ARGOCD PROJECT!
 
   source:
     path: deploy/vote-app-with-mysql-vm/direct
-    repoURL: http://HOST/YOUR-REPO-PATH.git       # <<== add your repo URL here
+    repoURL: http://HOST/YOUR-REPO-PATH.git       # <<== add your vote-app repo URL here (Gitea)
     targetRevision: HEAD
 
   syncPolicy:
@@ -245,7 +245,7 @@ spec:
       selfHeal: false
 ```
 
-- `destination`: describes into which cluster and namespace/project to apply the yaml resources (using the locally-resolvable URL for the cluster)
+- `destination`: describes into which cluster and project to apply the yaml resources (using the locally-resolvable URL for the cluster)
 - `project default`: is an ArgoCD concept and has nothing to do with OpenShift projects
 - `source`: describes from which git repository, and the directory path, to fetch the yaml resources
 - `prune`: resources, that have been removed from the Git repo, will be automatically pruned
@@ -270,7 +270,7 @@ You should see the provisioned application which looks like this:
 
 - `Bonus activity`: Using the Virtualization menu item, find and then log into the MySQL VM's Console and check the output of the cloud-init script.  See the log file at /var/log/cloud-init-output.log.  Also, verify that MySQL is running in the VM with "ps -ef | grep -i mysql".  If you know how, connect to MySQL and view the database contents.
 
-Now, find the vote-app route in your project/namespace (e.g. project gitops-user1) and open the application in your browser to check it is working.  You should be able to make a single vote and view the result. 
+Now, find the vote-app route in your project (e.g. project gitops-user1) and open the application in your browser to check it is working.  You should be able to make a single vote and view the result. 
 
 It should look like this:
 
@@ -302,7 +302,7 @@ spec:
 Since `selfHeal` was set to false, if any application resource in OpenShift is deleted `it WILL NOT be` re-created automatically. 
 We can try this out if we delete one of the kubernetes resources of the application.
 
-Now, delete the vote-app `route` in your namespace/project.  Note that this will break the application and make it inaccessible!
+Now, delete the vote-app `route` in your project (e.g. project gitops-user1).  Note that this will break the application and make it inaccessible!
 
 What happened? 
 
@@ -313,7 +313,7 @@ Set selfHeal to "auto" in the ArgoCD UI.  To do that, go to the Application, cli
 
 Go back to the main ArgoCD UI and see "_Auto sync is enabled_" is showing under "Sync status".
 
-Now, make a very human mistake and delete some other vote-app resources in your project. 
+Now, make a very human mistake and delete some other vote-app resources in your project (e.g. project gitops-user1). 
 
 Make a change in OpenShift and see it is "healed" by ArgoCD, for example: 
 

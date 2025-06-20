@@ -21,7 +21,7 @@ oc new-project gitea
 
 Create Gitea instance (check the changes needed)
 
-> Ensure giteaUserPassword is set to your prefered password, e.g. the password already provided by the lab environment.
+> Ensure giteaUserPassword (in the yaml below) is set to your prefered password, e.g. the password already provided by the lab environment.
 > Create the correct number of users for your workshop
 
 Import this yaml into the gitea project:
