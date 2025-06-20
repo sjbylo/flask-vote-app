@@ -182,7 +182,7 @@ In the Console, go to Workloads -> Pods (ensure your project - e.g. project gito
 
 After about 3-4 mins, you should see all the ArgoCD pods, running and ready (1/1), similar to the following: 
 
-<img src="./images/-argocd-pods.png" alt="ArgoCD pods" width="500">
+<img src="./images/argocd-pods.png" alt="ArgoCD pods" width="500">
 
 Find the Route that was created in `YOUR PROJECT` (e.g. gitops-user1) and access it to open the ArgoCD UI at the login page.
 
