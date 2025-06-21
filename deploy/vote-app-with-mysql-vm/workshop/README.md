@@ -213,7 +213,8 @@ Open the URL in another browser tab to see the ArgoCD login page.
 
 Use the `LOG IN VIA OPENSHIFT` button to log into ArgoCD with your user's OpenShift credentials.
 > *DO NOT* use the `username` and `password` fields below it!
-and, on the next page, allow the `access permissions`.
+
+On the next page, allow the `access permissions`.
 
 `In the next section we will provision the vote-app Application.`
 
