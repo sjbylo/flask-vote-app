@@ -389,6 +389,13 @@ You should be able to roll back to the previous state and the application will s
 > - `Sync` The process of making an application move to its target state. E.g. by applying changes to a Kubernetes cluster.
 
 
+## Optional: Other things you can try
+
+In the OpenShift Console, change the MySQL VM core count or the memory size.  Will it be changed or will it be reverted back to the "source of truth", as defined in Git? 
+
+In Git, change the core count or the memory size of the MySQL VM and watch the VM be upgraded.
+
+
 ## Clean up 
 
 Now delete the application.
