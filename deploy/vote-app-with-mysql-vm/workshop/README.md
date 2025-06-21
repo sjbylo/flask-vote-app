@@ -25,7 +25,7 @@ Before we start, delete any of the resources that may have been created in the c
 We will provision a vote application into OpenShift.  But, from what yaml code?
 Before we do anything, we need to take a look at your application manifests (yaml code) in our lab's git server (Gitea).
 
-> **Note:** Note that whenever you are working in the OpenShift Console, it is always very important to select the correct OpenShift project in the top left of the Console.  
+> **Note:** whenever you are working in the OpenShift Console, it is always very important to select the correct OpenShift project in the top left of the Console.  
 > For example:
 > <img src="./images/project-gitops-user1.png" alt="Project selection example" width="150">
 
@@ -67,7 +67,7 @@ Create a new project for yourself to work in and remember the project name.  Use
 You can do this in the OpenShift Console under `Home -> Projects -> Create Project` or from the command line with "oc new-project gitops-user1". 
 You can run the CLI commands in an `OpenShift command line terminal`.
 
-> Note: you can access the command line (terminal) from the top right of the OpenShift Console, where you will see the ">_" icon.
+> **Note**: you can access the command line (terminal) from the top right of the OpenShift Console, where you will see the ">_" icon.
 
 `You will use the project you just cerated for all further activities.`
 
@@ -199,7 +199,7 @@ Here is one way to find the ArgoCD Route from the command line.
 oc get route -n YOUR-PROJECT argocd-server -o jsonpath='{.spec.host}{"\n"}'
 ```
 
-> Note: you can access the command line (terminal) from the top right of the OpenShift Console, where you will see the ">_" icon.
+> **Note**: you can access the command line (terminal) from the top right of the OpenShift Console, where you will see the ">_" icon.
 
 Another way to find the route is to look at the main menu in the OpenShift Console, under `Networking -> Routes`. 
 
@@ -268,7 +268,7 @@ You should see the provisioned application which looks like this:
 
 <img src="./images/argocd-ui-with-vote-app.png" alt="Vote App in ArgoCD" width="900">
 
-> Note that after the VM status is `Running` it will still `take up to 5 mins` for the MySQL VM to run its `cloud-init` script to install, configure and run MySQL, after which the vote application will connect to the database and be ready to use.  
+> **Note** that after the VM status is `Running` it will still `take up to 5 mins` for the MySQL VM to run its `cloud-init` script to install, configure and run MySQL, after which the vote application will connect to the database and be ready to use.  
 
 - `Bonus activity`: Staying in the Administrator View, go to the `Virtualization -> VirtualMachines` menu item, find and then log into the MySQL VM's Console and check the output of the cloud-init script.  See the log file at /var/log/cloud-init-output.log.  Also, verify that MySQL is running in the VM with "ps -ef | grep -i mysql".  If you know how, connect to MySQL and view the database contents.
 
@@ -328,7 +328,7 @@ You should see those resources being re-instated, as defined in your Gitea repos
 
 `Ensure the application is working again before moving on`
 
-> Note: If you restarted or recreated the VM, you will need to bounce (or restart) the vote-app pods so they can re-connect!
+> **Note**: If you restarted or recreated the VM, you will need to bounce (or restart) the vote-app pods so they can re-connect!
 
 
 ## Implement Rollback
@@ -376,7 +376,7 @@ At the bottom of the page, commit the change, after entering "Route deleted!" in
 
 Ensure the Application is automatically re-synchronized via the UI.  
 
-> Note: If Auto-Sync is not set, you may need to click on the `Sync` button.
+> **Note**: If Auto-Sync is not set, you may need to click on the `Sync` button.
 
 Deleting the Route stops the application working. Check that it has now truly failed since there is no way to access the application from outside OpenShift (ingress Route is missing).
 
@@ -384,7 +384,7 @@ Now try out the "HISTORY AND ROLLBACK" button and change the configuration back 
 
 You should be able to roll back to the previous state and the application will start working properly again. 
 
-> Note: See the [ArgoCD Core Concepts](https://argo-cd.readthedocs.io/en/stable/core_concepts/#core-concepts) for an explanation on the difference between `Refresh` and `Sync`.
+> **Note**: See the [ArgoCD Core Concepts](https://argo-cd.readthedocs.io/en/stable/core_concepts/#core-concepts) for an explanation on the difference between `Refresh` and `Sync`.
 > - `Refresh` Compare the latest code in Git with the live state. Figure out what is different.
 > - `Sync` The process of making an application move to its target state. E.g. by applying changes to a Kubernetes cluster.
 
