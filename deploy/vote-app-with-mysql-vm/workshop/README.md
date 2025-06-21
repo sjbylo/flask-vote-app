@@ -81,9 +81,9 @@ Add the following ArgoCD resource into your project (e.g. project gitops-user1).
 > Always ensure your project is selected!
 > How to select the project?  Select it at the top left of the OpenShift Console.
 
-There are many ways to do this, e.g. via the OpenShift Console or via the command line.
+There are many ways to do this, e.g. via the OpenShift Console (see the "+" icon) or via the command line.
 
-Don't forget to change the `YOUR-OPENSHIFT-PROJECT` in the yaml code to match your OpenShift project. 
+Don't forget to change the `YOUR-OPENSHIFT-PROJECT` placeholder - to match your OpenShift project - after pasting the below yaml code.
 
 ```
 apiVersion: argoproj.io/v1beta1
