@@ -28,7 +28,7 @@ Before we do anything, we need to take a look at your application manifests (yam
 
 Using the above selector, select the "Gitea" project in the OpenShift Console. 
 
-Determine Gitea's Route which you will find in the Gitea project (Go to Menu -> Networking -> Routes).  
+Determine Gitea's Route which you will find in the Gitea project (Go to `Menu -> Networking -> Routes`).  
 
 Log into Gitea using your username and password as provided by your lab proctors (these credentials are usually the same as for the Virtualization Workshop). 
 
@@ -73,7 +73,12 @@ You can run the CLI commands in an `OpenShift command line terminal`.
 
 First, you will provision your own instance of ArgoCD into your OpenShift project.
 
-Add the following ArgoCD resource into your project (e.g. project gitops-user1).  There are many ways to do this, e.g. via the OpenShift Console or via the command line.
+Add the following ArgoCD resource into your project (e.g. project gitops-user1).  
+
+> Always ensure your project is selected!
+> How to select the project?  Select it at the top left of the OpenShift Console.
+
+There are many ways to do this, e.g. via the OpenShift Console or via the command line.
 
 Don't forget to change the `YOUR-OPENSHIFT-PROJECT` in the yaml code to match your OpenShift project. 
 
@@ -178,7 +183,7 @@ spec:
     ca: {}
 ```
 
-In the Console, go to Workloads -> Pods (ensure your project - e.g. project gitops-user1 - is selected above).
+In the Console, go to `Workloads -> Pods` (ensure your project - e.g. project gitops-user1 - is selected at the top of the OpenShift Console).
 
 After about 3-4 mins, you should see all the ArgoCD pods, running and ready (1/1), similar to the following: 
 
