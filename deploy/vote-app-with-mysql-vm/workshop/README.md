@@ -1,25 +1,28 @@
 # Mixed Pod + VM OpenShift Virtualization GitOps Workshop
 
+In this workshop you will learn how to deploy a demo vote application (pod and a MySQL VM) using OpenShift Virtualization & GitOps.
+
+Running VMs and Pods together in OpenShift is useful because some workloads can't be containerized
+due to many reasons—including legacy dependencies, specific OS requirements, or licensing.
+It also enables infrastructure and skills consolidation, reducing hardware costs, simplifying operations,
+and allowing teams to manage everything with a single platform and toolset.
+
 GitOps is a way to manage infrastructure and applications using Git as the single source of truth.
 It automates deployment by syncing the desired state in Git with the live environment.
 Every change is tracked in Git, providing a full audit trail for transparency and accountability.
-
-## Virt + GitOps Workshop
-
-In this workshop you will learn how to deploy a demo application (pod and a MySQL VM) using OpenShift Virtualization & GitOps.
 
 Once the application is deployed this is what you will see in OpenShift's Topology View:
 
 <img src="./images/vote-app-plus-vm-demo.png" alt="Pod and VM working together as one application" width="500">
 
-We will use the OpenShift GitOps Operator (based on the [ArgoCD Project](https://argo-cd.readthedocs.io/)) to implement GitOps and deploy our demo application. 
+We will use the OpenShift GitOps Operator (based on the [ArgoCD Project](https://argo-cd.readthedocs.io/)) to implement GitOps and deploy our vote application. 
 
 Before we start, delete any of the resources that may have been created in the cluster due to previous labs, e.g. Virtual Machines.
 
 
 ## Find and access your Git Repo URL
 
-We will provision a demo app into OpenShift.  But, from what yaml code?
+We will provision a vote application into OpenShift.  But, from what yaml code?
 Before we do anything, we need to take a look at your application manifests (yaml code) in our lab's git server (Gitea).
 
 > **Note:** Note that whenever you are working in the OpenShift Console, it is always very important to select the correct OpenShift project in the top left of the Console.  
@@ -71,7 +74,7 @@ You can run the CLI commands in an `OpenShift command line terminal`.
 
 ## Provision your own instance of OpenShift GitOps (ArgoCD)
 
-First, you will provision your own instance of ArgoCD into your OpenShift project.
+First, you will provision your own instance of ArgoCD.
 
 Add the following ArgoCD resource into your project (e.g. project gitops-user1).  
 
@@ -183,8 +186,7 @@ spec:
     ca: {}
 ```
 
-In the Console, go to `Workloads -> Pods` (ensure your project - e.g. project gitops-user1 - is selected at the top of the OpenShift Console).
-
+In the Console, go to `Workloads -> Pods`.
 After about 3-4 mins, you should see all the ArgoCD pods, running and ready (1/1), similar to the following: 
 
 <img src="./images/argocd-pods.png" alt="ArgoCD pods" width="500">
@@ -193,13 +195,13 @@ Find the Route that was created in `YOUR PROJECT` (e.g. gitops-user1) and access
 
 Here is one way to find the ArgoCD Route from the command line.
 
-> Note: you can access the command line (terminal) from the top right of the OpenShift Console, where you will see the ">_" icon.
-
 ```
 oc get route -n YOUR-PROJECT argocd-server -o jsonpath='{.spec.host}{"\n"}'
 ```
 
-Another way to find the route is to look at the main menu in the OpenShift Console, on the left, under `Networking -> Routes`. 
+> Note: you can access the command line (terminal) from the top right of the OpenShift Console, where you will see the ">_" icon.
+
+Another way to find the route is to look at the main menu in the OpenShift Console, under `Networking -> Routes`. 
 
 The route should `look similar` to this one:
 
@@ -207,7 +209,7 @@ The route should `look similar` to this one:
 https://argocd-server-gitops-user1.apps.cluster-xxxxx.dynamic.redhatworkshops.io/
 ```
 
-Open the URL in another tab and you will now see the ArgoCD login page in your browser.
+Open the URL in another browser tab and you will now see the ArgoCD login page in your browser.
 
 Use the `LOG IN VIA OPENSHIFT` button to log into ArgoCD with your user's OpenShift credentials (DO NOT use the `username` and `password` fields below it!) 
 and, on the next page, allow the `access permissions`.
@@ -215,7 +217,7 @@ and, on the next page, allow the `access permissions`.
 `In the next section we will provision the vote-app Application.`
 
 
-## Provision the Demo Application
+## Provision the Vote Application
 
 In ArgoCD, a managed set of Kubernetes manifests is called an `Application`. 
 To enable ArgoCD to deploy these manifests to your cluster, you need to define them using an `Application` `Custom Resource` (CR).
@@ -276,7 +278,7 @@ It should look like this:
 
 <img src="./images/vote-app-results.png" alt="Vote App Results" width="900">
 
-`At this point you should have the demo application up and running`
+`At this point you should have the vote application up and running`
 
 
 ## View the VM in the OpenShift Console
