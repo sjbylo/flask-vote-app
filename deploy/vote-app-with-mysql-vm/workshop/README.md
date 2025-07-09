@@ -3,9 +3,9 @@
 In this workshop you will learn how to deploy a demo application which allows you, and others, to vote for your favorite Linux distribution. 
 The "vote" application is made up of a mixture of pods and a MySQL VM running on OpenShift Virtualization & deployed via GitOps.
 
-Running VMs and Pods together in OpenShift is useful because some workloads can't be containerized
-due to some reasons—including legacy dependencies, specific OS requirements, or licensing.
-It also enables infrastructure and skills consolidation, reducing hardware costs, simplifying operations,
+Running VMs and Pods together in OpenShift is useful because:
+- some workloads can't be containerized due to some reasons—including legacy dependencies, specific OS requirements, or licensing.
+- it enables infrastructure and skills consolidation, reducing hardware costs, simplifying operations,
 and allowing teams to manage everything with a single platform and toolset.
 
 GitOps is a way to manage infrastructure and applications using Git as the single source of truth.
