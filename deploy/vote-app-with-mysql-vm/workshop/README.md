@@ -4,7 +4,7 @@ In this workshop you will learn how to deploy a demo application which allows yo
 The "vote" application is made up of a mixture of pods and a MySQL VM running on OpenShift Virtualization & deployed via GitOps.
 
 Running VMs and Pods together in OpenShift is useful because:
-- some workloads can't be containerized due to some reasons—including legacy dependencies, specific OS requirements, or licensing.
+- some workloads can't be containerized due to several reasons—including legacy dependencies, specific OS requirements, or licensing.
 - it enables infrastructure and skills consolidation, reducing hardware costs, simplifying operations,
 and allowing teams to manage everything with a single platform and toolset.
 
@@ -16,9 +16,9 @@ Once the application is deployed this is what you will see in OpenShift's Topolo
 
 <img src="./images/vote-app-plus-vm-demo.png" alt="Pod and VM working together as one application" width="500">
 
-We will use the OpenShift GitOps Operator (based on the [ArgoCD Project](https://argo-cd.readthedocs.io/)) to implement GitOps and deploy our vote application. 
+We will use the OpenShift GitOps Operator (read more at the [ArgoCD Project](https://argo-cd.readthedocs.io/)) to implement GitOps and deploy our vote application. 
 
-Before we start, delete any of the resources that may have been created in the cluster due to previous labs, e.g. Virtual Machines.
+Before we start, delete any of the resources that may have been created in the cluster due to any previous labs you've been working on, especially Virtual Machines.
 
 
 ## Find and access your Git Repo URL
@@ -34,9 +34,9 @@ Using the above selector, select the "Gitea" project in the OpenShift Console.
 
 Determine Gitea's Route which you will find in the Gitea project (Go to `Menu -> Networking -> Routes`).  
 
-Log into Gitea using your username and password as provided by your lab proctors (these credentials are usually the same as for the Virtualization Workshop). 
+Log into Gitea using your username and password as provided by your lab proctors (these credentials are usually the same as for the OpenShift Virtualization Workshop). 
 
-After logging into Gitea, note your repository (a copy of the source code of the original flask-vote-app) and fetch the repo URL.  
+After logging into Gitea, note your repository (which is a copy of the source code of the original flask-vote-app) and fetch the repository URL.  
 You will see your repository with the name, e.g. "user1/flask-vote-app".
 
 Your Git repo URL will look something like this (starting with "http://" and ending in "flask-vote-app.git").  Make a note of it:
@@ -47,7 +47,7 @@ http://gitea-gitea.apps.sandbox.openshift.com/user1/flask-vote-app.git
 
 Look into the folder "deploy/vote-app-with-mysql-vm/direct" and open the file `vote-app-mysql-vm-all-in-one.yaml`.
 
-In the file, you will see all the Kubernetes resources that are needed to deploy the application. 
+In the file, you will see all the Kubernetes resource definitions that are needed to deploy the full vote application. 
 
 Note the following definitions:
 
@@ -58,7 +58,7 @@ Note the following definitions:
 
 Later on in the workshop you will make changes to the code and see the changes take effect in OpenShift. 
 
-`Before moving onto the next section, ensure you have made of note of the URL for your Gitea repository.  It will be needed later!`
+`Before moving onto the next section, ensure you have made a note of the URL for your Gitea repository.  It will be needed later!`
 
 
 ## Create a new Project 
