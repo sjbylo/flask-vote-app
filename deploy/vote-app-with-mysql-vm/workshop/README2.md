@@ -18,7 +18,7 @@ Once the application is deployed, this is what you will see in OpenShift's Topol
 
 We will use the OpenShift GitOps Operator (read more at the [ArgoCD Project](https://argo-cd.readthedocs.io/)) to implement GitOps and deploy our vote application. 
 
-Before we start, delete any of the resources that you may have created in the cluster due to any previous labs you've been working on, especially Virtual Machines.
+Before starting, please delete any Virtual Machines created in previous labs you may have completed to free up cluster resources.
 
 
 ## Find and access your Git Repo URL
