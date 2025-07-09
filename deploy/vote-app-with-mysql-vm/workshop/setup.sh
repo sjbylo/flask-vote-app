@@ -1,36 +1,83 @@
 #!/bin/bash -e
 
-apw=$1; shift
+#apw=$1; shift
 upw=$1; shift
 input=$1; shift
 
-echo admin pw=$apw
+#echo admin pw=$apw
 echo user pw=$upw
 echo input=$input
-urls=$(grep -o "https://api.*" $input | sort | uniq)
 
-echo "$urls"
+url=$(grep -o "https://api.*" $input | sort | uniq)
+
+#apws=$(grep -o "^password: .*" $input | sed "s/password: //g" | uniq) 
+##readarray -t apws < <(grep -o "admin .* password: .*" $input | sed "s/admin password: //g" | uniq)  
+
+#User admin with password MjVXjtNklXw2Rcv6
+
+apws=()
+while IFS= read -r line; do
+  apws+=("$line")
+done < <(grep "^User admin with password " $input | awk '{print $5}' | uniq)
+
+#grep "User admin with password" yourfile.txt | awk '{print $5}'
+
+
+#sbylo-mac:workshop steve$ grep -o -e "https://api\..*" -e "^password: .*" tt | sed "s/password: //g" | sort |uniq
+#https://api.cluster-9mzvv.dynamic.redhatworkshops.io:6443
+
+echo urls="${urls[@]}"
+echo apws="${apws[@]}"
+
+echo
+for f in ${urls[@]}
+do
+	echo $f
+done
+echo
+for f in ${apws[@]}
+do
+	echo $f
+done
+
+echo ${apws[0]}
+echo ${apws[1]}
+
+i=0
+for url in ${urls[@]}
+do
+	echo ${apws[$i]}
+	let i=$i+1
+done
 
 echo -n "Hit enter: "
 read yn
 
 set -x
 
-for url in $urls
+i=0
+for url in ${urls[@]}
 do
 	echo Install Op. cluster $url
 
-	oc login -u admin -p $apw $url --insecure-skip-tls-verify
+	echo "oc login -u admin -p ${apws[$i]} $url --insecure-skip-tls-verify"
+	read yn
+	oc login -u admin -p ${apws[$i]} $url --insecure-skip-tls-verify
 	sleep 1
 
 	oc apply -k https://github.com/rhpds/gitea-operator/OLMDeploy
+
+	let i=$i+1
 done
 
-for url in $urls
+exit 
+
+i=0
+for url in ${urls[@]}
 do
 	echo Add Gitea for $url
 
-	oc login -u admin -p $apw $url --insecure-skip-tls-verify
+	oc login -u admin -p ${apws[$i]} $url --insecure-skip-tls-verify
 
 	until oc get po -n gitea-operator | grep gitea-operator-controller-manager.*2/2
 	do
@@ -73,10 +120,12 @@ spec:
 END
 
 	oc adm policy add-role-to-group view system:authenticated -n gitea
+
+	let i=$i+1
 done
 
 
-for url in $urls
+for url in ${urls[@]}
 do
 	echo Checking cluster $url
 
