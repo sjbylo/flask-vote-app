@@ -23,7 +23,7 @@ Before starting, please delete any Virtual Machines created in previous labs you
 
 ## Find and access your Git Repo URL
 
-We will provision a vote application into OpenShift.  But, from what yaml code?
+We will provision a vote application into OpenShift.  But, from what YAML code?
 Before we proceed, we need to review your application manifests (YAML code) on our lab's Git server (Gitea).
 
 > **Note:** Whenever you are working in the OpenShift Console, it is always essential to select the correct OpenShift project in the top left of the Console.  
@@ -63,9 +63,9 @@ Later on in the workshop, you will make changes to the code and see the changes 
 
 ## Create a new Project 
 
-Create a new project for yourself to work in and remember the project name.  Use a unique name, e.g., `gitops-user1`
+Create a new project for yourself to work in and remember the project name.  Use a unique name, e.g., `gitops-user1` (you must change 'user1' to your username).
 
-You can do this in the OpenShift Console under `Home -> Projects -> Create Project` or from the command line with "oc new-project gitops-user1". 
+You can do this in the OpenShift Console under `Home -> Projects -> Create Project` or from the command line with "oc new-project gitops-user1" (remember to change 'user1' to your username!).
 You can run the CLI commands in an `OpenShift command line terminal`.
 
 > **Note**: You can access the command line (terminal) from the top right of the OpenShift Console, where you will see the ">_" icon.
@@ -84,7 +84,7 @@ Add the following ArgoCD resource to your project (e.g., project gitops-user1). 
 
 There are several ways to do this, for example, via the OpenShift Console (see the "+" icon in the top right) or via the command line.
 
-Don't forget to change the `YOUR-OPENSHIFT-PROJECT` placeholder - to match your OpenShift project - after pasting the below yaml code.
+Don't forget to change the `YOUR-OPENSHIFT-PROJECT` placeholder - to match your OpenShift project - after pasting the below YAML code.
 
 ```
 apiVersion: argoproj.io/v1beta1
@@ -250,9 +250,9 @@ spec:
       selfHeal: false
 ```
 
-- `destination`: describes into which cluster and project to apply the yaml resources (using the locally-resolvable URL for the cluster)
+- `destination`: describes into which cluster and project to apply the YAML resources (using the locally-resolvable URL for the cluster)
 - `project default`: is an ArgoCD concept and has nothing to do with OpenShift projects
-- `source`: describes from which git repository, and the directory path, to fetch the yaml resources
+- `source`: describes from which git repository, and the directory path, to fetch the YAML resources
 - `prune`: resources that have been removed from the Git repo, will be automatically pruned
 - `selfHeal` false: manual changes or deletions made to the Kubernetes resources will not be automatically "healed"
 
@@ -260,9 +260,9 @@ Create the above Application by:
 
 - Clicking on the "CREATE APPLICATION" button in the ArgoCD UI
 - Click on the "EDIT AS YAML" button
-- Copy and paste the above `Application` yaml code and then
+- Copy and paste the above `Application` YAML code and then
 - `Edit the code` by changing the three values, as indicated above
-- Click SAVE and then (note that all the fields in the form have now been populated from the yaml)
+- Click SAVE and then (note that all the fields in the form have now been populated from the YAML)
 - Click the CREATE button to create the Application
 
 > `IMPORTANT: Be sure to change the three values in the above Application manifest: both "namespaces" & "repoURL"`
