@@ -43,18 +43,18 @@ Example of what you should see:
 
 <img src="./images/vm-gitops-1-gitea-repo-view.png" alt="Gitea repo" width="300">
 
-Click into your repository. You can copy the URL as in this screenshot:
+Drill down into your repository. You can copy the URL as in this screenshot:
 
 <img src="./images/vm-gitops-2-gitea-repo-copy.png" alt="Copy Gitea repo URL" width="300">
 
 
-Make a note of your Git repo URL which will look similar to this (starting with `http://gitea-gitea` and ending in `flask-vote-app.git`).  
+Make a note of your Git repo URL which will look similar to this (starting with `http://gitea-gitea` and ending in `flask-vote-app.git`):
 
 ```
 http://gitea-gitea.apps.sandbox.openshift.com/user1/flask-vote-app.git
 ```
 
-In Gitea, look into the folder `deploy -> vote-app-with-mysql-vm -> direct` and open the file `vote-app-mysql-vm-all-in-one.yaml`.
+In Gitea, drill down further into the folder `deploy -> vote-app-with-mysql-vm -> direct` and open the file `vote-app-mysql-vm-all-in-one.yaml`.
 
 In the file, you will find all the OpenShift resource definitions required to deploy the complete vote application. 
 
@@ -114,10 +114,6 @@ After about 3-4 minutes, you should see all the ArgoCD pods running and ready (1
 
 Go to `Networking -> Routes` to find the ArgoCD Route that was created in your project (e.g., gitops-user1) and access it to open the ArgoCD UI at the login page.
 
-You will see the login page:
-
-<img src="./images/vm-gitops-3-argocd-login-page.png" alt="ArgoCD log in page" width="500">
-
 <!--
 Here is one way to find the ArgoCD Route from the command line.
 
@@ -136,6 +132,10 @@ https://argocd-server-gitops-user1.apps.cluster-xxxxx.dynamic.redhatworkshops.io
 
 Open the URL in a separate browser tab to view the ArgoCD login page.
 
+You will see the login page:
+
+<img src="./images/vm-gitops-3-argocd-login-page.png" alt="ArgoCD log in page" width="600">
+
 Use the `LOG IN VIA OPENSHIFT` button to log into ArgoCD with your user's OpenShift credentials.
 > *DO NOT* use the `username` and `password` fields below it!
 
@@ -143,7 +143,7 @@ On the next page, allow the `access permissions`.
 
 You will see the following after log in:
 
-<img src="./images/vm-gitops-4-argocd-after-login.png" alt="ArgoCD after log in" width="500">
+<img src="./images/vm-gitops-4-argocd-after-login.png" alt="ArgoCD after log in" width="900">
 
 `In the next section, we will provision the vote-app Application.`
 
@@ -165,11 +165,11 @@ spec:
     namespace: YOUR-OPENSHIFT-PROJECT             # <<== Add your project here, e.g. gitops-user1
     server: https://kubernetes.default.svc
 
-  project: default                                # <<== NO NOT CHANGE ARGOCD PROJECT!
+  project: default                                # <<== NO NOT CHANGE THE ARGOCD PROJECT!
 
   source:
     path: deploy/vote-app-with-mysql-vm/direct
-    repoURL: http://HOST/YOUR-REPO-PATH.git       # <<== add your vote-app repo URL here (Gitea)
+    repoURL: http://HOST/YOUR-REPO-PATH.git       # <<== add your Gitea repo vote-app URL here (Gitea)
     targetRevision: HEAD
 
   syncPolicy:
@@ -178,20 +178,20 @@ spec:
       selfHeal: false
 ```
 
-- `destination`: describes into which cluster and project to apply the YAML resources (using the locally-resolvable URL for the cluster)
-- `project default`: is an ArgoCD concept and has nothing to do with OpenShift projects
-- `source`: describes from which git repository, and the directory path, to fetch the YAML resources
-- `prune`: resources that have been removed from the Git repo, will be automatically pruned
-- `selfHeal` false: manual changes or deletions made to the Kubernetes resources will not be automatically "healed"
+- `destination`: describes into which cluster and project to apply the YAML resources (using the locally-resolvable server URL for the cluster).
+- `project default`: is an ArgoCD concept and has nothing to do with OpenShift projects! Do not change this!
+- `source`: describes from which git repository, and the directory path, to fetch the YAML resources.
+- `prune`: resources that have been removed from the Git repo, will be automatically pruned from OpenShift.
+- `selfHeal` false: manual changes or deletions made to the OpenShift resources will not be automatically "healed".
 
 Create the above Application by:
 
-- Clicking on the "CREATE APPLICATION" button in the ArgoCD UI
-- Click on the "EDIT AS YAML" button
-- Copy and paste the above `Application` YAML code and then
-- `Edit the code` by changing the three values, as indicated above
-- Click SAVE and then (note that all the fields in the form have now been populated from the YAML)
-- Click the CREATE button to create the Application
+1 Clicking on the "CREATE APPLICATION" button in the ArgoCD UI
+1 Click on the "EDIT AS YAML" button
+1 Copy and paste the above `Application` YAML code and then
+1 `Edit the code` by changing the three values, as indicated above
+1 Click SAVE and then (note that all the fields in the form have now been populated from the YAML)
+1 Click the CREATE button to create the Application
 
 > `IMPORTANT: Be sure to change the three values in the above Application manifest: both "namespaces" & "repoURL"`
 
@@ -234,7 +234,7 @@ spec:
 We set the application to NOT `self-heal`.  Let's test this now. 
 
 Since `selfHeal` is set to false, if any application resource in OpenShift is deleted it `WILL NOT` be re-created or healed automatically. 
-We can try this out by deleting one of the Kubernetes resources of the vote application.
+We can try this out by deleting one of the OpenShift resources of the vote application.
 
 Now, delete the vote-app `route` in your project (e.g., project gitops-user1).  Note that this will cause the application to break and become inaccessible.
 
