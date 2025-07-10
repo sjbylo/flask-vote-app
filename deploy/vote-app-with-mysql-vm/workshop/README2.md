@@ -48,10 +48,7 @@ Click into your repository. You can copy the URL as in this screenshot:
 <img src="./images/vm-gitops-2-gitea-repo-copy.png" alt="Copy Gitea repo URL" width="400">
 
 
-
-
-
-Your Git repo URL will look similar like this (starting with `http://gitea-gitea` and ending in `flask-vote-app.git`).  Make a note of it:
+Make a note of your Git repo URL which will look similar to this (starting with `http://gitea-gitea` and ending in `flask-vote-app.git`).  
 
 ```
 http://gitea-gitea.apps.sandbox.openshift.com/user1/flask-vote-app.git
