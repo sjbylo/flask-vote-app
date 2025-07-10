@@ -41,17 +41,17 @@ You will see your repository, which will have a name, e.g., "user1/flask-vote-ap
 
 Example of what you should see:
 
-<img src="./images/vm-gitops-1-gitea-repo-view.png" alt="Gitea repo" width="50">
+<img src="./images/vm-gitops-1-gitea-repo-view.png" alt="Gitea repo" width="200">
 
-<img src="./images/vm-gitops-2-gitea-repo-copy.png" alt="Copy Gitea repo URL" width="50">
+<img src="./images/vm-gitops-2-gitea-repo-copy.png" alt="Copy Gitea repo URL" width="200">
 
-<img src="./images/vm-gitops-3-argocd-login-page.png" alt="ArgoCD log in page" width="50">
+<img src="./images/vm-gitops-3-argocd-login-page.png" alt="ArgoCD log in page" width="200">
 
-<img src="./images/vm-gitops-4-argocd-after-login.png" alt="ArgoCD after log in" width="50">
+<img src="./images/vm-gitops-4-argocd-after-login.png" alt="ArgoCD after log in" width="200">
 
-<img src="./images/vm-gitops-5-argocd-enable-selfheal.png" alt="Enable selfheal" width="50">
+<img src="./images/vm-gitops-5-argocd-enable-selfheal.png" alt="Enable selfheal" width="200">
 
-<img src="./images/vm-gitops-6-argocd-verify-selfheal.png" alt="Verify selfheal" width="50">
+<img src="./images/vm-gitops-6-argocd-verify-selfheal.png" alt="Verify selfheal" width="200">
 
 
 Your Git repo URL will look similar like this (starting with "http://gitea-gitea" and ending in "flask-vote-app.git").  Make a note of it:
