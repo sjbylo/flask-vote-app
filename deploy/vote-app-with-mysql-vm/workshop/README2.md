@@ -317,7 +317,7 @@ Ensure the Application is automatically resynchronized via the UI.   Click on R
 
 Corrupting the Route stops the application from working. Verify that it has now truly failed, as there is no way to access the application from outside OpenShift (since the ingress Route is configured with the wrong port).
 
-Now, try out the "HISTORY AND ROLLBACK" button and change the configuration back to the previous working one.
+Now, try out the `HISTORY AND ROLLBACK` button and change the configuration back to the previous working version.
 
 You should be able to roll back to the previous state, and the application will start working correctly again. 
 
