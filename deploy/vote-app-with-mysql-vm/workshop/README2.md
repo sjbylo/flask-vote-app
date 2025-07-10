@@ -84,11 +84,15 @@ Add the following ArgoCD resource to your project (e.g., project gitops-user1). 
 
 There are several ways to do this, for example, via the OpenShift Console (see the "+" icon in the top right) or via the command line.
 
-Don't forget to change the `YOUR-OPENSHIFT-PROJECT` placeholder - to match your OpenShift project - after pasting the below YAML code.
+<!--Don't forget to change the `YOUR-OPENSHIFT-PROJECT` placeholder - to match your OpenShift project - after pasting the below YAML code.-->
 
-ADD-COMMAND-HERE
+Run this command:
 
-In the Console, go to `Workloads -> Pods`.
+```
+oc apply -f https://raw.githubusercontent.com/sjbylo/flask-vote-app/refs/heads/master/deploy/vote-app-with-mysql-vm/workshop/argocd.yaml
+```
+
+In the Console, go to `Administrator -> Workloads -> Pods`.
 After about 3-4 minutes, you should see all the ArgoCD pods running and ready (1/1), similar to the following: 
 
 <img src="./images/argocd-pods.png" alt="ArgoCD pods" width="500">
