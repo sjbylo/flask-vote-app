@@ -51,10 +51,10 @@ In the file, you will find all the Kubernetes resource definitions required to d
 
 Note the following definitions:
 
-  - `kind: Deployment` (name: vote-app) - provisions the Python-based vote-app in a pod
-  - `kind: Service` (name: db) - provides a static name & IP to allow the pod to access the MySQL VM, via the pod network
-  - `kind: VirtualMachine` - will provision the MySQL VM
-  - `kind: Route` - will provide north-south ingress into the vote-app application pod
+  - `kind: Deployment` (name: vote-app): provisions the Python-based vote-app in a pod
+  - `kind: Service` (name: db): provides a static name & IP to allow the pod to access the MySQL VM, via the pod network
+  - `kind: VirtualMachine`: will provision the MySQL VM
+  - `kind: Route`: will provide north-south ingress into the vote-app application pod
 
 Later on in the workshop, you will make changes to the code and see the changes take effect in OpenShift. 
 
