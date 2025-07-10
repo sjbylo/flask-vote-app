@@ -309,9 +309,9 @@ spec:
   wildcardPolicy: None
 ```
 
-At the bottom of the page, commit the change, after entering "Port now 8888!" into the `Subject` line of the commit (this message will later show up in ArgoCD).
+At the bottom of the page enter "Port now 8888!" into the `Subject` line of the commit and commit the change.
 
-Ensure the Application is automatically resynchronized via the UI.   Click on Refresh.
+Ensure the Application is automatically resynchronized via the UI.   Click on Refresh. (Note that your commit message now shows up in ArgoCD.  If not, refresh the browser tab!). 
 
 > **Note**: If Auto-Sync is not set, you may need to click on the `Sync` button.
 
