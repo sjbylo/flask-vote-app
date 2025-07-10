@@ -1,7 +1,7 @@
 # Unifying Pods & VMs: Hands-On GitOps with OpenShift Virtualization Workshop
 
-In this workshop, you will learn how to deploy a demo application that allows you and others to vote for your favorite Linux distribution. 
-The "vote" application consists of a combination of pods and a MySQL VM running on OpenShift Virtualization, all of which are deployed via GitOps.
+In this workshop, you'll deploy a GitOps-powered demo app where users vote for their favorite Linux distro.
+The app blends modern and traditional workloads: containerized services running in Pods and a MySQL database hosted on a Virtual Machine—all seamlessly orchestrated with OpenShift Virtualization and GitOps.
 
 Running VMs and Pods together in OpenShift is helpful because:
 - Some workloads can't be containerized due to several reasons, including legacy dependencies, specific OS requirements, or licensing restrictions.
