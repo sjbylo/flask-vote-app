@@ -196,21 +196,21 @@ Create the above Application by:
 
 > `IMPORTANT: Be sure to change the three values in the above Application manifest: both "namespaces" & "repoURL"`
 
-After a several seconds you should see the provisioned application, which looks like this:
+After several seconds you should see the provisioned application, which looks like this:
 
 <img src="./images/argocd-ui-with-vote-app.png" alt="Vote App in ArgoCD" width="900">
 
 > **Note** that after the VM status is `Running`, it will still `take up to 5 mins` for the MySQL VM to run its `cloud-init` script to install, configure, and run MySQL, after which the vote application will connect to the database and be ready to use.  
 
-- `Bonus activity`: Staying in the Administrator View, go to the `Virtualization -> VirtualMachines` menu item, find and then log into the MySQL VM's Console and check the output of the cloud-init script.  See the log file at /var/log/cloud-init-output.log.  Also, verify that MySQL is running in the VM with "ps -ef | grep -i mysql".  If you know how, connect to MySQL and view the contents of the database.
+- `Bonus activity`: Staying in the Administrator View, go to the `Virtualization -> VirtualMachines` menu item, find and then log into the MySQL VM's Console and check the output of the cloud-init script.  See the log file at /var/log/cloud-init-output.log.  Also, verify that MySQL is running in the VM with "_ps -ef | grep -i mysql_".  If you know how, connect to MySQL and view the contents of the database.
 
 Now, locate the vote-app Route in your project (e.g., project gitops-user1) and open the application in your browser to verify that it is working.  You should be able to make a single vote and view the result. 
 
-It should look like this:
+After you've made a vote, it will look like this:
 
 <img src="./images/vote-app-results.png" alt="Vote App Results" width="900">
 
-`At this point, you should have the vote application up and running`
+`At this point, you should have the vote application up and running!`
 
 
 ## View the VM in the OpenShift Console
@@ -223,7 +223,7 @@ to view the cloud-init script, which sets the demo user & password and also inst
 
 ## Self-Healing via GitOps
 
-Notice that we set the following in the `Application` YAML resource above.  
+Notice that we set the following values in the `Application` custom resource:
 
 ```
 spec:
@@ -244,15 +244,17 @@ What happened? 
 The Route resource is not re-created automatically!  Why not? 
 Answer: `Because the Application is not set to 'self heal'` (as explained above). 
 
-Set selfHeal to "auto" in the ArgoCD UI.  To do that, go to the Application, click `Details`, scroll down, and make the change to self-heal.  Click on ENABLE-AUTO-SYNC to enable it.  Ensure `PRUNE RESOURCES` and `SELF HEAL` are also enabled!
+Set selfHeal to "auto" in the ArgoCD UI.  
+
+To do that, go to the Application, click `Details`, scroll down, and make the change to self-heal.  If needed, click on ENABLE-AUTO-SYNC to enable it.  Ensure `PRUNE RESOURCES` and `SELF HEAL` are both enabled!
 
 It should look like this after selfheal is enabled:
 
-<img src="./images/vm-gitops-5-argocd-enable-selfheal.png" alt="Enable selfheal" width="200">
+<img src="./images/vm-gitops-5-argocd-enable-selfheal.png" alt="Enable selfheal" width="400">
 
 Return to the main ArgoCD UI and verify that "_Auto sync is enabled_" is displayed under "Sync status".
 
-<img src="./images/vm-gitops-6-argocd-verify-selfheal.png" alt="Verify selfheal" width="200">
+<img src="./images/vm-gitops-6-argocd-verify-selfheal.png" alt="Verify selfheal" width="400">
 
 Now, make a very human mistake and delete some other vote-app resources in your project (e.g., project gitops-user1). 
 
