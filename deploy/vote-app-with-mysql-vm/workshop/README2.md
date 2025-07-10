@@ -186,12 +186,12 @@ spec:
 
 Create the above Application by:
 
-1 Clicking on the "CREATE APPLICATION" button in the ArgoCD UI
-1 Click on the "EDIT AS YAML" button
-1 Copy and paste the above `Application` YAML code and then
-1 `Edit the code` by changing the three values, as indicated above
-1 Click SAVE and then (note that all the fields in the form have now been populated from the YAML)
-1 Click the CREATE button to create the Application
+1. Clicking on the "CREATE APPLICATION" button in the ArgoCD UI
+1. Click on the "EDIT AS YAML" button
+1. Copy and paste the above `Application` YAML code and then
+1. `Edit the code` by changing the three values, as indicated above
+1. Click SAVE and then (note that all the fields in the form have now been populated from the YAML)
+1. Click the CREATE button to create the Application
 
 > `IMPORTANT: Be sure to change the three values in the above Application manifest: both "namespaces" & "repoURL"`
 
