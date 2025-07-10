@@ -230,24 +230,24 @@ Let’s take a look at the Application manifest used for this deployment and bre
 ```
 kind: Application
 metadata:
-  name: vote-app
-  namespace: YOUR-OPENSHIFT-PROJECT               # <<== Add your project here, e.g. gitops-user1
+  name: vote-app
+  namespace: YOUR-OPENSHIFT-PROJECT               # <<== Add your project here, e.g. gitops-user1
 spec:
-  destination:
-    namespace: YOUR-OPENSHIFT-PROJECT             # <<== Add your project here, e.g. gitops-user1
-    server: https://kubernetes.default.svc
+  destination:
+    namespace: YOUR-OPENSHIFT-PROJECT             # <<== Add your project here, e.g. gitops-user1
+    server: https://kubernetes.default.svc
 
-  project: default                                # <<== NO NOT CHANGE ARGOCD PROJECT!
+  project: default                                # <<== NO NOT CHANGE ARGOCD PROJECT!
 
-  source:
-    path: deploy/vote-app-with-mysql-vm/direct
-    repoURL: http://HOST/YOUR-REPO-PATH.git       # <<== add your vote-app repo URL here (Gitea)
-    targetRevision: HEAD
+  source:
+    path: deploy/vote-app-with-mysql-vm/direct
+    repoURL: http://HOST/YOUR-REPO-PATH.git       # <<== add your vote-app repo URL here (Gitea)
+    targetRevision: HEAD
 
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: false
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: false
 ```
 
 - `destination`: describes into which cluster and project to apply the YAML resources (using the locally-resolvable URL for the cluster)
