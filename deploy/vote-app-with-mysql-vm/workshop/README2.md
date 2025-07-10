@@ -191,7 +191,7 @@ Create the above Application by:
 1. Remove the existing YAML code.
 1. Copy and paste the above `Application` YAML code.
 1. `Edit the code` by changing the three values, as indicated above.
-1. Click SAVE and then (note that all the fields in the form have now been populated from the YAML).
+1. Click SAVE and then (_note that all the fields in the form have now been populated from the YAML_).
 1. Click the CREATE button to create the Application.
 
 > `IMPORTANT: Be sure to change the three values in the above Application manifest: both "namespaces" & "repoURL"`
