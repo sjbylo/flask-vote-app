@@ -18,17 +18,17 @@ Wait for the deployment of the Operator.  Check the pods are running AND ready i
 oc get pods -n gitea-operator
 ```
 
-Create the gitea namespace and set permissions (create read access to the gitea project so all users all users can find the Gitea Route):
+Create the gitea namespace and set permissions (create read access to the gitea project so all users can find the Gitea Route):
 
 ```
 oc new-project gitea
 oc adm policy add-role-to-group view system:authenticated -n gitea
 ```
 
-Create Gitea instance (check the changes needed)
+Create Gitea instance (important: check the changes needed below)
 
 > Ensure giteaUserPassword (in the yaml below) is set to your preferred password, e.g. the password already provided by the lab environment.
-> Create the correct number of users for your workshop
+> Create the correct number of users for your workshop.
 
 Run this command to import the yaml into the gitea project:
 
@@ -65,7 +65,7 @@ END
 
 ## Example status of "Gitea" when complete. 
 
-Check the status of the gitea instance and ensure it looks like the below `before moving to the next step!`
+Check the status of the gitea instance and ensure it looks like the below `before starting the workshop!`
 
 Note: "userSetupComplete: true" and "repoMigrationComplete: true"
 
