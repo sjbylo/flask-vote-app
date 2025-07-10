@@ -43,7 +43,7 @@ Example of what you should see:
 
 <img src="./images/vm-gitops-1-gitea-repo-view.png" alt="Gitea repo" width="400">
 
-You can copy the URL as in this screenshot:
+Click into your repository. You can copy the URL as in this screenshot:
 
 <img src="./images/vm-gitops-2-gitea-repo-copy.png" alt="Copy Gitea repo URL" width="400">
 
@@ -51,7 +51,7 @@ You can copy the URL as in this screenshot:
 
 
 
-Your Git repo URL will look similar like this (starting with "http://gitea-gitea" and ending in "flask-vote-app.git").  Make a note of it:
+Your Git repo URL will look similar like this (starting with `http://gitea-gitea` and ending in `flask-vote-app.git`).  Make a note of it:
 
 ```
 http://gitea-gitea.apps.sandbox.openshift.com/user1/flask-vote-app.git
