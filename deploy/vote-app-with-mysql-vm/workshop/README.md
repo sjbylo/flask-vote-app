@@ -1,4 +1,4 @@
-# Unifying Pods & VMs: Hands-On GitOps with OpenShift Virtualization Workshop
+# Unifying Pods & VMs Workshop: Hands-On GitOps with OpenShift Virtualization
 
 In this workshop, you'll deploy a GitOps-powered demo app where users vote for their favorite Linux distro.
 The app blends modern and traditional workloads: containerized services running in Pods and a MySQL database hosted on a Virtual Machine—all seamlessly orchestrated with OpenShift Virtualization and GitOps.
@@ -341,7 +341,7 @@ Now delete the application.
 
 On the ArgoCD UI, drill down into your Application tile, click the `DELETE` button, and watch as all the resources are removed. 
 
-You have reached the end of the `Unifying Pods & VMs: Hands-On GitOps with OpenShift Virtualization Workshop`.  
+You have reached the end of the `Unifying Pods & VMs Workshop: Hands-On GitOps with OpenShift Virtualization`.  
 <!--You have learned how to configure OpenShift GitOps (ArgoCD) and use it to provision and manage mixed (VM + Pod) applications in OpenShift, via Git.-->
 
 You’ve explored how OpenShift GitOps (powered by Argo CD) enables consistent, declarative management of hybrid workloads—mixing Pods and Virtual Machines—all from Git. 
