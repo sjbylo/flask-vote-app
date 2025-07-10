@@ -1,53 +1,28 @@
 #!/bin/bash -e
 
-#apw=$1; shift
+apw=$1; shift
 upw=$1; shift
 input=$1; shift
 
-#echo admin pw=$apw
+echo admin pw=$apw
 echo user pw=$upw
 echo input=$input
 
-url=$(grep -o "https://api.*" $input | sort | uniq)
-
-#apws=$(grep -o "^password: .*" $input | sed "s/password: //g" | uniq) 
-##readarray -t apws < <(grep -o "admin .* password: .*" $input | sed "s/admin password: //g" | uniq)  
-
-#User admin with password MjVXjtNklXw2Rcv6
-
-apws=()
-while IFS= read -r line; do
-  apws+=("$line")
-done < <(grep "^User admin with password " $input | awk '{print $5}' | uniq)
-
-#grep "User admin with password" yourfile.txt | awk '{print $5}'
-
-
-#sbylo-mac:workshop steve$ grep -o -e "https://api\..*" -e "^password: .*" tt | sed "s/password: //g" | sort |uniq
-#https://api.cluster-9mzvv.dynamic.redhatworkshops.io:6443
-
-echo urls="${urls[@]}"
-echo apws="${apws[@]}"
-
+logins=$(grep -o "oc login.*https://api.*" $input | sort | uniq)
+echo "$logins"
 echo
-for f in ${urls[@]}
+
+login_cmds=()
+echo "$logins" | while read l
 do
-	echo $f
-done
-echo
-for f in ${apws[@]}
-do
-	echo $f
+	echo l=$l
+	login_cmds+=("$l")
 done
 
-echo ${apws[0]}
-echo ${apws[1]}
-
-i=0
-for url in ${urls[@]}
+echo
+for f in ${login_cmds[@]}
 do
-	echo ${apws[$i]}
-	let i=$i+1
+	echo [ $f ]
 done
 
 echo -n "Hit enter: "
@@ -56,13 +31,14 @@ read yn
 set -x
 
 i=0
-for url in ${urls[@]}
+echo "$logins" | while read l
 do
-	echo Install Op. cluster $url
+	echo Install Op. for cluster $l
 
-	echo "oc login -u admin -p ${apws[$i]} $url --insecure-skip-tls-verify"
+	eval $l
 	read yn
-	oc login -u admin -p ${apws[$i]} $url --insecure-skip-tls-verify
+
+	echo "$l"
 	sleep 1
 
 	oc apply -k https://github.com/rhpds/gitea-operator/OLMDeploy
@@ -109,7 +85,7 @@ spec:
 
   giteaCreateUsers: true
   giteaGenerateUserFormat: "user%d"
-  giteaUserNumber: 30
+  giteaUserNumber: 3
   giteaUserPassword: $upw
 
   giteaMigrateRepositories: true

@@ -32,22 +32,37 @@ Before we proceed, we need to review your application manifests (YAML code) on o
 
 Using the above selector, select the "Gitea" project in the OpenShift Console. 
 
-Determine Gitea's Route, which you will find in the Gitea project (Go to `Menu -> Networking -> Routes`).  
+Determine Gitea's Route (starting with `http:`, not https:), which you will find in the Gitea project (Go to `Menu -> Networking -> Routes`).  
 
-Log in to Gitea using your username and password as provided by your lab proctors (these credentials are usually the same as for the OpenShift Virtualization Workshop). 
+Log in to Gitea using your username and password as provided by your lab proctors (these credentials are usually the same as those used for the OpenShift Virtualization Workshop). 
 
 After logging into Gitea, note your repository (which is a copy of the original flask-vote-app's source code) and fetch the repository's URL.  
-You will see your repository, which will have a name, e.g., "user1/flask-vote-app".
+You will see your repository, which will have a name, e.g., "user1/flask-vote-app" (your username will likely be different).
 
-Your Git repo URL will look something like this (starting with "http://" and ending in "flask-vote-app.git").  Make a note of it:
+Example of what you should see:
+
+<img src="./images/vm-gitops-1-gitea-repo-view.png" alt="Gitea repo" width="50">
+
+<img src="./images/vm-gitops-2-gitea-repo-copy.png" alt="Copy Gitea repo URL" width="50">
+
+<img src="./images/vm-gitops-3-argocd-login-page.png" alt="ArgoCD log in page" width="50">
+
+<img src="./images/vm-gitops-4-argocd-after-login.png" alt="ArgoCD after log in" width="50">
+
+<img src="./images/vm-gitops-5-argocd-enable-selfheal.png" alt="Enable selfheal" width="50">
+
+<img src="./images/vm-gitops-6-argocd-verify-selfheal.png" alt="Verify selfheal" width="50">
+
+
+Your Git repo URL will look similar like this (starting with "http://gitea-gitea" and ending in "flask-vote-app.git").  Make a note of it:
 
 ```
 http://gitea-gitea.apps.sandbox.openshift.com/user1/flask-vote-app.git
 ```
 
-Look into the folder "deploy/vote-app-with-mysql-vm/direct" and open the file `vote-app-mysql-vm-all-in-one.yaml`.
+In Gitea, look into the folder `deploy -> vote-app-with-mysql-vm -> direct` and open the file `vote-app-mysql-vm-all-in-one.yaml`.
 
-In the file, you will find all the Kubernetes resource definitions required to deploy the complete vote application. 
+In the file, you will find all the OpenShift resource definitions required to deploy the complete vote application. 
 
 Note the following definitions:
 
@@ -56,7 +71,7 @@ Note the following definitions:
   - `kind: VirtualMachine`: will provision the MySQL VM
   - `kind: Route`: will provide north-south ingress into the vote-app application pod
 
-Later on in the workshop, you will make changes to the code and see the changes take effect in OpenShift. 
+Later on in the workshop, you will make changes to the code in Git and see the changes take effect in OpenShift. 
 
 `Before moving on to the next section, ensure you have made a note of the URL for your Gitea repository.  You will need it later!`
 
@@ -172,7 +187,7 @@ Create the above Application by:
 
 > `IMPORTANT: Be sure to change the three values in the above Application manifest: both "namespaces" & "repoURL"`
 
-You should see the provisioned application, which looks like this:
+After a several seconds you should see the provisioned application, which looks like this:
 
 <img src="./images/argocd-ui-with-vote-app.png" alt="Vote App in ArgoCD" width="900">
 
@@ -199,7 +214,7 @@ to view the cloud-init script, which sets the demo user & password and also inst
 
 ## Self-Healing via GitOps
 
-Notice that we set the following in the `Application` YAML resource above.  We set the application to NOT `self-heal`.  Let's test this now. 
+Notice that we set the following in the `Application` YAML resource above.  
 
 ```
 spec:
@@ -208,9 +223,10 @@ spec:
       prune: true
       selfHeal: false 
 ```
+We set the application to NOT `self-heal`.  Let's test this now. 
 
-Since `selfHeal` was set to false, if any application resource in OpenShift is deleted `it WILL NOT be` re-created automatically. 
-We can try this out by deleting one of the Kubernetes resources for the application.
+Since `selfHeal` is set to false, if any application resource in OpenShift is deleted it `WILL NOT` be re-created or healed automatically. 
+We can try this out by deleting one of the Kubernetes resources of the vote application.
 
 Now, delete the vote-app `route` in your project (e.g., project gitops-user1).  Note that this will cause the application to break and become inaccessible.
 
@@ -242,7 +258,6 @@ You should see those resources being re-instated, as defined in your Gitea repos
 ## Implement Rollback
 
 Imagine a change is rolled out by the platform team (via a change in Git) and then synced with OpenShift.
-
 However, there is a problem - the change has caused an outage!
 - You can rollback to the previous revision (or `git commit`), which is known to work!
 

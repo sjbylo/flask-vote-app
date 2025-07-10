@@ -184,7 +184,7 @@ spec:
           - masquerade: {}
             model: virtio
             name: default
-          networkInterfaceMultiqueue: true
+          networkInterfaceMultiqueue: false
           rng: {}
         machine:
           type: pc-q35-rhel9.2.0
