@@ -1,4 +1,4 @@
-# Mixed Pod + VM OpenShift Virtualization GitOps Workshop
+# Unifying Pods & VMs: Hands-On GitOps with OpenShift Virtualization Workshop
 
 In this workshop, you will learn how to deploy a demo application that allows you and others to vote for your favorite Linux distribution. 
 The "vote" application consists of a combination of pods and a MySQL VM running on OpenShift Virtualization, all of which are deployed via GitOps.
@@ -339,7 +339,10 @@ Now delete the application.
 
 On the ArgoCD UI, drill down into your Application tile, click the `DELETE` button, and watch as all the resources are removed. 
 
-You have reached the end of the Virt + GitOps workshop.  You have learned how to configure OpenShift GitOps (ArgoCD) and use it to provision and manage mixed (VM + Pod) applications
-in OpenShift, via Git.
+You have reached the end of the `Unifying Pods & VMs: Hands-On GitOps with OpenShift Virtualization Workshop`.  
+<!--You have learned how to configure OpenShift GitOps (ArgoCD) and use it to provision and manage mixed (VM + Pod) applications in OpenShift, via Git.-->
+
+You’ve explored how OpenShift GitOps (powered by Argo CD) enables consistent, declarative management of hybrid workloads—mixing Pods and Virtual Machines—all from Git. 
+With this foundation, you're now ready to bring GitOps best practices to complex, real-world application deployments across your OpenShift environments.
 
 You can learn more about GitOps from this [GitOps Workshop Guide](https://openshiftdemos.github.io/openshift-gitops-workshop/openshift-gitops-workshop/index.html).
