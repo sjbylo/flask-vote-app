@@ -6,7 +6,7 @@ First, bring up an environment for "_Experience OpenShift Virtualization Roadsho
 
 Use this [Gitea Operator](https://github.com/rhpds/gitea-operator) to provide a Gitea server so each user has access to their own repository and can make code changes.
 
-Follow the instructions from the above guide, OR follow these below:
+Follow these instructions for all workshop clusters:
 
 Log into the workshop cluster (do this for all workshop clusters if there are more than one) and run:
 
