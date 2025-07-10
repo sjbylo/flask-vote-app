@@ -265,7 +265,7 @@ Make a change in OpenShift and see how it's "healed" by ArgoCD, for example: 
 - Delete the Route again and/or
 - Stop the MySQL VM
 
-You should see those resources being re-instated, as defined in your Gitea repository (the desired state).
+You should see those resources being re-instated, as defined in your Gitea repository (the desired state or single source of truth).
 
 `Ensure the application is working again before moving on`
 
@@ -281,6 +281,8 @@ However, there is a problem - the change has caused an application outage!
 Via Gitea, make a change to the "_vote-app-mysql-vm-all-in-one.yaml_" file in your Gitea repo by clicking on the `Edit File` button (to the right).  
 
 <!--Make the change by `removing the whole of the Route resource` at the very bottom of the file!-->
+
+`A platform engineer mistakenly changes the port number of the ingress Route!`
 
 Make the change by `corrupting the Route resource` at the very bottom of the file!
 
