@@ -2,28 +2,33 @@
 
 apw=$1; shift
 upw=$1; shift
+ucnt=3
 input=$1; shift
 
 echo admin pw=$apw
 echo user pw=$upw
 echo input=$input
 
+urls=$(grep -o "https://api.*" $input | sort | uniq)
 logins=$(grep -o "oc login.*https://api.*" $input | sort | uniq)
-echo "$logins"
-echo
 
-login_cmds=()
-echo "$logins" | while read l
-do
-	echo l=$l
-	login_cmds+=("$l")
+urls_arr=()
+while IFS= read -r line; do
+  urls_arr+=("$line")
+done <<< "$urls"
+for i in "${urls_arr[@]}"; do
+  echo ">$i<"
+done
+
+logins_arr=()
+while IFS= read -r line; do
+  logins_arr+=("$line")
+done <<< "$logins"
+for i in "${logins_arr[@]}"; do
+  echo ">$i<"
 done
 
 echo
-for f in ${login_cmds[@]}
-do
-	echo [ $f ]
-done
 
 echo -n "Hit enter: "
 read yn
@@ -31,12 +36,20 @@ read yn
 set -x
 
 i=0
+
+for i in "${logins_arr[@]}"; do
+	echo ">$i<"
+	echo Install Op. for cluster $i
+
+	oc login -u admin -p ${apws[$i]} $url --insecure-skip-tls-verify
+	oc apply -k https://github.com/rhpds/gitea-operator/OLMDeploy
+done
+
 echo "$logins" | while read l
 do
 	echo Install Op. for cluster $l
 
-	eval $l
-	read yn
+	eval 
 
 	echo "$l"
 	sleep 1
@@ -85,7 +98,7 @@ spec:
 
   giteaCreateUsers: true
   giteaGenerateUserFormat: "user%d"
-  giteaUserNumber: 3
+  giteaUserNumber: $ucnt
   giteaUserPassword: $upw
 
   giteaMigrateRepositories: true

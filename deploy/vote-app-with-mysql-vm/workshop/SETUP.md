@@ -1,44 +1,46 @@
-# Setup of the Virt + GitOps workshop labs
+# Setup of the `Unifying Pods & VMs` Workshop
 
-## Install of Gitea for each user
+## Install one instance of Gitea for all workshop users
 
-We will use this [Gitea Operator](https://github.com/rhpds/gitea-operator) to provide a Gitea server so each user has access to their own repository and can make code changes.
+Use this [Gitea Operator](https://github.com/rhpds/gitea-operator) to provide a Gitea server so each user has access to their own repository and can make code changes.
 
 Follow the instructions from the above guide, OR follow these below:
+
+Log into the workshop cluster (do this for all workshop clusters if there are more than one) and run:
 
 ```
 oc apply -k https://github.com/rhpds/gitea-operator/OLMDeploy
 ```
 
-Wait for deployment of the Operator.  Check the pods are running AND ready in the gitea-operator project.
+Wait for the deployment of the Operator.  Check the pods are running AND ready in the gitea-operator project:
 
+```
+oc get pods -n gitea-operator
+```
 
-Create the gitea namespace
+Create the gitea namespace and set permissions (create read access to the gitea project so all users all users can find the Gitea Route):
 
 ```
 oc new-project gitea
+oc adm policy add-role-to-group view system:authenticated -n gitea
 ```
 
 Create Gitea instance (check the changes needed)
 
-> Ensure giteaUserPassword (in the yaml below) is set to your prefered password, e.g. the password already provided by the lab environment.
+> Ensure giteaUserPassword (in the yaml below) is set to your preferred password, e.g. the password already provided by the lab environment.
 > Create the correct number of users for your workshop
 
-Import this yaml into the gitea project:
+Run this command to import the yaml into the gitea project:
 
 ```
-#apiVersion: v1
-#kind: Namespace
-#metadata:
-#  name: gitea
-#---
+oc apply -f - <<END
 apiVersion: pfe.rhpds.com/v1
 kind: Gitea
 metadata:
   name: gitea
   namespace: gitea
 spec:
-  giteaSsl: false                     # Important, so ArgoCD can easily access the repos
+  giteaSsl: false                     # Important, so ArgoCD can easily access the repos without a cert
 
   giteaAdminUser: admin
   giteaAdminPassword: "some-password"
@@ -57,19 +59,11 @@ spec:
   - repo: https://github.com/sjbylo/flask-vote-app.git
     name: flask-vote-app
     private: false
+END
 ```
 
 
-## Create read access to the gitea project for all users
-
-Users need to find the Route hostname to use to access their repos.
-
-```
-oc adm policy add-role-to-group view system:authenticated -n gitea
-```
-
-
-## Example status of "Gitea" when complate. 
+## Example status of "Gitea" when complete. 
 
 Check the status of the gitea instance and ensure it looks like the below `before moving to the next step!`
 
@@ -97,12 +91,12 @@ status:
     type: Running
   giteaHostname: gitea-gitea.apps.demo1.example.com
   giteaRoute: http://gitea-gitea.apps.demo1.example.com
-  repoMigrationComplete: true                           # <<== wait for this to be true
+  repoMigrationComplete: true                               # <<== wait for this to be true
   userPassword: password
   userSetupComplete: true
 ```
 
-## (OPTIONAL) Run the setup script instead
+## (OPTIONAL) Run the setup script instead (experimental!) 
 
 If there are several clusters to configure, use this script.
 
