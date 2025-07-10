@@ -41,11 +41,11 @@ You will see your repository, which will have a name, e.g., "user1/flask-vote-ap
 
 Example of what you should see:
 
-<img src="./images/vm-gitops-1-gitea-repo-view.png" alt="Gitea repo" width="400">
+<img src="./images/vm-gitops-1-gitea-repo-view.png" alt="Gitea repo" width="300">
 
 Click into your repository. You can copy the URL as in this screenshot:
 
-<img src="./images/vm-gitops-2-gitea-repo-copy.png" alt="Copy Gitea repo URL" width="400">
+<img src="./images/vm-gitops-2-gitea-repo-copy.png" alt="Copy Gitea repo URL" width="300">
 
 
 Make a note of your Git repo URL which will look similar to this (starting with `http://gitea-gitea` and ending in `flask-vote-app.git`).  
@@ -116,7 +116,7 @@ Go to `Networking -> Routes` to find the ArgoCD Route that was created in your p
 
 You will see the login page:
 
-<img src="./images/vm-gitops-3-argocd-login-page.png" alt="ArgoCD log in page" width="200">
+<img src="./images/vm-gitops-3-argocd-login-page.png" alt="ArgoCD log in page" width="500">
 
 <!--
 Here is one way to find the ArgoCD Route from the command line.
@@ -143,7 +143,7 @@ On the next page, allow the `access permissions`.
 
 You will see the following after log in:
 
-<img src="./images/vm-gitops-4-argocd-after-login.png" alt="ArgoCD after log in" width="200">
+<img src="./images/vm-gitops-4-argocd-after-login.png" alt="ArgoCD after log in" width="500">
 
 `In the next section, we will provision the vote-app Application.`
 
