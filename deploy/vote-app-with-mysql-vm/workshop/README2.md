@@ -328,9 +328,13 @@ You should be able to roll back to the previous state, and the application will 
 
 ## Optional: Other things you can try
 
+In Git, modify the core count or memory size of the MySQL VM and, in the OpenShift Console, observe the VM being upgraded.
+
 In the OpenShift Console, change the MySQL VM core count or the memory size.  Will it be changed, or will it be reverted to the "source of truth", as defined in Git? 
 
-In Git, modify the core count or memory size of the MySQL VM and observe the VM being upgraded.
+Scale the vote-app pods in Git.
+
+What else can you think of trying?!
 
 
 ## Clean up 
