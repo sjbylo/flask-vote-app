@@ -41,17 +41,14 @@ You will see your repository, which will have a name, e.g., "user1/flask-vote-ap
 
 Example of what you should see:
 
-<img src="./images/vm-gitops-1-gitea-repo-view.png" alt="Gitea repo" width="200">
+<img src="./images/vm-gitops-1-gitea-repo-view.png" alt="Gitea repo" width="400">
 
-<img src="./images/vm-gitops-2-gitea-repo-copy.png" alt="Copy Gitea repo URL" width="200">
+You can copy the URL as in this screenshot:
 
-<img src="./images/vm-gitops-3-argocd-login-page.png" alt="ArgoCD log in page" width="200">
+<img src="./images/vm-gitops-2-gitea-repo-copy.png" alt="Copy Gitea repo URL" width="400">
 
-<img src="./images/vm-gitops-4-argocd-after-login.png" alt="ArgoCD after log in" width="200">
 
-<img src="./images/vm-gitops-5-argocd-enable-selfheal.png" alt="Enable selfheal" width="200">
 
-<img src="./images/vm-gitops-6-argocd-verify-selfheal.png" alt="Verify selfheal" width="200">
 
 
 Your Git repo URL will look similar like this (starting with "http://gitea-gitea" and ending in "flask-vote-app.git").  Make a note of it:
@@ -80,28 +77,34 @@ Later on in the workshop, you will make changes to the code in Git and see the c
 
 Create a new project for yourself to work in and remember the project name.  Use a unique name, e.g., `gitops-user1` (you must change 'user1' to your username).
 
-You can do this in the OpenShift Console under `Home -> Projects -> Create Project` or from the command line with "oc new-project gitops-user1" (remember to change 'user1' to your username!).
-You can run the CLI commands in an `OpenShift command line terminal`.
+You should do this in the OpenShift Console under `Administrator -> Home -> Projects -> Create Project`.
 
-> **Note**: You can access the command line (terminal) from the top right of the OpenShift Console, where you will see the ">_" icon.
+
 
 `You will use the project you just created for all further activities.`
 
 
 ## Provision your instance of OpenShift GitOps (ArgoCD)
 
-First, you will provision your instance of ArgoCD.
-
-Add the following ArgoCD resource to your project (e.g., project gitops-user1).  
+First, you will provision your instance of ArgoCD from the command line. 
 
 > Always ensure your project is selected!
 > How to choose the project?  Select it at the top left of the OpenShift Console.
 
-There are several ways to do this, for example, via the OpenShift Console (see the "+" icon in the top right) or via the command line.
+Open the command line (terminal) in your project by selecting the ">_" icon at the top right of the OpenShift Console.
 
+Wait for the Terminal to load and appear.
+
+<!--Add the following ArgoCD resource to your project (e.g., project gitops-user1).  -->
+<!--There are several ways to do this, for example, via the OpenShift Console (see the "+" icon in the top right) or via the command line.-->
 <!--Don't forget to change the `YOUR-OPENSHIFT-PROJECT` placeholder - to match your OpenShift project - after pasting the below YAML code.-->
 
-Run this command:
+<!--
+You can run the CLI commands in an `OpenShift command line terminal`.
+> **Note**: You can access the command line (terminal) from the top right of the OpenShift Console, where you will see the ">_" icon.
+-->
+
+Now, copy, paste and run this command in the terminal:
 
 ```
 oc apply -f https://raw.githubusercontent.com/sjbylo/flask-vote-app/refs/heads/master/deploy/vote-app-with-mysql-vm/workshop/argocd.yaml
@@ -112,17 +115,21 @@ After about 3-4 minutes, you should see all the ArgoCD pods running and ready (1
 
 <img src="./images/argocd-pods.png" alt="ArgoCD pods" width="500">
 
-Find the Route that was created in `YOUR PROJECT` (e.g., gitops-user1) and access it to open the ArgoCD UI at the login page.
+Go to `Networking -> Routes` to find the ArgoCD Route that was created in your project (e.g., gitops-user1) and access it to open the ArgoCD UI at the login page.
 
+You will see the login page:
+
+<img src="./images/vm-gitops-3-argocd-login-page.png" alt="ArgoCD log in page" width="200">
+
+<!--
 Here is one way to find the ArgoCD Route from the command line.
 
 ```
 oc get route -n YOUR-PROJECT argocd-server -o jsonpath='{.spec.host}{"\n"}'
 ```
-
 > **Note**: You can access the command line (terminal) from the top right of the OpenShift Console, where you will see the ">_" icon.
-
 Another way to find the Route is to look at the main menu in the OpenShift Console, under `Networking -> Routes`. 
+-->
 
 The Route should `look similar` to this one:
 
@@ -136,6 +143,10 @@ Use the `LOG IN VIA OPENSHIFT` button to log into ArgoCD with your user's OpenSh
 > *DO NOT* use the `username` and `password` fields below it!
 
 On the next page, allow the `access permissions`.
+
+You will see the following after log in:
+
+<img src="./images/vm-gitops-4-argocd-after-login.png" alt="ArgoCD after log in" width="200">
 
 `In the next section, we will provision the vote-app Application.`
 
@@ -237,7 +248,13 @@ Answer: `Because the Application is not set to 'self heal'` (as explained above)
 
 Set selfHeal to "auto" in the ArgoCD UI.  To do that, go to the Application, click `Details`, scroll down, and make the change to self-heal.  Click on ENABLE-AUTO-SYNC to enable it.  Ensure `PRUNE RESOURCES` and `SELF HEAL` are also enabled!
 
+It should look like this after selfheal is enabled:
+
+<img src="./images/vm-gitops-5-argocd-enable-selfheal.png" alt="Enable selfheal" width="200">
+
 Return to the main ArgoCD UI and verify that "_Auto sync is enabled_" is displayed under "Sync status".
+
+<img src="./images/vm-gitops-6-argocd-verify-selfheal.png" alt="Verify selfheal" width="200">
 
 Now, make a very human mistake and delete some other vote-app resources in your project (e.g., project gitops-user1). 
 
@@ -257,34 +274,29 @@ You should see those resources being re-instated, as defined in your Gitea repos
 
 ## Implement Rollback
 
-Imagine a change is rolled out by the platform team (via a change in Git) and then synced with OpenShift.
-However, there is a problem - the change has caused an outage!
-- You can rollback to the previous revision (or `git commit`), which is known to work!
+Imagine a change is rolled out by the platform team (via a change in Git) and then synchronized with OpenShift.
+However, there is a problem - the change has caused an application outage! 
+- You can rollback to the previous working revision (or `git commit`)!
 
 Via Gitea, make a change to the "_vote-app-mysql-vm-all-in-one.yaml_" file in your Gitea repo by clicking on the `Edit File` button (to the right).  
 
-Make the change by `removing the whole of the Route resource` at the very bottom of the file!
+<!--Make the change by `removing the whole of the Route resource` at the very bottom of the file!-->
 
-Delete all these lines:
+Make the change by `corrupting the Route resource` at the very bottom of the file!
+
+Change the port number from `8080` to `8888` in the line `targetPort: 8080-tcp` of the Route:
+
+It will then look like this:
 
 ```
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
-  annotations:
-    app.openshift.io/connects-to: '[{"apiVersion":"kubevirt.io/v1","kind":"VirtualMachine","name":"mysql-demo"}]'
-    openshift.io/host.generated: "true"
-  labels:
-    app: vote-app
-    app.kubernetes.io/component: vote-app
-    app.kubernetes.io/instance: vote-app
-    app.kubernetes.io/name: vote-app
-    app.kubernetes.io/part-of: vote-app
-    app.openshift.io/runtime-version: latest
+...
   name: vote-app
 spec:
   port:
-    targetPort: 8080-tcp
+    targetPort: 8888-tcp           << CHANGE THIS LINE
   tls:
     insecureEdgeTerminationPolicy: Redirect
     termination: edge
@@ -295,13 +307,13 @@ spec:
   wildcardPolicy: None
 ```
 
-At the bottom of the page, commit the change, after entering "Route deleted!" into the `Subject` line of the commit (this message will show up in ArgoCD soon).
+At the bottom of the page, commit the change, after entering "Port now 8888!" into the `Subject` line of the commit (this message will later show up in ArgoCD).
 
-Ensure the Application is automatically resynchronized via the UI.  
+Ensure the Application is automatically resynchronized via the UI.   Click on Refresh.
 
 > **Note**: If Auto-Sync is not set, you may need to click on the `Sync` button.
 
-Deleting the Route stops the application from working. Verify that it has now truly failed, as there is no way to access the application from outside OpenShift (since the ingress Route is missing).
+Corrupting the Route stops the application from working. Verify that it has now truly failed, as there is no way to access the application from outside OpenShift (since the ingress Route is configured with the wrong port).
 
 Now, try out the "HISTORY AND ROLLBACK" button and change the configuration back to the previous working one.
 
