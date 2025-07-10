@@ -1,5 +1,7 @@
 # Setup of the `Unifying Pods & VMs` Workshop
 
+First, bring up an environment for "_Experience OpenShift Virtualization Roadshow_" via https://demo.redhat.com/.
+
 ## Install one instance of Gitea for all workshop users
 
 Use this [Gitea Operator](https://github.com/rhpds/gitea-operator) to provide a Gitea server so each user has access to their own repository and can make code changes.
