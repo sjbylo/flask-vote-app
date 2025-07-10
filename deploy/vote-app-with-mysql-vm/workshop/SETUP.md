@@ -69,6 +69,10 @@ END
 
 Check the status of the gitea instance and ensure it looks like the below `before starting the workshop!`
 
+```
+oc get Gitea gitea -n gitea -o yaml
+```
+
 Note: "userSetupComplete: true" and "repoMigrationComplete: true"
 
 ```
