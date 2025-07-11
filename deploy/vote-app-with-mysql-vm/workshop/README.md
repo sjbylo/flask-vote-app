@@ -348,3 +348,6 @@ You’ve explored how OpenShift GitOps (powered by Argo CD) enables consistent, 
 With this foundation, you're now ready to bring GitOps best practices to complex, real-world application deployments across your OpenShift environments.
 
 You can learn more about GitOps from this [GitOps Workshop Guide](https://openshiftdemos.github.io/openshift-gitops-workshop/openshift-gitops-workshop/index.html).
+
+Here is another example of running a mix of pods and VMs with [Elasticsearch](https://github.com/purefield/ocp-virt/blob/main/README.md).
+
