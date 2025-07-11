@@ -102,6 +102,7 @@ status:
   userSetupComplete: true
 ```
 
+<!--
 ## (OPTIONAL) Run the setup script instead (experimental!) 
 
 If there are several clusters to configure, use this script.
@@ -111,4 +112,4 @@ Set number of users in setup.sh script.  Get the api URLs of the workshop env. f
 ```
 ./setup.sh admin-password user-password <path-to-file-with-all-api-urls>
 ```
-
+-->
